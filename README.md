@@ -39,5 +39,5 @@ Momentan nimeni
 
 ## Abilități Robot
 
-- Nu avem, revenim mai târziu
+- Nu avem, reveniti mai târziu
 
