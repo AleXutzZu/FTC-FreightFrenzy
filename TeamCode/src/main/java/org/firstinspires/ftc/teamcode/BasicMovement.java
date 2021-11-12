@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Util.RobotHardware;
@@ -16,10 +14,6 @@ public class BasicMovement extends OpMode {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor rightFront;
-    private DcMotor rightBack;
-    private DcMotor leftFront;
-    private DcMotor leftBack;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -27,20 +21,6 @@ public class BasicMovement extends OpMode {
     @Override
     public void init() {
         robotHardware.init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-
-
-        rightFront = hardwareMap.get(DcMotor.class, "right_front");
-        rightBack = hardwareMap.get(DcMotor.class, "right_back");
-        leftBack = hardwareMap.get(DcMotor.class, "left_back");
-        leftFront = hardwareMap.get(DcMotor.class, "left_front");
-
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
 
@@ -57,10 +37,10 @@ public class BasicMovement extends OpMode {
     @Override
     public void start() {
         runtime.reset();
-        rightFront.setPower(0f);
-        rightBack.setPower(0f);
-        leftFront.setPower(0f);
-        leftBack.setPower(0f);
+        robotHardware.rightFrontMotor.setPower(0f);
+        robotHardware.rightBackMotor.setPower(0f);
+        robotHardware.leftFrontMotor.setPower(0f);
+        robotHardware.leftBackMotor.setPower(0f);
     }
 
     /*
@@ -75,10 +55,10 @@ public class BasicMovement extends OpMode {
 
 
         // Send calculated power to wheels
-        rightFront.setPower(rightTrigger);
-        rightBack.setPower(rightTrigger);
-        leftFront.setPower(rightTrigger);
-        leftBack.setPower(rightTrigger);
+        robotHardware.rightFrontMotor.setPower(rightTrigger);
+        robotHardware.rightBackMotor.setPower(rightTrigger);
+        robotHardware.leftFrontMotor.setPower(rightTrigger);
+        robotHardware.leftBackMotor.setPower(rightTrigger);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -90,10 +70,10 @@ public class BasicMovement extends OpMode {
      */
     @Override
     public void stop() {
-        rightFront.setPower(0f);
-        rightBack.setPower(0f);
-        leftFront.setPower(0f);
-        leftBack.setPower(0f);
+        robotHardware.rightFrontMotor.setPower(0f);
+        robotHardware.rightBackMotor.setPower(0f);
+        robotHardware.leftFrontMotor.setPower(0f);
+        robotHardware.leftBackMotor.setPower(0f);
     }
 
 }
