@@ -6,9 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Util.RobotHardware;
+
 
 @TeleOp(name = "Basic: Movement", group = "Testing Purposes")
 public class BasicMovement extends OpMode {
+
+    RobotHardware robotHardware = new RobotHardware();
+
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
     private DcMotor rightFront;
@@ -21,6 +26,7 @@ public class BasicMovement extends OpMode {
      */
     @Override
     public void init() {
+        robotHardware.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
 
 
