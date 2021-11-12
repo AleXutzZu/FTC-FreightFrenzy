@@ -61,7 +61,7 @@ public class BasicMovement extends OpMode {
        
         double leftStickY = -gamepad1.left_stick_y;
 
-        leftStickY = Math.max(leftStickY, 0.8);
+        leftStickY = Math.min(leftStickY, 0.8);
         
 
         // Send calculated power to wheels
