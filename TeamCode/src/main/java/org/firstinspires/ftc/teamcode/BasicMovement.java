@@ -23,7 +23,7 @@ public class BasicMovement extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-       
+
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
         rightBack = hardwareMap.get(DcMotor.class, "right_back");
         leftBack = hardwareMap.get(DcMotor.class, "left_back");
@@ -51,6 +51,10 @@ public class BasicMovement extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        rightFront.setPower(0f);
+        rightBack.setPower(0f);
+        leftFront.setPower(0f);
+        leftBack.setPower(0f);
     }
 
     /*
@@ -58,21 +62,21 @@ public class BasicMovement extends OpMode {
      */
     @Override
     public void loop() {
-       
-        double leftStickY = -gamepad1.left_stick_y;
 
-        leftStickY = Math.min(leftStickY, 0.8);
-        
+        float rightTrigger = gamepad1.right_trigger;
+
+        rightTrigger = Math.min(rightTrigger, 0.8f);
+
 
         // Send calculated power to wheels
-        rightFront.setPower(leftStickY);
-        rightBack.setPower(leftStickY);
-        leftFront.setPower(leftStickY);
-        leftBack.setPower(leftStickY);
+        rightFront.setPower(rightTrigger);
+        rightBack.setPower(rightTrigger);
+        leftFront.setPower(rightTrigger);
+        leftBack.setPower(rightTrigger);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "forward (%.2f)", leftStickY);
+        telemetry.addData("Motors", "forward (%.2f)", rightTrigger);
     }
 
     /*
@@ -80,10 +84,10 @@ public class BasicMovement extends OpMode {
      */
     @Override
     public void stop() {
-        rightFront.setPower(0);
-        rightBack.setPower(0);
-        leftFront.setPower(0);
-        leftBack.setPower(0);
+        rightFront.setPower(0f);
+        rightBack.setPower(0f);
+        leftFront.setPower(0f);
+        leftBack.setPower(0f);
     }
 
 }
