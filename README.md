@@ -36,6 +36,7 @@ Momentan nimeni
 - [Documentația FtcRobotController](https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki)
 - [Javadoc](https://javadoc.io/doc/org.firstinspires.ftc)
 - [Exemple de Cod](FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples)
+- [Codul de anul trecut](https://drive.google.com/drive/u/0/folders/1fYaFXlUK6ZxIL_FdRfeJHxZKOYuNguDm)
 
 ## Abilități Robot
 
