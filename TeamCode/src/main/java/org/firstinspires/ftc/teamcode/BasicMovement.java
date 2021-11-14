@@ -50,19 +50,22 @@ public class BasicMovement extends OpMode {
     public void loop() {
 
         float rightTrigger = gamepad1.right_trigger;
+        float leftTrigger = gamepad1.left_trigger;
 
+        leftTrigger = Math.min(leftTrigger, 0.8f);
+        leftTrigger = -leftTrigger;
         rightTrigger = Math.min(rightTrigger, 0.8f);
 
-
+        float forwardPower = leftTrigger + rightTrigger;
         // Send calculated power to wheels
-        robotHardware.rightFrontMotor.setPower(rightTrigger);
-        robotHardware.rightBackMotor.setPower(rightTrigger);
-        robotHardware.leftFrontMotor.setPower(rightTrigger);
-        robotHardware.leftBackMotor.setPower(rightTrigger);
+        robotHardware.rightFrontMotor.setPower(forwardPower);
+        robotHardware.rightBackMotor.setPower(forwardPower);
+        robotHardware.leftFrontMotor.setPower(forwardPower);
+        robotHardware.leftBackMotor.setPower(forwardPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "forward (%.2f)", rightTrigger);
+        telemetry.addData("Motors", "forward (%.2f)", forwardPower);
     }
 
     /*
