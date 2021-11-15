@@ -52,8 +52,7 @@ public class BasicMovement extends OpMode {
         float rightTrigger = gamepad1.right_trigger;
         float leftTrigger = gamepad1.left_trigger;
 
-        leftTrigger = Math.min(leftTrigger, 0.8f);
-        leftTrigger = -leftTrigger;
+        leftTrigger = -Math.min(leftTrigger, 0.8f);
         rightTrigger = Math.min(rightTrigger, 0.8f);
 
         float forwardPower = leftTrigger + rightTrigger;
