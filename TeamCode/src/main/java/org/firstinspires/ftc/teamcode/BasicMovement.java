@@ -2,13 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Util.Driveable;
 import org.firstinspires.ftc.teamcode.Util.RobotHardware;
 
 
 @TeleOp(name = "Basic: Movement", group = "Testing Purposes")
-public class BasicMovement extends OpMode {
+public class BasicMovement extends OpMode implements Driveable {
 
     RobotHardware robotHardware = new RobotHardware();
 
@@ -55,16 +57,13 @@ public class BasicMovement extends OpMode {
         leftTrigger = -Math.min(leftTrigger, 0.8f);
         rightTrigger = Math.min(rightTrigger, 0.8f);
 
-        float forwardPower = leftTrigger + rightTrigger;
+        float power = leftTrigger + rightTrigger;
         // Send calculated power to wheels
-        robotHardware.rightFrontMotor.setPower(forwardPower);
-        robotHardware.rightBackMotor.setPower(forwardPower);
-        robotHardware.leftFrontMotor.setPower(forwardPower);
-        robotHardware.leftBackMotor.setPower(forwardPower);
+        if (power < 0) driveBackward(-power);
+        else driveForward(power);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "forward (%.2f)", forwardPower);
     }
 
     /*
@@ -78,4 +77,39 @@ public class BasicMovement extends OpMode {
         robotHardware.leftBackMotor.setPower(0f);
     }
 
+    @Override
+    public void driveForward(float motorPower) {
+        /*
+        Setting the orientation for driving forwards.
+         */
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robotHardware.rightFrontMotor.setPower(motorPower);
+        robotHardware.rightBackMotor.setPower(motorPower);
+        robotHardware.leftFrontMotor.setPower(motorPower);
+        robotHardware.leftBackMotor.setPower(motorPower);
+
+        telemetry.addData("Motors", "forward (%.2f)", motorPower);
+    }
+
+    @Override
+    public void driveBackward(float motorPower) {
+        /*
+        Setting the orientation for driving backwards.
+         */
+        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robotHardware.rightFrontMotor.setPower(motorPower);
+        robotHardware.rightBackMotor.setPower(motorPower);
+        robotHardware.leftFrontMotor.setPower(motorPower);
+        robotHardware.leftBackMotor.setPower(motorPower);
+
+        telemetry.addData("Motors", "backward (%.2f)", motorPower);
+    }
 }

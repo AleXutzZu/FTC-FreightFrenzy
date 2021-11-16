@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Util;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -41,10 +40,10 @@ public class RobotHardware {
         leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
         leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
 
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         rightFrontMotor.setPower(0f);
         rightBackMotor.setPower(0f);
