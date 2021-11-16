@@ -112,4 +112,15 @@ public class BasicMovement extends OpMode implements Driveable {
 
         telemetry.addData("Motors", "backward (%.2f)", motorPower);
     }
+
+    @Override
+    public void resetMotors() {
+        /*
+        Setting motors power to 0 to stop the robot.
+         */
+        robotHardware.rightFrontMotor.setPower(0f);
+        robotHardware.rightBackMotor.setPower(0f);
+        robotHardware.leftFrontMotor.setPower(0f);
+        robotHardware.leftBackMotor.setPower(0f);
+    }
 }
