@@ -2,55 +2,37 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.util.Driveable;
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.control.Control;
+import org.firstinspires.ftc.teamcode.util.Direction;
 
 
 @TeleOp(name = "Basic: Movement", group = "Testing Purposes")
-public class BasicMovement extends OpMode implements Driveable {
+public class BasicMovement extends OpMode {
 
-    RobotHardware robotHardware = new RobotHardware();
-
-    // Declare OpMode members.
+    private Control robotControl;
     private final ElapsedTime runtime = new ElapsedTime();
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
-        robotHardware.init(hardwareMap);
+        robotControl = Control.getInstance();
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
     @Override
     public void init_loop() {
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         runtime.reset();
-        robotHardware.rightFrontMotor.setPower(0f);
-        robotHardware.rightBackMotor.setPower(0f);
-        robotHardware.leftFrontMotor.setPower(0f);
-        robotHardware.leftBackMotor.setPower(0f);
+        robotControl.stopMotors();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
-
+        Direction direction;
         float rightTrigger = gamepad1.right_trigger;
         float leftTrigger = gamepad1.left_trigger;
 
@@ -59,68 +41,16 @@ public class BasicMovement extends OpMode implements Driveable {
 
         float power = leftTrigger + rightTrigger;
         // Send calculated power to wheels
-        if (power < 0) driveBackward(-power);
-        else driveForward(power);
-
+        if (power < 0) robotControl.driveBackward(-power);
+        else robotControl.driveForward(power);
+        direction = (power < 0 ? Direction.STRAIGHT_BACKWARD : Direction.STRAIGHT_FORWARD);
         // Show the elapsed game time and wheel power.
+        telemetry.addData("Direction", "%s -> power : %.2f", direction, power);
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
-        robotHardware.rightFrontMotor.setPower(0f);
-        robotHardware.rightBackMotor.setPower(0f);
-        robotHardware.leftFrontMotor.setPower(0f);
-        robotHardware.leftBackMotor.setPower(0f);
-    }
-
-    @Override
-    public void driveForward(float motorPower) {
-        /*
-        Setting the orientation for driving forwards.
-         */
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
-
-        telemetry.addData("Motors", "forward (%.2f)", motorPower);
-    }
-
-    @Override
-    public void driveBackward(float motorPower) {
-        /*
-        Setting the orientation for driving backwards.
-         */
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
-
-        telemetry.addData("Motors", "backward (%.2f)", motorPower);
-    }
-
-    @Override
-    public void resetMotors() {
-        /*
-        Setting motors power to 0 to stop the robot.
-         */
-        robotHardware.rightFrontMotor.setPower(0f);
-        robotHardware.rightBackMotor.setPower(0f);
-        robotHardware.leftFrontMotor.setPower(0f);
-        robotHardware.leftBackMotor.setPower(0f);
+        robotControl.stopMotors();
     }
 }
