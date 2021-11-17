@@ -16,7 +16,7 @@ public class BasicMovement extends OpMode {
 
     @Override
     public void init() {
-        robotControl = Control.getInstance();
+        robotControl = new Control(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 

@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class Controller {
     protected RobotHardware robotHardware = new RobotHardware();
 
-    protected Controller() {
+    protected Controller(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
     }
 

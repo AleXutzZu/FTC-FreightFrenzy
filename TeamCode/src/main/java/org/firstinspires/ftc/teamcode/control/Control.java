@@ -1,24 +1,17 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.Controller;
 
 public class Control extends Controller {
-    private static Control instance = null;
-
-
     /**
-     * Get the instance of the Control singleton class
-     * @return the instance of the class
+     * Creates an instance for control with the specified hardware map
+     * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
      */
-    public static Control getInstance() {
-        if (instance == null) instance = new Control();
-        return instance;
-    }
-
-    private Control() {
-        super();
+    public Control(HardwareMap hardwareMap) {
+        super(hardwareMap);
     }
 
     @Override
