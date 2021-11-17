@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
-public abstract class Controller {
+public abstract class RobotMovementControls {
     protected RobotHardware robotHardware = new RobotHardware();
 
-    protected Controller(HardwareMap hardwareMap) {
+    protected RobotMovementControls(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
     }
 
@@ -82,6 +82,19 @@ public abstract class Controller {
      */
     public abstract void steerRight(float motorPower);
 
+    /**
+     * Rotates the robot on its center axis counter clockwise by the specified power
+     *
+     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     */
+    public abstract void rotateLeft(float motorPower);
+
+    /**
+     * Rotates the robot on its center axis clockwise by the specified power
+     *
+     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     */
+    public abstract void rotateRight(float motorPower);
     /**
      * Stops the motors like a handbrake.
      */

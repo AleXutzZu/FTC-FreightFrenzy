@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.control;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.util.Controller;
+import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
-public class Control extends Controller {
+public class Movements extends RobotMovementControls {
     /**
      * Creates an instance for control with the specified hardware map
      * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
      */
-    public Control(HardwareMap hardwareMap) {
+    public Movements(HardwareMap hardwareMap) {
         super(hardwareMap);
     }
 
@@ -134,6 +134,16 @@ public class Control extends Controller {
         robotHardware.rightBackMotor.setPower(motorPower);
         robotHardware.leftFrontMotor.setPower(motorPower);
         robotHardware.leftBackMotor.setPower(motorPower);
+    }
+
+    @Override
+    public void rotateLeft(float motorPower) {
+
+    }
+
+    @Override
+    public void rotateRight(float motorPower) {
+
     }
 
     @Override
