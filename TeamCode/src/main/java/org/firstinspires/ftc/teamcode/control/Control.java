@@ -16,10 +16,10 @@ public class Control extends Controller {
 
     @Override
     public void driveForward(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(motorPower);
@@ -29,19 +29,6 @@ public class Control extends Controller {
 
     @Override
     public void driveBackward(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
-    }
-
-    @Override
-    public void driveLeft(float motorPower) {
         robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -54,11 +41,24 @@ public class Control extends Controller {
     }
 
     @Override
-    public void driveRight(float motorPower) {
+    public void driveLeft(float motorPower) {
         robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robotHardware.rightFrontMotor.setPower(motorPower);
+        robotHardware.rightBackMotor.setPower(motorPower);
+        robotHardware.leftFrontMotor.setPower(motorPower);
+        robotHardware.leftBackMotor.setPower(motorPower);
+    }
+
+    @Override
+    public void driveRight(float motorPower) {
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(motorPower);
@@ -79,8 +79,8 @@ public class Control extends Controller {
 
     @Override
     public void driveDiagonallyLeftForward(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(0f);
@@ -90,8 +90,8 @@ public class Control extends Controller {
 
     @Override
     public void driveDiagonallyRightBackward(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(0f);
@@ -101,8 +101,8 @@ public class Control extends Controller {
 
     @Override
     public void driveDiagonallyLeftBackward(float motorPower) {
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.rightFrontMotor.setPower(0f);
         robotHardware.rightBackMotor.setPower(motorPower);
@@ -112,10 +112,10 @@ public class Control extends Controller {
 
     @Override
     public void steerLeft(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(motorPower);
@@ -125,10 +125,10 @@ public class Control extends Controller {
 
     @Override
     public void steerRight(float motorPower) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.rightFrontMotor.setPower(motorPower);
         robotHardware.rightBackMotor.setPower(motorPower);
