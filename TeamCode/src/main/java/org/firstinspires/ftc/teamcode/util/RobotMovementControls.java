@@ -71,16 +71,20 @@ public abstract class RobotMovementControls {
     /**
      * Steers the robot to the left by the specified power
      *
-     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     * @param leftMotorsPower float value between 0.0 and 1.0 representing the power given to the left motors (Less power means less speed)
+     * @param rightMotorsPower float value between 0.0 and 1.0 representing the power given to the right motors. For this operation
+     *                         rightMotorsPower < leftMotorsPower
      */
-    public abstract void steerLeft(float motorPower);
+    public abstract void steerLeft(float leftMotorsPower, float rightMotorsPower);
 
     /**
      * Steers the robot to the right by the specified power
      *
-     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     * @param leftMotorsPower float value between 0.0 and 1.0 representing the power given to the motors. For this operation
+     *                        leftMotorsPower > rightMotorsPower
+     * @param rightMotorsPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
      */
-    public abstract void steerRight(float motorPower);
+    public abstract void steerRight(float leftMotorsPower, float rightMotorsPower);
 
     /**
      * Rotates the robot on its center axis counter clockwise by the specified power
