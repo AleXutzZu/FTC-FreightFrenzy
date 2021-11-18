@@ -10,9 +10,8 @@ import org.firstinspires.ftc.teamcode.control.Movements;
 @TeleOp(name = "Advanced Movement", group = "Testing Purposes")
 public class AdvancedMovement extends OpMode {
 
-    private final float POWER_RATIO = 2f;
-    private final float DEFAULT_POWER = 0.5f;
-    private final int GEARS = 5;
+    private static final float POWER_RATIO = 2f;
+    private static final float DEFAULT_POWER = 0.5f;
     private Movements robotMovements;
     private final ElapsedTime runtime = new ElapsedTime();
 
