@@ -70,7 +70,7 @@ public abstract class RobotMovementControls {
 
     /**
      * Steers the robot to the forwards by the specified powers
-     * If leftMotorsPower > rightMotorsPower the robot will steer to the left, otherwise to the right.
+     * If leftMotorsPower < rightMotorsPower the robot will steer to the left, otherwise to the right.
      *  @param leftMotorsPower float value between 0.0 and 1.0 representing the power given to the left motors. (Less power means less speed)
      * @param rightMotorsPower float value between 0.0 and 1.0 representing the power given to the right motors.
      */
