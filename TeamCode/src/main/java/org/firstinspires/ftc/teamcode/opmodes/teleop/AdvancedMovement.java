@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.control.Movements;
 
 @TeleOp(name = "Advanced Movement", group = "Testing Purposes")
 public class AdvancedMovement extends OpMode {
+
     private final float POWER_RATIO = 2f;
     private final float DEFAULT_POWER = 0.3f;
     private Movements robotMovements;
@@ -40,28 +41,25 @@ public class AdvancedMovement extends OpMode {
         D-pad Right = Slide right
         D-pad Left = Slide left
          */
+
         if (gamepad1.a) {
             robotMovements.stopMotors();
             return;
         }
 
-        if (gamepad1.right_bumper || gamepad1.left_bumper) {
-            if (gamepad1.right_bumper && gamepad1.left_bumper) {
+        if (gamepad1.left_bumper || gamepad1.right_bumper || gamepad1.dpad_right || gamepad1.dpad_left) {
+            boolean areMultipleButtonsPressed = (gamepad1.right_bumper && !gamepad1.left_bumper && !gamepad1.dpad_right && !gamepad1.dpad_left)
+                    || (gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_left && !gamepad1.dpad_right)
+                    || (gamepad1.dpad_right && !gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_left)
+                    || (gamepad1.dpad_left && !gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_right);
+            if (!areMultipleButtonsPressed) {
                 robotMovements.stopMotors();
                 return;
             }
+            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER);
             if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER);
-            else robotMovements.rotateLeft(DEFAULT_POWER);
-            return;
-        }
-
-        if (gamepad1.dpad_right || gamepad1.dpad_left) {
-            if (gamepad1.dpad_right && gamepad1.dpad_left) {
-                robotMovements.stopMotors();
-                return;
-            }
+            if (gamepad1.dpad_left) robotMovements.driveLeft(DEFAULT_POWER);
             if (gamepad1.dpad_right) robotMovements.driveRight(DEFAULT_POWER);
-            else robotMovements.driveLeft(DEFAULT_POWER);
             return;
         }
         /*
