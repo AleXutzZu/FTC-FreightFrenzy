@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.control.Movements;
 public class AdvancedMovement extends OpMode {
 
     private final float POWER_RATIO = 2f;
-    private final float DEFAULT_POWER = 0.3f;
+    private final float DEFAULT_POWER = 0.7f;
     private Movements robotMovements;
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -78,7 +78,26 @@ public class AdvancedMovement extends OpMode {
                                Lower -> Turn right backwards
          */
         float acceleration = (gamepad1.right_trigger - gamepad1.left_trigger) / POWER_RATIO;
+        boolean isLeftJoyStickActive = gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0;
+        boolean isRightJoyStickActive = gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0;
 
+        if ((isLeftJoyStickActive && isRightJoyStickActive) || (!isLeftJoyStickActive && !isRightJoyStickActive)){
+            robotMovements.stopMotors();
+            return;
+        }
+        /*
+        Left joystick mappings
+         */
+        if (isLeftJoyStickActive){
+
+        }
+
+        /*
+        Right joystick mappings
+         */
+        if (isRightJoyStickActive){
+
+        }
     }
 
     @Override
