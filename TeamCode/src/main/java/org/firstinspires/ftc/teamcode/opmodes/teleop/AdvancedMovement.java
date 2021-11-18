@@ -12,6 +12,7 @@ public class AdvancedMovement extends OpMode {
 
     private final float POWER_RATIO = 2f;
     private final float DEFAULT_POWER = 0.5f;
+    private final int GEARS = 5;
     private Movements robotMovements;
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -90,7 +91,6 @@ public class AdvancedMovement extends OpMode {
             robotMovements.stopMotors();
             return;
         }
-        float additionalPower = Math.max(totalPower, 0f);
         /*
         Left joystick mappings
          */
@@ -101,9 +101,93 @@ public class AdvancedMovement extends OpMode {
             float horizontalCoordinate = -gamepad1.left_stick_x;
             float verticalCoordinate = -gamepad1.left_stick_y;
 
-
+            /*
+            Graphing the axis
+                                         g(x) = -x     / \ (0, 1)      f(x) = x
+                                          \             |             /
+                                           \            |            /
+                                            \           |           /
+                                             \          |          /
+                                              \         |         /
+                                               \        |        /
+                                                \       |       /
+                                                 \      |      /
+                                                  \     |     /
+                                                   \    |    /
+                                                    \   |   /
+                                                     \  |  /
+                                                      \ | /
+            (-1, 0) <-----------------------------------+-----------------------------------> (1, 0)
+                                                      / | \
+                                                     /  |  \
+                                                    /   |   \
+                                                   /    |    \
+                                                  /     |     \
+                                                 /      |      \
+                                                /       |       \
+                                               /        |        \
+                                              /         |         \
+                                             /          |          \
+                                            /           |           \
+                                           /            |            \
+                                          /             |             \
+                                                       \ / (0, -1)
+            We deduce the following laws:
+            For any given pair (x,y) on the xOy axis the following will be true:
+            If f(x) < y then (x, y) is above the graph of f(x) otherwise it is under
+            If g(x) < y then (x, y) is above the graph of g(x) otherwise it is under
+            Given these conditions, we can deduce the conditions for each zone:
+                UP : Above g and f
+                RIGHT: Above g but below f
+                DOWN: Below g and f
+                LEFT: Below g but above f
+            These can be transformed into 4 conditions:
+                UP : x <= y && -x <= y
+                RIGHT: x > y && -x < y
+                DOWN: x >= y && -x >= y
+                LEFT: x < y && -x > y
+             */
+            float basePower;
+            if (horizontalCoordinate <= verticalCoordinate && -horizontalCoordinate <= verticalCoordinate) {
+                basePower = verticalCoordinate / POWER_RATIO;
+                if (totalPower > 0f) robotMovements.driveForward(basePower + forwardPower);
+                else robotMovements.stopMotors();
+                return;
+            }
+            if (horizontalCoordinate >= verticalCoordinate && -horizontalCoordinate >= verticalCoordinate) {
+                basePower = -verticalCoordinate / POWER_RATIO;
+                if (totalPower < 0f) robotMovements.driveBackward(basePower - backwardPower);
+                else robotMovements.stopMotors();
+                return;
+            }
+            if (horizontalCoordinate > verticalCoordinate && -horizontalCoordinate < verticalCoordinate) {
+                basePower = horizontalCoordinate / POWER_RATIO;
+                if (totalPower > 0f) {
+                    if (verticalCoordinate > 0f) {
+                        robotMovements.steerForward(basePower + forwardPower, basePower);
+                    } else robotMovements.stopMotors();
+                } else {
+                    if (verticalCoordinate < 0f) {
+                        robotMovements.steerBackward(basePower, basePower - backwardPower);
+                    } else robotMovements.stopMotors();
+                }
+                return;
+            }
+            if (horizontalCoordinate < verticalCoordinate && -horizontalCoordinate > verticalCoordinate) {
+                basePower = -horizontalCoordinate / POWER_RATIO;
+                if (totalPower > 0f) {
+                    if (verticalCoordinate > 0f) {
+                        robotMovements.steerForward(basePower, basePower + forwardPower);
+                    } else robotMovements.stopMotors();
+                } else {
+                    if (verticalCoordinate < 0f) {
+                        robotMovements.steerBackward(basePower - backwardPower, basePower);
+                    } else robotMovements.stopMotors();
+                }
+                return;
+            }
         }
-
+        float additionalPower = Math.max(totalPower, 0f);
         /*
         Right joystick mappings
          */
