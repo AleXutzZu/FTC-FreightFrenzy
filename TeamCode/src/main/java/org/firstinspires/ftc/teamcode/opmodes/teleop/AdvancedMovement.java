@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.control.Movements;
 public class AdvancedMovement extends OpMode {
 
     private final float POWER_RATIO = 2f;
-    private final float DEFAULT_POWER = 0.7f;
+    private final float DEFAULT_POWER = 0.5f;
     private Movements robotMovements;
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -47,6 +47,10 @@ public class AdvancedMovement extends OpMode {
             return;
         }
 
+        float forwardPower = gamepad1.right_trigger / POWER_RATIO;
+        float backwardPower = -gamepad1.left_trigger / POWER_RATIO;
+        float totalPower = forwardPower + backwardPower;
+
         if (gamepad1.left_bumper || gamepad1.right_bumper || gamepad1.dpad_right || gamepad1.dpad_left) {
             boolean areMultipleButtonsPressed = (gamepad1.right_bumper && !gamepad1.left_bumper && !gamepad1.dpad_right && !gamepad1.dpad_left)
                     || (gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_left && !gamepad1.dpad_right)
@@ -56,10 +60,11 @@ public class AdvancedMovement extends OpMode {
                 robotMovements.stopMotors();
                 return;
             }
-            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER);
-            if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER);
-            if (gamepad1.dpad_left) robotMovements.driveLeft(DEFAULT_POWER);
-            if (gamepad1.dpad_right) robotMovements.driveRight(DEFAULT_POWER);
+            float additionalPower = Math.max(totalPower, 0f);
+            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER + additionalPower);
+            if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER + additionalPower);
+            if (gamepad1.dpad_left) robotMovements.driveLeft(DEFAULT_POWER + additionalPower);
+            if (gamepad1.dpad_right) robotMovements.driveRight(DEFAULT_POWER + additionalPower);
             return;
         }
         /*
@@ -77,26 +82,49 @@ public class AdvancedMovement extends OpMode {
                       - RIGHT: Upper -> Turn right forwards
                                Lower -> Turn right backwards
          */
-        float acceleration = (gamepad1.right_trigger - gamepad1.left_trigger) / POWER_RATIO;
+
         boolean isLeftJoyStickActive = gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0;
         boolean isRightJoyStickActive = gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0;
 
-        if ((isLeftJoyStickActive && isRightJoyStickActive) || (!isLeftJoyStickActive && !isRightJoyStickActive)){
+        if ((isLeftJoyStickActive && isRightJoyStickActive) || (!isLeftJoyStickActive && !isRightJoyStickActive)) {
             robotMovements.stopMotors();
             return;
         }
+        float additionalPower = Math.max(totalPower, 0f);
         /*
         Left joystick mappings
          */
-        if (isLeftJoyStickActive){
+        if (isLeftJoyStickActive) {
+            /*
+            Reverting the xOy axis
+             */
+            float horizontalCoordinate = -gamepad1.left_stick_x;
+            float verticalCoordinate = -gamepad1.left_stick_y;
+
 
         }
 
         /*
         Right joystick mappings
          */
-        if (isRightJoyStickActive){
-
+        if (isRightJoyStickActive) {
+            /*
+            Reverting the xOy axis
+             */
+            float horizontalCoordinate = -gamepad1.right_stick_x;
+            float verticalCoordinate = -gamepad1.right_stick_y;
+            /*
+            Finding in which quadrant the controller is
+             */
+            if (horizontalCoordinate > 0f) {
+                if (verticalCoordinate > 0f) {
+                    robotMovements.driveDiagonallyRightForward(DEFAULT_POWER + additionalPower);
+                } else robotMovements.driveDiagonallyRightBackward(DEFAULT_POWER + additionalPower);
+            } else {
+                if (verticalCoordinate > 0f) {
+                    robotMovements.driveDiagonallyLeftForward(DEFAULT_POWER + additionalPower);
+                } else robotMovements.driveDiagonallyLeftBackward(DEFAULT_POWER + additionalPower);
+            }
         }
     }
 
