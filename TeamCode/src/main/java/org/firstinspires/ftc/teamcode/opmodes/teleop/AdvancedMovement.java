@@ -12,6 +12,9 @@ public class AdvancedMovement extends OpMode {
 
     private static final float POWER_RATIO = 2f;
     private static final float DEFAULT_POWER = 0.5f;
+    private static final float ROTATION_POWER = 1f;
+    private static final float SLIDING_POWER = 1f;
+    private static final float DIAGONAL_DRIVING_POWER = 1f;
     private Movements robotMovements;
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -47,10 +50,6 @@ public class AdvancedMovement extends OpMode {
             return;
         }
 
-        float forwardPower = gamepad1.right_trigger / POWER_RATIO;
-        float backwardPower = -gamepad1.left_trigger / POWER_RATIO;
-        float totalPower = forwardPower + backwardPower;
-
         if (gamepad1.left_bumper || gamepad1.right_bumper || gamepad1.dpad_right || gamepad1.dpad_left) {
             boolean areMultipleButtonsPressed = (gamepad1.right_bumper && !gamepad1.left_bumper && !gamepad1.dpad_right && !gamepad1.dpad_left)
                     || (gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_left && !gamepad1.dpad_right)
@@ -60,13 +59,17 @@ public class AdvancedMovement extends OpMode {
                 robotMovements.stopMotors();
                 return;
             }
-            float additionalPower = Math.max(totalPower, 0f);
-            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER);
-            if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER);
-            if (gamepad1.dpad_left) robotMovements.driveLeft(DEFAULT_POWER + additionalPower);
-            if (gamepad1.dpad_right) robotMovements.driveRight(DEFAULT_POWER + additionalPower);
+            if (gamepad1.left_bumper) robotMovements.rotateLeft(ROTATION_POWER);
+            if (gamepad1.right_bumper) robotMovements.rotateRight(ROTATION_POWER);
+            if (gamepad1.dpad_left) robotMovements.driveLeft(SLIDING_POWER);
+            if (gamepad1.dpad_right) robotMovements.driveRight(SLIDING_POWER);
             return;
         }
+
+        float forwardPower = gamepad1.right_trigger / POWER_RATIO;
+        float backwardPower = -gamepad1.left_trigger / POWER_RATIO;
+        float totalPower = forwardPower + backwardPower;
+
         /*
         Joysticks and triggers mappings
         LT - decelerate
@@ -161,20 +164,19 @@ public class AdvancedMovement extends OpMode {
             }
             if (horizontalCoordinate > verticalCoordinate && -horizontalCoordinate < verticalCoordinate) {
                 basePower = horizontalCoordinate / POWER_RATIO;
-                if (totalPower >= 0f){
-                    robotMovements.steerForward(basePower + totalPower, basePower);
-                }else robotMovements.steerBackward(basePower - totalPower, basePower);
+                if (totalPower >= 0f) {
+                    robotMovements.steerForward(basePower / POWER_RATIO, basePower + totalPower);
+                } else robotMovements.steerBackward(basePower - totalPower, basePower / POWER_RATIO);
                 return;
             }
             if (horizontalCoordinate < verticalCoordinate && -horizontalCoordinate > verticalCoordinate) {
                 basePower = -horizontalCoordinate / POWER_RATIO;
-                if (totalPower >= 0f){
-                    robotMovements.steerForward(basePower, basePower + totalPower);
-                }else robotMovements.steerBackward(basePower - totalPower, basePower);
+                if (totalPower >= 0f) {
+                    robotMovements.steerForward(basePower + totalPower, basePower / POWER_RATIO);
+                } else robotMovements.steerBackward(basePower / POWER_RATIO, basePower - totalPower);
                 return;
             }
         }
-        float additionalPower = Math.max(totalPower, 0f);
         /*
         Right joystick mappings
          */
@@ -189,12 +191,12 @@ public class AdvancedMovement extends OpMode {
              */
             if (horizontalCoordinate > 0f) {
                 if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyRightForward(DEFAULT_POWER + additionalPower);
-                } else robotMovements.driveDiagonallyRightBackward(DEFAULT_POWER + additionalPower);
+                    robotMovements.driveDiagonallyRightForward(DIAGONAL_DRIVING_POWER);
+                } else robotMovements.driveDiagonallyRightBackward(DIAGONAL_DRIVING_POWER);
             } else {
                 if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyLeftForward(DEFAULT_POWER + additionalPower);
-                } else robotMovements.driveDiagonallyLeftBackward(DEFAULT_POWER + additionalPower);
+                    robotMovements.driveDiagonallyLeftForward(DIAGONAL_DRIVING_POWER);
+                } else robotMovements.driveDiagonallyLeftBackward(DIAGONAL_DRIVING_POWER);
             }
         }
     }
