@@ -61,8 +61,8 @@ public class AdvancedMovement extends OpMode {
                 return;
             }
             float additionalPower = Math.max(totalPower, 0f);
-            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER + additionalPower);
-            if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER + additionalPower);
+            if (gamepad1.left_bumper) robotMovements.rotateLeft(DEFAULT_POWER);
+            if (gamepad1.right_bumper) robotMovements.rotateRight(DEFAULT_POWER);
             if (gamepad1.dpad_left) robotMovements.driveLeft(DEFAULT_POWER + additionalPower);
             if (gamepad1.dpad_right) robotMovements.driveRight(DEFAULT_POWER + additionalPower);
             return;
@@ -149,40 +149,28 @@ public class AdvancedMovement extends OpMode {
             float basePower;
             if (horizontalCoordinate <= verticalCoordinate && -horizontalCoordinate <= verticalCoordinate) {
                 basePower = verticalCoordinate / POWER_RATIO;
-                if (totalPower > 0f) robotMovements.driveForward(basePower + forwardPower);
+                if (totalPower >= 0f) robotMovements.driveForward(basePower + forwardPower);
                 else robotMovements.stopMotors();
                 return;
             }
             if (horizontalCoordinate >= verticalCoordinate && -horizontalCoordinate >= verticalCoordinate) {
                 basePower = -verticalCoordinate / POWER_RATIO;
-                if (totalPower < 0f) robotMovements.driveBackward(basePower - backwardPower);
+                if (totalPower <= 0f) robotMovements.driveBackward(basePower - backwardPower);
                 else robotMovements.stopMotors();
                 return;
             }
             if (horizontalCoordinate > verticalCoordinate && -horizontalCoordinate < verticalCoordinate) {
                 basePower = horizontalCoordinate / POWER_RATIO;
-                if (totalPower > 0f) {
-                    if (verticalCoordinate > 0f) {
-                        robotMovements.steerForward(basePower + forwardPower, basePower);
-                    } else robotMovements.stopMotors();
-                } else {
-                    if (verticalCoordinate < 0f) {
-                        robotMovements.steerBackward(basePower, basePower - backwardPower);
-                    } else robotMovements.stopMotors();
-                }
+                if (totalPower >= 0f){
+                    robotMovements.steerForward(basePower + totalPower, basePower);
+                }else robotMovements.steerBackward(basePower - totalPower, basePower);
                 return;
             }
             if (horizontalCoordinate < verticalCoordinate && -horizontalCoordinate > verticalCoordinate) {
                 basePower = -horizontalCoordinate / POWER_RATIO;
-                if (totalPower > 0f) {
-                    if (verticalCoordinate > 0f) {
-                        robotMovements.steerForward(basePower, basePower + forwardPower);
-                    } else robotMovements.stopMotors();
-                } else {
-                    if (verticalCoordinate < 0f) {
-                        robotMovements.steerBackward(basePower - backwardPower, basePower);
-                    } else robotMovements.stopMotors();
-                }
+                if (totalPower >= 0f){
+                    robotMovements.steerForward(basePower, basePower + totalPower);
+                }else robotMovements.steerBackward(basePower - totalPower, basePower);
                 return;
             }
         }
