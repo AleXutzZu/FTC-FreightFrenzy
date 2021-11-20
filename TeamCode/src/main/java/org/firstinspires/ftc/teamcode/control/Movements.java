@@ -9,6 +9,7 @@ public class Movements extends RobotMovementControls {
     /**
      * Creates an instance for control with the specified hardware map
      * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
+     * @see org.firstinspires.ftc.teamcode.hardware.RobotHardware
      */
     public Movements(HardwareMap hardwareMap) {
         super(hardwareMap);
