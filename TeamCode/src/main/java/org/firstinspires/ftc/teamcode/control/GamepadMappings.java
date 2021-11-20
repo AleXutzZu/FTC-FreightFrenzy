@@ -157,7 +157,7 @@ public class GamepadMappings extends Gamepads {
             float basePower;
             if (horizontalCoordinate <= verticalCoordinate && -horizontalCoordinate <= verticalCoordinate) {
                 basePower = verticalCoordinate / POWER_RATIO;
-                if (totalPower >= 0f) {
+                if (totalPower > 0f) {
                     robotMovements.driveForward(basePower + totalPower);
                     direction = Direction.STRAIGHT_FORWARD;
                 }
@@ -169,7 +169,7 @@ public class GamepadMappings extends Gamepads {
             }
             if (horizontalCoordinate >= verticalCoordinate && -horizontalCoordinate >= verticalCoordinate) {
                 basePower = -verticalCoordinate / POWER_RATIO;
-                if (totalPower <= 0f) {
+                if (totalPower < 0f) {
                     robotMovements.driveBackward(basePower - totalPower);
                     direction = Direction.STRAIGHT_BACKWARD;
                 } else {
