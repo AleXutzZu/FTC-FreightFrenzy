@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.control;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
+import org.firstinspires.ftc.teamcode.util.MovementControls;
 
-public class Movements extends RobotMovementControls {
+public class Movements extends MovementControls {
     /**
      * Creates an instance for control with the specified hardware map
      * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts

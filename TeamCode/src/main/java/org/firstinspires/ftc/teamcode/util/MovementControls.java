@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
-public abstract class RobotMovementControls {
+public abstract class MovementControls {
     protected RobotHardware robotHardware = new RobotHardware();
 
-    protected RobotMovementControls(HardwareMap hardwareMap) {
+    protected MovementControls(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
     }
 
