@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.GamepadMappings;
 import org.firstinspires.ftc.teamcode.control.Movements;
+import org.firstinspires.ftc.teamcode.util.Direction;
 
 
 @TeleOp(name = "Proficient Movement", group = "Testing Purposes")
@@ -32,7 +33,10 @@ public class ProficientMovement extends OpMode {
 
     @Override
     public void loop() {
-        robotControl.drive();
+        Direction direction = robotControl.drive();
+        if (robotControl.isDebug()){
+            telemetry.addData("State", "Direction -> %s leftMotors: 0 rightMotors: 0", direction.toString());
+        }
     }
 
     @Override
