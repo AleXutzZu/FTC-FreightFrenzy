@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -30,7 +32,11 @@ public class RobotHardware {
 
     }
 
-    public void init(HardwareMap hardwareMap) {
+    /**
+     * Initializes motors, servos and other hardware installed on the robot
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void init(@NonNull HardwareMap hardwareMap) {
 
         /*
          Defining motors used for controlling the movement
