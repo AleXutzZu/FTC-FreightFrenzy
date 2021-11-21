@@ -20,7 +20,7 @@ public class AdvancedMovement extends OpMode {
 
     @Override
     public void init() {
-        robotMovements = new Movements(hardwareMap);
+        robotMovements = new Movements.Builder(hardwareMap).build();
         telemetry.addData("Status", "Initialized");
     }
 
