@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * <p>
  * This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.
  * <p>
- * Motor channel:  Right front motor:                                       "right_front"
- * Motor channel:  Right back motor:                                        "right_back"
- * Motor channel:  Left front motor:                                        "left_front"
- * Motor channel:  Left back motor:                                         "right_back"
+ * <p>Motor channel:  Right front motor:                                       "right_front"</p>
+ * <p>Motor channel:  Right back motor:                                        "right_back"</p>
+ * <p>Motor channel:  Left front motor:                                        "left_front"</p>
+ * <p>Motor channel:  Left back motor:                                         "right_back"</p>
  */
 
 
