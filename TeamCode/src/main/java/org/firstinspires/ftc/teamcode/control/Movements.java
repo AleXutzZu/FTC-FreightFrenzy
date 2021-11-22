@@ -1,42 +1,33 @@
 package org.firstinspires.ftc.teamcode.control;
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
 public class Movements extends RobotMovementControls {
-
+    private static Movements instance = null;
+    //prevent instantiation
     private Movements() {
 
     }
 
-    public static class Builder {
-        private final @NonNull HardwareMap hardwareMap;
+    /**
+     * Get the Movements instance
+     * @return the instance of the class
+     */
+    public static Movements getInstance(){
+        if (instance == null) instance = new Movements();
+        return instance;
+    }
 
-        /**
-         * Creates a builder instance for the Movements class
-         *
-         * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
-         * @see org.firstinspires.ftc.teamcode.hardware.RobotHardware
-         */
-        public Builder(@NonNull HardwareMap hardwareMap) {
-            this.hardwareMap = hardwareMap;
-        }
-
-        /**
-         * Builds the Movements object
-         *
-         * @return a Movements object with the desired hardware map
-         * @see Movements
-         */
-        public Movements build() {
-            Movements movements = new Movements();
-            movements.robotHardware.init(hardwareMap);
-            return movements;
-        }
+    /**
+     * Initializes the Movements object with the hardware map
+     * @param hardwareMap never null map responsible for configuring the robot
+     */
+    public void init(@NonNull HardwareMap hardwareMap){
+        robotHardware.init(hardwareMap);
     }
 
     @Override
