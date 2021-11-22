@@ -49,7 +49,6 @@ public abstract class RobotMovementControls {
      * Drives the robot forwards by the specified power
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @see RobotMovementControls#driveForward(float, float)
      */
     public abstract void driveForward(float motorPower);
 
@@ -65,7 +64,6 @@ public abstract class RobotMovementControls {
      * Drives the robot backwards by the specified power
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @see RobotMovementControls#driveBackward(float, float)
      */
     public abstract void driveBackward(float motorPower);
 
@@ -81,7 +79,6 @@ public abstract class RobotMovementControls {
      * Drives the robot left by the specified power
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @see RobotMovementControls#driveLeft(float, float)
      */
     public abstract void driveLeft(float motorPower);
 
@@ -97,7 +94,6 @@ public abstract class RobotMovementControls {
      * Drives the robot right by the specified power
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @see RobotMovementControls#driveRight(float, float)
      */
     public abstract void driveRight(float motorPower);
 
