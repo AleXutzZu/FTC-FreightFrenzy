@@ -28,11 +28,15 @@ public class RobotHardware {
 
     private static RobotHardware instance = null;
 
+    /**
+     * Gets the instance of the hardware class
+     * @return the current instance
+     */
     public static RobotHardware getInstance() {
         if (instance == null) instance = new RobotHardware();
         return instance;
     }
-
+    //prevent direct instantiation
     private RobotHardware() {
 
     }
@@ -43,7 +47,6 @@ public class RobotHardware {
      * @param hardwareMap never null map with the configuration from the robot controller app
      */
     public void init(@NonNull HardwareMap hardwareMap) {
-
         /*
          Defining motors used for controlling the movement
          */
