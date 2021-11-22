@@ -80,6 +80,16 @@ public class Movements extends RobotMovementControls {
 
     @Override
     public void driveForward(float motorPower, float distance) {
+        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robotHardware.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
     }
 
