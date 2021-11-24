@@ -21,10 +21,10 @@ public class RobotHardware {
     /*
     Public OpMode members
      */
-    public DcMotor rightFrontMotor = null;
-    public DcMotor rightBackMotor = null;
-    public DcMotor leftFrontMotor = null;
-    public DcMotor leftBackMotor = null;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor rightBackMotor = null;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor leftBackMotor = null;
 
     private static RobotHardware instance = null;
 
@@ -61,5 +61,21 @@ public class RobotHardware {
         rightBackMotor.setPower(0f);
         leftBackMotor.setPower(0f);
         leftFrontMotor.setPower(0f);
+    }
+
+    public DcMotor getRightFrontMotor() {
+        return rightFrontMotor;
+    }
+
+    public DcMotor getRightBackMotor() {
+        return rightBackMotor;
+    }
+
+    public DcMotor getLeftFrontMotor() {
+        return leftFrontMotor;
+    }
+
+    public DcMotor getLeftBackMotor() {
+        return leftBackMotor;
     }
 }

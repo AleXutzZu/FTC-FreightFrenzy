@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.util;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.control.Movements;
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class Gamepads {
-    protected final RobotHardware robotHardware = new RobotHardware();
-    protected final Movements robotMovements;
+    protected final Movements robotMovements = Movements.getInstance();
 
     protected Gamepads(HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
-        robotMovements = new Movements(hardwareMap);
+        robotMovements.init(hardwareMap);
     }
 
     /**
