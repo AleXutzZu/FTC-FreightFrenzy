@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
-public abstract class MovementControls {
-    protected RobotHardware robotHardware = new RobotHardware();
-
-    protected MovementControls(HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
-    }
+public abstract class RobotMovementControls {
+    protected RobotHardware robotHardware = RobotHardware.getInstance();
 
     /**
      * Drives the robot forwards by the specified power
@@ -71,7 +65,8 @@ public abstract class MovementControls {
     /**
      * Steers the robot to the forwards by the specified powers
      * If leftMotorsPower > rightMotorsPower the robot will steer to the left, otherwise to the right.
-     *  @param leftMotorsPower float value between 0.0 and 1.0 representing the power given to the left motors. (Less power means less speed)
+     *
+     * @param leftMotorsPower  float value between 0.0 and 1.0 representing the power given to the left motors. (Less power means less speed)
      * @param rightMotorsPower float value between 0.0 and 1.0 representing the power given to the right motors.
      */
     public abstract void steerForward(float leftMotorsPower, float rightMotorsPower);
@@ -79,7 +74,8 @@ public abstract class MovementControls {
     /**
      * Steers the robot backwards by the specified powers
      * If leftMotorsPower > rightMotorsPower the robot will steer to the right, otherwise to the left.
-     *  @param leftMotorsPower float value between 0.0 and 1.0 representing the power given to the motors.
+     *
+     * @param leftMotorsPower  float value between 0.0 and 1.0 representing the power given to the motors.
      * @param rightMotorsPower float value between 0.0 and 1.0 representing the power given to the motors. (Less power means less speed)
      */
     public abstract void steerBackward(float leftMotorsPower, float rightMotorsPower);
@@ -97,6 +93,7 @@ public abstract class MovementControls {
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
      */
     public abstract void rotateRight(float motorPower);
+
     /**
      * Stops the motors like a handbrake.
      */
