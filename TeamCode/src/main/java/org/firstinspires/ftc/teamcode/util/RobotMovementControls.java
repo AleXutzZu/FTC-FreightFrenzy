@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,9 +15,12 @@ public abstract class RobotMovementControls {
         - Currently using TETRIX Motors and HD Mecanum Wheels
      */
     /**
+     * <p>Wheel diameter in <b>centimetres</b></p>
+     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
+     *
+     * Ticks used for encoder driving in the overloaded methods with distance parameter
      * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
      * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
-     *
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
@@ -27,8 +31,6 @@ public abstract class RobotMovementControls {
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
      * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
-     *
-     * Ticks used for encoder driving in the overloaded methods with distance parameter
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
@@ -84,7 +86,7 @@ public abstract class RobotMovementControls {
      * Drives the robot forwards for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveForward(float motorPower, float distance);
 
@@ -99,7 +101,7 @@ public abstract class RobotMovementControls {
      * Drives the robot backwards for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveBackward(float motorPower, float distance);
 
@@ -114,7 +116,7 @@ public abstract class RobotMovementControls {
      * Drives the robot left for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveLeft(float motorPower, float distance);
 
@@ -129,7 +131,7 @@ public abstract class RobotMovementControls {
      * Drives the robot right for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveRight(float motorPower, float distance);
 
