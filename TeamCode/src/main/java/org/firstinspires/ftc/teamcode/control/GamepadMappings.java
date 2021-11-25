@@ -93,14 +93,55 @@ public class GamepadMappings extends Gamepads {
         boolean isLeftJoyStickActive = gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0;
         boolean isRightJoyStickActive = gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0;
 
-        if ((isLeftJoyStickActive && isRightJoyStickActive) || (!isLeftJoyStickActive && !isRightJoyStickActive)) {
+        if (isLeftJoyStickActive && isRightJoyStickActive) {
             robotMovements.stopMotors();
             return Direction.IDLE;
         }
         /*
+        Right joystick mappings
+         */
+        if (isRightJoyStickActive) {
+            /*
+            Reverting the xOy axis
+             */
+            float horizontalCoordinate = -gamepad1.right_stick_x;
+            float verticalCoordinate = -gamepad1.right_stick_y;
+            /*
+            Finding in which quadrant the controller is
+             */
+            if (horizontalCoordinate > 0f) {
+                if (verticalCoordinate > 0f) {
+                    robotMovements.driveDiagonallyRightForward(DIAGONAL_DRIVING_POWER);
+                    return Direction.DIAGONALLY_RIGHT_FORWARD;
+                } else {
+                    robotMovements.driveDiagonallyRightBackward(DIAGONAL_DRIVING_POWER);
+                    return Direction.DIAGONALLY_RIGHT_BACKWARD;
+                }
+            } else {
+                if (verticalCoordinate > 0f) {
+                    robotMovements.driveDiagonallyLeftForward(DIAGONAL_DRIVING_POWER);
+                    return Direction.DIAGONALLY_LEFT_FORWARD;
+                } else {
+                    robotMovements.driveDiagonallyLeftBackward(DIAGONAL_DRIVING_POWER);
+                    return Direction.DIAGONALLY_LEFT_BACKWARD;
+                }
+            }
+        }
+        /*
         Left joystick mappings
          */
-        if (isLeftJoyStickActive) {
+        if (!isLeftJoyStickActive) {
+            if (totalPower > 0f) {
+                robotMovements.driveForward(totalPower);
+                return Direction.STRAIGHT_FORWARD;
+            }
+            if (totalPower == 0f) {
+                robotMovements.stopMotors();
+                return Direction.IDLE;
+            }
+            robotMovements.driveBackward(-totalPower);
+            return Direction.STRAIGHT_BACKWARD;
+        } else {
             /*
             Reverting the xOy axis
              */
@@ -154,18 +195,19 @@ public class GamepadMappings extends Gamepads {
                 LEFT: x < y && -x > y
              */
             float basePower;
+            //UP
             if (horizontalCoordinate <= verticalCoordinate && -horizontalCoordinate <= verticalCoordinate) {
                 basePower = verticalCoordinate / POWER_RATIO;
                 if (totalPower > 0f) {
                     robotMovements.driveForward(basePower + totalPower);
                     direction = Direction.STRAIGHT_FORWARD;
-                }
-                else {
+                } else {
                     robotMovements.stopMotors();
                     direction = Direction.IDLE;
                 }
                 return direction;
             }
+            //DOWN
             if (horizontalCoordinate >= verticalCoordinate && -horizontalCoordinate >= verticalCoordinate) {
                 basePower = -verticalCoordinate / POWER_RATIO;
                 if (totalPower < 0f) {
@@ -177,6 +219,7 @@ public class GamepadMappings extends Gamepads {
                 }
                 return direction;
             }
+            //RIGHT
             if (horizontalCoordinate > verticalCoordinate && -horizontalCoordinate < verticalCoordinate) {
                 basePower = horizontalCoordinate / POWER_RATIO;
                 if (totalPower >= 0f) {
@@ -188,6 +231,7 @@ public class GamepadMappings extends Gamepads {
                 }
                 return direction;
             }
+            //LEFT
             if (horizontalCoordinate < verticalCoordinate && -horizontalCoordinate > verticalCoordinate) {
                 basePower = -horizontalCoordinate / POWER_RATIO;
                 if (totalPower >= 0f) {
@@ -199,38 +243,8 @@ public class GamepadMappings extends Gamepads {
                 }
                 return direction;
             }
+            return Direction.IDLE;
         }
-        /*
-        Right joystick mappings
-         */
-        if (isRightJoyStickActive) {
-            /*
-            Reverting the xOy axis
-             */
-            float horizontalCoordinate = -gamepad1.right_stick_x;
-            float verticalCoordinate = -gamepad1.right_stick_y;
-            /*
-            Finding in which quadrant the controller is
-             */
-            if (horizontalCoordinate > 0f) {
-                if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyRightForward(DIAGONAL_DRIVING_POWER);
-                    direction = Direction.DIAGONALLY_RIGHT_FORWARD;
-                } else {
-                    robotMovements.driveDiagonallyRightBackward(DIAGONAL_DRIVING_POWER);
-                    direction = Direction.DIAGONALLY_RIGHT_BACKWARD;
-                }
-            } else {
-                if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyLeftForward(DIAGONAL_DRIVING_POWER);
-                    direction = Direction.DIAGONALLY_LEFT_FORWARD;
-                } else {
-                    robotMovements.driveDiagonallyLeftBackward(DIAGONAL_DRIVING_POWER);
-                    direction = Direction.DIAGONALLY_LEFT_BACKWARD;
-                }
-            }
-        }
-        return direction;
     }
 
     @Override
