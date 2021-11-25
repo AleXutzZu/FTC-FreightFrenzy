@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,15 +8,39 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class RobotMovementControls {
+    /*
+    TODO
+        - Possibly update values to match goBILDA motors and wheels.
+        - Currently using TETRIX Motors and HD Mecanum Wheels
+     */
     /**
+     * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
+     * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
+     * @see RobotMovementControls#driveForward(float, float)
+     * @see RobotMovementControls#driveBackward(float, float)
+     * @see RobotMovementControls#driveLeft(float, float)
+     * @see RobotMovementControls#driveRight(float, float)
+     */
+    protected static final int MOTOR_TICK_RATE = 1440;
+
+    /**
+     * <p>Wheel diameter in <b>centimetres</b></p>
+     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
      * Ticks used for encoder driving in the overloaded methods with distance parameter
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
      * @see RobotMovementControls#driveRight(float, float)
      */
-    protected static final int motorTickRate = 1440;
+    protected static final float WHEEL_DIAMETER = 10.16f;
 
+    /**
+     * <p>Ticks per centimetre based on motor and wheel specs</p>
+     * <p>Defined as <b>MOTOR_TICK_RATE / WHEEL_DIAMETER</b></p>
+     * @see RobotMovementControls#WHEEL_DIAMETER
+     * @see RobotMovementControls#MOTOR_TICK_RATE
+     */
+    protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float)Math.PI);
 
     protected RobotMovementControls(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
