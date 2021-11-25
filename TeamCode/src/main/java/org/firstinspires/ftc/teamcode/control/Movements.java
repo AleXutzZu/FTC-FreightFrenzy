@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 public class Movements extends RobotMovementControls {
     /**
      * Creates an instance for control with the specified hardware map
+     *
      * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
      */
     public Movements(HardwareMap hardwareMap) {
@@ -35,12 +36,36 @@ public class Movements extends RobotMovementControls {
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        robotHardware.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
+        robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
+        robotHardware.leftBackMotor.setTargetPosition(drivingTarget);
+        robotHardware.rightFrontMotor.setTargetPosition(drivingTarget);
+        robotHardware.rightBackMotor.setTargetPosition(drivingTarget);
+
+        robotHardware.rightFrontMotor.setPower(motorPower);
+        robotHardware.rightBackMotor.setPower(motorPower);
+        robotHardware.leftFrontMotor.setPower(motorPower);
+        robotHardware.leftBackMotor.setPower(motorPower);
+
+        robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (robotHardware.rightFrontMotor.isBusy() ||
+                robotHardware.rightBackMotor.isBusy() ||
+                robotHardware.leftFrontMotor.isBusy() ||
+                robotHardware.leftBackMotor.isBusy()
+        ) {
+            robotHardware.rightFrontMotor.setPower(motorPower);
+            robotHardware.rightBackMotor.setPower(motorPower);
+            robotHardware.leftFrontMotor.setPower(motorPower);
+            robotHardware.leftBackMotor.setPower(motorPower);
+        }
+
+        stopMotors();
+
+        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override

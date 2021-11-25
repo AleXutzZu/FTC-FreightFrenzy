@@ -50,4 +50,18 @@ public class RobotHardware {
         leftBackMotor.setPower(0f);
         leftFrontMotor.setPower(0f);
     }
+
+    /**
+     * Sets the corresponding run mode across all four motors
+     * @param runMode new run mode
+     * @see DcMotor.RunMode#RUN_TO_POSITION
+     * @see DcMotor.RunMode#STOP_AND_RESET_ENCODER
+     * @see DcMotor.RunMode#RUN_USING_ENCODER
+     */
+    public void setMotorModes(DcMotor.RunMode runMode){
+        rightFrontMotor.setMode(runMode);
+        rightBackMotor.setMode(runMode);
+        leftFrontMotor.setMode(runMode);
+        leftBackMotor.setMode(runMode);
+    }
 }
