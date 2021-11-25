@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
@@ -9,15 +10,38 @@ public abstract class RobotMovementControls {
      * Robot hardware
      */
     protected RobotHardware robotHardware = new RobotHardware();
+    /*
+    TODO
+        - Possibly update values to match goBILDA motors and wheels.
+        - Currently using TETRIX Motors and HD Mecanum Wheels
+     */
     /**
-     * Ticks used for encoder driving in the overloaded methods with distance parameter
+     * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
+     * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
      * @see RobotMovementControls#driveRight(float, float)
      */
-    protected static final int motorTickRate = 1440;
+    protected static final int MOTOR_TICK_RATE = 1440;
 
+    /**
+     * <p>Wheel diameter in <b>centimetres</b></p>
+     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
+     * @see RobotMovementControls#driveForward(float, float)
+     * @see RobotMovementControls#driveBackward(float, float)
+     * @see RobotMovementControls#driveLeft(float, float)
+     * @see RobotMovementControls#driveRight(float, float)
+     */
+    protected static final float WHEEL_DIAMETER = 10.16f;
+
+    /**
+     * <p>Ticks per centimetre based on motor and wheel specs</p>
+     * <p>Defined as <b>MOTOR_TICK_RATE / WHEEL_DIAMETER</b></p>
+     * @see RobotMovementControls#WHEEL_DIAMETER
+     * @see RobotMovementControls#MOTOR_TICK_RATE
+     */
+    protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float)Math.PI);
 
     protected RobotMovementControls(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
@@ -34,7 +58,7 @@ public abstract class RobotMovementControls {
      * Drives the robot forwards for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveForward(float motorPower, float distance);
 
@@ -49,7 +73,7 @@ public abstract class RobotMovementControls {
      * Drives the robot backwards for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveBackward(float motorPower, float distance);
 
@@ -64,7 +88,7 @@ public abstract class RobotMovementControls {
      * Drives the robot left for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveLeft(float motorPower, float distance);
 
@@ -79,7 +103,7 @@ public abstract class RobotMovementControls {
      * Drives the robot right for the desired distance (approximate)
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in ???
+     * @param distance   desired distance in centimetres
      */
     public abstract void driveRight(float motorPower, float distance);
 
