@@ -21,6 +21,7 @@ public abstract class RobotMovementControls {
      * Ticks used for encoder driving in the overloaded methods with distance parameter
      * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
      * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
+     *
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
@@ -31,6 +32,7 @@ public abstract class RobotMovementControls {
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
      * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
+     *
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
