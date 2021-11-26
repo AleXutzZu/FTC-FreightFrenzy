@@ -179,6 +179,8 @@ public class Movements extends RobotMovementControls {
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
         robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
@@ -268,6 +270,8 @@ public class Movements extends RobotMovementControls {
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
         robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
@@ -356,6 +360,8 @@ public class Movements extends RobotMovementControls {
         robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
