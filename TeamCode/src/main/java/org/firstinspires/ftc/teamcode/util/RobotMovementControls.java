@@ -8,7 +8,7 @@ public abstract class RobotMovementControls {
     /**
      * Robot hardware
      */
-    protected RobotHardware robotHardware = new RobotHardware();
+    protected RobotHardware robotHardware = RobotHardware.getInstance();
     /*
     TODO
         - Possibly update values to match goBILDA motors and wheels.
@@ -44,10 +44,6 @@ public abstract class RobotMovementControls {
      * @see RobotMovementControls#MOTOR_TICK_RATE
      */
     protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
-
-    protected RobotMovementControls(HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
-    }
 
     /**
      * Drives the robot forwards by the specified power
