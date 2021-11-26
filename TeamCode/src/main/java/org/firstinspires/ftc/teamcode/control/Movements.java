@@ -52,9 +52,9 @@ public class Movements extends RobotMovementControls {
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
+        while (robotHardware.rightFrontMotor.isBusy() &&
+                robotHardware.rightBackMotor.isBusy() &&
+                robotHardware.leftFrontMotor.isBusy() &&
                 robotHardware.leftBackMotor.isBusy()
         ) {
             robotHardware.rightFrontMotor.setPower(motorPower);
@@ -102,9 +102,9 @@ public class Movements extends RobotMovementControls {
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
+        while (robotHardware.rightFrontMotor.isBusy() &&
+                robotHardware.rightBackMotor.isBusy() &&
+                robotHardware.leftFrontMotor.isBusy() &&
                 robotHardware.leftBackMotor.isBusy()
         ) {
             robotHardware.rightFrontMotor.setPower(motorPower);
@@ -152,9 +152,9 @@ public class Movements extends RobotMovementControls {
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
+        while (robotHardware.rightFrontMotor.isBusy() &&
+                robotHardware.rightBackMotor.isBusy() &&
+                robotHardware.leftFrontMotor.isBusy() &&
                 robotHardware.leftBackMotor.isBusy()
         ) {
             robotHardware.rightFrontMotor.setPower(motorPower);
@@ -202,9 +202,9 @@ public class Movements extends RobotMovementControls {
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
+        while (robotHardware.rightFrontMotor.isBusy() &&
+                robotHardware.rightBackMotor.isBusy() &&
+                robotHardware.leftFrontMotor.isBusy() &&
                 robotHardware.leftBackMotor.isBusy()
         ) {
             robotHardware.rightFrontMotor.setPower(motorPower);
