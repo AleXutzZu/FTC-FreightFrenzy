@@ -16,6 +16,7 @@ public abstract class RobotMovementControls {
     /**
      * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
      * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
+     *
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
      * @see RobotMovementControls#driveLeft(float, float)
@@ -26,6 +27,7 @@ public abstract class RobotMovementControls {
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
      * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
+     *
      * Ticks used for encoder driving in the overloaded methods with distance parameter
      * @see RobotMovementControls#driveForward(float, float)
      * @see RobotMovementControls#driveBackward(float, float)
@@ -37,10 +39,11 @@ public abstract class RobotMovementControls {
     /**
      * <p>Ticks per centimetre based on motor and wheel specs</p>
      * <p>Defined as <b>MOTOR_TICK_RATE / WHEEL_DIAMETER</b></p>
+     *
      * @see RobotMovementControls#WHEEL_DIAMETER
      * @see RobotMovementControls#MOTOR_TICK_RATE
      */
-    protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float)Math.PI);
+    protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
 
     protected RobotMovementControls(HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
