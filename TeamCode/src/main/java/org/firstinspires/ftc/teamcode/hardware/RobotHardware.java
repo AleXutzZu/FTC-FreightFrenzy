@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class RobotHardware {
     /*
-    Public OpMode members
+    Motors
      */
     private DcMotor rightFrontMotor = null;
     private DcMotor rightBackMotor = null;
