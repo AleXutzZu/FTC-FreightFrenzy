@@ -13,7 +13,8 @@ public class BasicAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Movements robotMovements = new Movements(hardwareMap);
+        Movements robotMovements = Movements.getInstance();
+        robotMovements.init(hardwareMap);
 
         waitForStart();
 

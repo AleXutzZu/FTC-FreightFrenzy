@@ -80,6 +80,8 @@ public class RobotHardware {
         rightBackMotor = hardwareMap.get(DcMotor.class, "right_back");
         leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
         leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
+        elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
+        wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
 
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -117,6 +119,20 @@ public class RobotHardware {
         leftFrontMotor.setPower(0f);
         elevatorMotor.setPower(0f);
         wheelMotor.setPower(0f);
+    }
+
+    /**
+     * Sets the corresponding run mode across all four motors
+     * @param runMode new run mode
+     * @see DcMotor.RunMode#RUN_TO_POSITION
+     * @see DcMotor.RunMode#STOP_AND_RESET_ENCODER
+     * @see DcMotor.RunMode#RUN_USING_ENCODER
+     */
+    public void setMotorModes(DcMotor.RunMode runMode){
+        rightFrontMotor.setMode(runMode);
+        rightBackMotor.setMode(runMode);
+        leftFrontMotor.setMode(runMode);
+        leftBackMotor.setMode(runMode);
     }
 
     public DcMotor getRightFrontMotor() {

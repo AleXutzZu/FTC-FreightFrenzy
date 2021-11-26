@@ -36,17 +36,46 @@ public class Movements extends RobotMovementControls {
 
     @Override
     public void driveForward(float motorPower, float distance) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
-        robotHardware.rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robotHardware.leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
+
+        robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
+
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
+
+        robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (robotHardware.getRightFrontMotor().isBusy() ||
+                robotHardware.getRightBackMotor().isBusy() ||
+                robotHardware.getLeftFrontMotor().isBusy() ||
+                robotHardware.getLeftBackMotor().isBusy()
+        ) {
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
+        }
+
+        stopMotors();
+
+        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -64,36 +93,36 @@ public class Movements extends RobotMovementControls {
 
     @Override
     public void driveBackward(float motorPower, float distance) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
-        robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.leftBackMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightBackMotor.setTargetPosition(drivingTarget);
+        robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
 
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
-                robotHardware.leftBackMotor.isBusy()
+        while (robotHardware.getRightFrontMotor().isBusy() ||
+                robotHardware.getRightBackMotor().isBusy() ||
+                robotHardware.getLeftFrontMotor().isBusy() ||
+                robotHardware.getLeftBackMotor().isBusy()
         ) {
-            robotHardware.rightFrontMotor.setPower(motorPower);
-            robotHardware.rightBackMotor.setPower(motorPower);
-            robotHardware.leftFrontMotor.setPower(motorPower);
-            robotHardware.leftBackMotor.setPower(motorPower);
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
         }
 
         stopMotors();
@@ -116,36 +145,36 @@ public class Movements extends RobotMovementControls {
 
     @Override
     public void driveLeft(float motorPower, float distance) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
         robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
-        robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.leftBackMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightBackMotor.setTargetPosition(drivingTarget);
+        robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
 
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
-                robotHardware.leftBackMotor.isBusy()
+        while (robotHardware.getRightFrontMotor().isBusy() ||
+                robotHardware.getRightBackMotor().isBusy() ||
+                robotHardware.getLeftFrontMotor().isBusy() ||
+                robotHardware.getLeftBackMotor().isBusy()
         ) {
-            robotHardware.rightFrontMotor.setPower(motorPower);
-            robotHardware.rightBackMotor.setPower(motorPower);
-            robotHardware.leftFrontMotor.setPower(motorPower);
-            robotHardware.leftBackMotor.setPower(motorPower);
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
         }
 
         stopMotors();
@@ -168,36 +197,36 @@ public class Movements extends RobotMovementControls {
 
     @Override
     public void driveRight(float motorPower, float distance) {
-        robotHardware.rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
 
         robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
-        robotHardware.leftFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.leftBackMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightFrontMotor.setTargetPosition(drivingTarget);
-        robotHardware.rightBackMotor.setTargetPosition(drivingTarget);
+        robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
+        robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
 
-        robotHardware.rightFrontMotor.setPower(motorPower);
-        robotHardware.rightBackMotor.setPower(motorPower);
-        robotHardware.leftFrontMotor.setPower(motorPower);
-        robotHardware.leftBackMotor.setPower(motorPower);
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
 
         robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (robotHardware.rightFrontMotor.isBusy() ||
-                robotHardware.rightBackMotor.isBusy() ||
-                robotHardware.leftFrontMotor.isBusy() ||
-                robotHardware.leftBackMotor.isBusy()
+        while (robotHardware.getRightFrontMotor().isBusy() ||
+                robotHardware.getRightBackMotor().isBusy() ||
+                robotHardware.getLeftFrontMotor().isBusy() ||
+                robotHardware.getLeftBackMotor().isBusy()
         ) {
-            robotHardware.rightFrontMotor.setPower(motorPower);
-            robotHardware.rightBackMotor.setPower(motorPower);
-            robotHardware.leftFrontMotor.setPower(motorPower);
-            robotHardware.leftBackMotor.setPower(motorPower);
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
         }
 
         stopMotors();
