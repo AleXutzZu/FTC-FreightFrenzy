@@ -32,8 +32,6 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <br>
  * <h2>Sensors and misc</h2>
  */
-
-
 public class RobotHardware {
     /*
     Motors
