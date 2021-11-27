@@ -6,25 +6,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
+ * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
  * This is NOT an OpMode.
- * <p>
- * This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.
- *
- * Motors for driving the robot
- * <p>Motor channel:  Right front motor:                                       "right_front"</p>
- * <p>Motor channel:  Right back motor:                                        "right_back"</p>
- * <p>Motor channel:  Left front motor:                                        "left_front"</p>
- * <p>Motor channel:  Left back motor:                                         "right_back"</p>
- *
- * <p>Motor for using the elevator</p>
- * <p>Motor channel:  Elevator motor:                                          "elevator_motor"</p>
- *
- * <p>Motor to spin the carousel</p>
- * <p>Motor channel:  Wheel spinning motor:                                    "wheel_motor"</p>
+ * <br>
+ * <p>Used Motors: <a href="https://www.pitsco.com/TETRIX-MAX-TorqueNADO-Motor-with-Encoder">TETRIX-MAX TorqueNADO Motor with Encoder</a></p>
+ * <h2>Motors for driving the robot</h2>
+ * <pre>Right front motor:                                  <i>"right_front"</i></pre>
+ * <pre>Right back motor:                                   <i>"right_back"</i></pre>
+ * <pre>Left front motor:                                   <i>"left_front"</i></pre>
+ * <pre>Left back motor:                                    <i>"right_back"</i></pre>
+ * <br>
+ * <h2>Motor for using the elevator</h2>
+ * <pre>Elevator motor:                                 <i>"elevator_motor"</i></pre>
+ *<br>
+ * <h2>Motor to spin the carousel</h2>
+ * <pre>Wheel spinning motor:                               <i>"wheel_motor"</i></pre>
  *
  */
-
-
 public class RobotHardware {
     /*
     Motors
