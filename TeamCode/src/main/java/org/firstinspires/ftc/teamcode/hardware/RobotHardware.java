@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -18,32 +19,40 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * <br>
  * <h2>Motor for using the elevator</h2>
  * <pre>Elevator motor:                                 <i>"elevator_motor"</i></pre>
- *<br>
+ * <br>
  * <h2>Motor to spin the carousel</h2>
  * <pre>Wheel spinning motor:                               <i>"wheel_motor"</i></pre>
- *
+ * <br>
+ * <h2>Servos</h2>
+ * <br>
+ * <h2>Sensors and misc</h2>
+ * <h3>Integrated Gyroscope in REV Control Hub 1</h3>
+ * <pre>BNU055IMU:                                          <i>"imu"</i></pre>
  */
 public class RobotHardware {
     /*
     Motors
      */
-    private DcMotor rightFrontMotor = null;                   //right_front
-    private DcMotor rightBackMotor = null;                    //right_back
-    private DcMotor leftFrontMotor = null;                    //left_front
-    private DcMotor leftBackMotor = null;                     //left_back
+    private DcMotor rightFrontMotor = null;                  //right_front
+    private DcMotor rightBackMotor = null;                   //right_back
+    private DcMotor leftFrontMotor = null;                   //left_front
+    private DcMotor leftBackMotor = null;                    //left_back
     private DcMotor elevatorMotor = null;                    //elevator_motor
     private DcMotor wheelMotor = null;                       //wheel_motor
+    private BNO055IMU gyroscope = null;                      //imu
 
     private static RobotHardware instance = null;
 
     /**
      * Gets the instance of the hardware class
+     *
      * @return the current instance
      */
     public static RobotHardware getInstance() {
         if (instance == null) instance = new RobotHardware();
         return instance;
     }
+
     //prevent direct instantiation
     private RobotHardware() {
 
@@ -65,12 +74,17 @@ public class RobotHardware {
         elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
         wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
 
+        gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
+
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         rightFrontMotor.setPower(0f);
         rightBackMotor.setPower(0f);
         leftBackMotor.setPower(0f);
@@ -79,12 +93,13 @@ public class RobotHardware {
 
     /**
      * Sets the corresponding run mode across all four motors
+     *
      * @param runMode new run mode
      * @see DcMotor.RunMode#RUN_TO_POSITION
      * @see DcMotor.RunMode#STOP_AND_RESET_ENCODER
      * @see DcMotor.RunMode#RUN_USING_ENCODER
      */
-    public void setMotorModes(DcMotor.RunMode runMode){
+    public void setMotorModes(DcMotor.RunMode runMode) {
         rightFrontMotor.setMode(runMode);
         rightBackMotor.setMode(runMode);
         leftFrontMotor.setMode(runMode);
@@ -113,5 +128,21 @@ public class RobotHardware {
 
     public DcMotor getWheelMotor() {
         return wheelMotor;
+    }
+
+    public BNO055IMU getGyroscope() {
+        return gyroscope;
+    }
+
+    /**
+     * Sets up the gyroscope
+     */
+    public void setupGyroscope() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        gyroscope.initialize(parameters);
     }
 }
