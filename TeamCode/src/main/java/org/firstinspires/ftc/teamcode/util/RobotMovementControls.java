@@ -210,4 +210,15 @@ public abstract class RobotMovementControls {
     public @NonNull RobotHardware getRobotHardware() {
         return robotHardware;
     }
+
+    /**
+     * Drives the robot using encoders. This method should be used inside an overloaded method designed for a specific direction
+     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     * @param distance desired distance in centimetres
+     * @see RobotMovementControls#driveForward(float, float)
+     * @see RobotMovementControls#driveBackward(float, float)
+     * @see RobotMovementControls#driveLeft(float, float)
+     * @see RobotMovementControls#driveRight(float, float)
+     */
+    protected abstract void encodedDriving(float motorPower, float distance);
 }

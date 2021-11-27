@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -42,6 +43,7 @@ public class RobotHardware {
     private DcMotor leftBackMotor = null;                    //left_back
     private DcMotor elevatorMotor = null;                    //elevator_motor
     private DcMotor wheelMotor = null;                       //wheel_motor
+    private BNO055IMU gyroscope = null;                      //imu
 
     /*
     Servos
@@ -54,12 +56,14 @@ public class RobotHardware {
 
     /**
      * Gets the instance of the hardware class
+     *
      * @return the current instance
      */
     public static RobotHardware getInstance() {
         if (instance == null) instance = new RobotHardware();
         return instance;
     }
+
     //prevent direct instantiation
     private RobotHardware() {
 
@@ -80,6 +84,8 @@ public class RobotHardware {
         leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
         elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
         wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
+
+        gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
 
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -167,5 +173,21 @@ public class RobotHardware {
         rightBackMotor.setMode(runMode);
         leftFrontMotor.setMode(runMode);
         leftBackMotor.setMode(runMode);
+    }
+
+    public BNO055IMU getGyroscope() {
+        return gyroscope;
+    }
+
+    /**
+     * Sets up the gyroscope
+     */
+    public void setupGyroscope() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        gyroscope.initialize(parameters);
     }
 }
