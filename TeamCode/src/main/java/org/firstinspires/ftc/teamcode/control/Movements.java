@@ -3,12 +3,17 @@ package org.firstinspires.ftc.teamcode.control;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
 public class Movements extends RobotMovementControls {
     private static Movements instance = null;
+
     //prevent instantiation
     private Movements() {
 
@@ -16,18 +21,20 @@ public class Movements extends RobotMovementControls {
 
     /**
      * Get the Movements instance
+     *
      * @return the instance of the class
      */
-    public static Movements getInstance(){
+    public static Movements getInstance() {
         if (instance == null) instance = new Movements();
         return instance;
     }
 
     /**
      * Initializes the Movements object with the hardware map
+     *
      * @param hardwareMap never null map responsible for configuring the robot
      */
-    public void init(@NonNull HardwareMap hardwareMap){
+    public void init(@NonNull HardwareMap hardwareMap) {
         robotHardware.init(hardwareMap);
     }
 
@@ -223,6 +230,25 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    public void rotateLeft(float motorPower, float degrees) {
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
+
+        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        float angle = offset;
+        while (angle - offset < degrees) angle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+        stopMotors();
+    }
+
+    @Override
     public void rotateRight(float motorPower) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
@@ -236,11 +262,38 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    public void rotateRight(float motorPower, float degrees) {
+        robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+        robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+
+        robotHardware.getRightFrontMotor().setPower(motorPower);
+        robotHardware.getRightBackMotor().setPower(motorPower);
+        robotHardware.getLeftFrontMotor().setPower(motorPower);
+        robotHardware.getLeftBackMotor().setPower(motorPower);
+
+        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        float angle = offset;
+        while (angle - offset < degrees) angle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+
+        stopMotors();
+    }
+
+    @Override
     public void stopMotors() {
         robotHardware.getRightFrontMotor().setPower(0f);
         robotHardware.getRightBackMotor().setPower(0f);
         robotHardware.getLeftFrontMotor().setPower(0f);
         robotHardware.getLeftBackMotor().setPower(0f);
+    }
+
+    @Override
+    protected float errorCorrection() {
+        float correction = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        while (correction < -180) correction += 360;
+        while (correction > 180) correction -= 360;
+        return correction;
     }
 
     @Override
@@ -266,10 +319,13 @@ public class Movements extends RobotMovementControls {
                 robotHardware.getLeftFrontMotor().isBusy() ||
                 robotHardware.getLeftBackMotor().isBusy()
         ) {
-            robotHardware.getRightFrontMotor().setPower(motorPower);
-            robotHardware.getRightBackMotor().setPower(motorPower);
-            robotHardware.getLeftFrontMotor().setPower(motorPower);
-            robotHardware.getLeftBackMotor().setPower(motorPower);
+            float correction = errorCorrection() * GAIN_COEFFICIENT;
+            correction = Range.clip(correction, -1f, 1f);
+
+            robotHardware.getRightFrontMotor().setPower(motorPower - correction);
+            robotHardware.getRightBackMotor().setPower(motorPower - correction);
+            robotHardware.getLeftFrontMotor().setPower(motorPower + correction);
+            robotHardware.getLeftBackMotor().setPower(motorPower + correction);
         }
     }
 }

@@ -18,10 +18,15 @@ public class BasicAutonomous extends LinearOpMode {
 
         waitForStart();
 
-        robotMovements.driveForward(1f, 100);
-        robotMovements.driveBackward(1f, 100);
-        robotMovements.driveRight(1f, 100);
-        robotMovements.driveLeft(1f, 100);
-        robotMovements.stopMotors();
+        if (opModeIsActive()){
+            //square path
+            robotMovements.driveForward(1f, 150f);
+            robotMovements.rotateRight(1f, 90f);
+            robotMovements.driveForward(1f, 150f);
+            robotMovements.rotateRight(1f, 90f);
+            robotMovements.driveForward(1f, 150f);
+            robotMovements.rotateRight(1f, 90f);
+            robotMovements.driveForward(1f, 150f);
+        }
     }
 }
