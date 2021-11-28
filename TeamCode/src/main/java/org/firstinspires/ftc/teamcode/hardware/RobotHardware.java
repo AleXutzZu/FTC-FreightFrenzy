@@ -65,30 +65,54 @@ public class RobotHardware {
      */
     public void init(@NonNull HardwareMap hardwareMap) {
         /*
-         Defining motors used for controlling the movement
+         Defining motors used for movement
          */
         rightFrontMotor = hardwareMap.get(DcMotor.class, "right_front");
         rightBackMotor = hardwareMap.get(DcMotor.class, "right_back");
         leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
         leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
-        elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
-        wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
-
-        gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
 
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        /*
+        Defining the motor for the elevator
+         */
+        elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
+
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        /*
+        Defining the motor to rotate the carousel
+        There is no need for an encoder
+         */
+        wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
 
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        /*
+        Setting the power to 0f for starters
+         */
         rightFrontMotor.setPower(0f);
         rightBackMotor.setPower(0f);
         leftBackMotor.setPower(0f);
         leftFrontMotor.setPower(0f);
+        elevatorMotor.setPower(0f);
+        wheelMotor.setPower(0f);
+
+        /*
+        Gyroscope setup
+         */
+        gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        gyroscope.initialize(parameters);
     }
 
     /**
@@ -132,17 +156,5 @@ public class RobotHardware {
 
     public BNO055IMU getGyroscope() {
         return gyroscope;
-    }
-
-    /**
-     * Sets up the gyroscope
-     */
-    public void setupGyroscope() {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        gyroscope.initialize(parameters);
     }
 }
