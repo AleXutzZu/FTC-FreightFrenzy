@@ -239,13 +239,14 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
 
+        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        float angle = offset;
+
         robotHardware.getRightFrontMotor().setPower(motorPower);
         robotHardware.getRightBackMotor().setPower(motorPower);
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
 
-        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        float angle = offset;
         while (angle - offset < degrees) angle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
         stopMotors();
@@ -271,14 +272,15 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
+        float offset = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        float angle = offset;
+
         robotHardware.getRightFrontMotor().setPower(motorPower);
         robotHardware.getRightBackMotor().setPower(motorPower);
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
 
-        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        float angle = offset;
-        while (angle - offset < degrees) angle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+        while (angle - offset < degrees) angle = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
 
         stopMotors();
     }
