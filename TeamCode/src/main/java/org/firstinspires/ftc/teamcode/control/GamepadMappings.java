@@ -248,7 +248,7 @@ public class GamepadMappings extends Gamepads {
 
     @Override
     public void useLimbs() {
-
+        if (gamepad2.a) robotLimbs.rotateWheel();
     }
 
     public boolean isDebug() {

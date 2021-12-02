@@ -23,15 +23,15 @@ public abstract class RobotLimbControls {
 
     /**
      * Brings the arm up with the specified power
-     * @param motorPower float value between 0.0 and 1.0 that dictates how fast the arm should retract
+     * @param servoPosition float value between 0.0 and 1.0 that dictates how fast the arm should retract
      */
-    public abstract void bringArmUp(float motorPower);
+    public abstract void bringArmUp(float servoPosition);
 
     /**
      * Puts the arm down with the specified power
-     * @param motorPower float value between 0.0 and 1.0 that dictates how fast the arm should go down
+     * @param servoPosition float value between 0.0 and 1.0 that dictates how fast the arm should go down
      */
-    public abstract void putArmDown(float motorPower);
+    public abstract void putArmDown(float servoPosition);
 
     /**
      * Brings the elevator up with the specified power
