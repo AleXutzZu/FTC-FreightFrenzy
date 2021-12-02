@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.GamepadMappings;
 import org.firstinspires.ftc.teamcode.control.Movements;
+import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Direction;
 
 
@@ -16,7 +17,13 @@ public class ProficientMovement extends OpMode {
 
     @Override
     public void init() {
-        robotControl = new GamepadMappings(hardwareMap, gamepad1, gamepad2);
+        /*
+        Initialize hardware
+         */
+        RobotHardware robotHardware = RobotHardware.getInstance();
+        robotHardware.init(hardwareMap);
+
+        robotControl = new GamepadMappings(gamepad1, gamepad2);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");
     }
@@ -34,7 +41,7 @@ public class ProficientMovement extends OpMode {
     @Override
     public void loop() {
         Direction direction = robotControl.drive();
-        if (robotControl.isDebug()){
+        if (robotControl.isDebug()) {
             telemetry.addData("State", "Direction -> %s leftMotors: 0 rightMotors: 0", direction.toString());
         }
     }

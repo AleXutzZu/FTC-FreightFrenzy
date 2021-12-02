@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 /**
  * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
@@ -25,6 +26,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * <pre>Wheel spinning motor:                               <i>"wheel_motor"</i></pre>
  * <br>
  * <h2>Servos</h2>
+ * <pre>Arm base                                            <i>"arm_base"</i></pre>
+ * <pre>Claws                                               <i>"claws"</i></pre>
  * <br>
  * <h2>Sensors and misc</h2>
  */
@@ -40,6 +43,12 @@ public class RobotHardware {
     private DcMotor leftBackMotor = null;                    //left_back
     private DcMotor elevatorMotor = null;                    //elevator_motor
     private DcMotor wheelMotor = null;                       //wheel_motor
+
+    /*
+    Servos
+     */
+    private Servo armBase = null;
+    private ServoController claws = null;
 
     private static RobotHardware instance = null;
 
@@ -91,6 +100,12 @@ public class RobotHardware {
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         /*
+        Servos
+         */
+        armBase = hardwareMap.get(Servo.class, "arm_base");
+        claws = hardwareMap.get(ServoController.class, "claws");
+
+        /*
         Setting the power to 0f for starters
          */
         rightFrontMotor.setPower(0f);
@@ -123,5 +138,13 @@ public class RobotHardware {
 
     public DcMotor getWheelMotor() {
         return wheelMotor;
+    }
+
+    public Servo getArmBase() {
+        return armBase;
+    }
+
+    public ServoController getClaws() {
+        return claws;
     }
 }

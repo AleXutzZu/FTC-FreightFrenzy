@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.control;
 
-import androidx.annotation.NonNull;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.RobotLimbControls;
 
@@ -22,15 +19,6 @@ public class Limbs extends RobotLimbControls {
     public static Limbs getInstance() {
         if (instance == null) instance = new Limbs();
         return instance;
-    }
-
-    /**
-     * Initializes the Limbs object with the hardware map
-     *
-     * @param hardwareMap never null map responsible for configuring the robot
-     */
-    public void init(@NonNull HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
     }
 
     @Override

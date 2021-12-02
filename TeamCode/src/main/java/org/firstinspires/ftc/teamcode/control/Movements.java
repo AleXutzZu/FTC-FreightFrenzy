@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
 public class Movements extends RobotMovementControls {
@@ -20,14 +18,6 @@ public class Movements extends RobotMovementControls {
     public static Movements getInstance(){
         if (instance == null) instance = new Movements();
         return instance;
-    }
-
-    /**
-     * Initializes the Movements object with the hardware map
-     * @param hardwareMap never null map responsible for configuring the robot
-     */
-    public void init(@NonNull HardwareMap hardwareMap){
-        robotHardware.init(hardwareMap);
     }
 
     @Override
