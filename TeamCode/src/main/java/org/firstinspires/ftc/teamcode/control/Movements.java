@@ -32,15 +32,6 @@ public class Movements extends RobotMovementControls {
         return instance;
     }
 
-    /**
-     * Initializes the Movements object with the hardware map
-     *
-     * @param hardwareMap never null map responsible for configuring the robot
-     */
-    public void init(@NonNull HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
-    }
-
     @Override
     public void driveForward(float motorPower) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
