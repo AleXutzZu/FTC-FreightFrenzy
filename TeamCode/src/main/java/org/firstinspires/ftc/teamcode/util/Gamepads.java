@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.control.Limbs;
 import org.firstinspires.ftc.teamcode.control.Movements;
 
 public abstract class Gamepads {
     protected final Movements robotMovements = Movements.getInstance();
-
-    protected Gamepads(HardwareMap hardwareMap) {
-        robotMovements.init(hardwareMap);
-    }
-
+    protected final Limbs robotLimbs = Limbs.getInstance();
     /**
      * This method will drive the robot on the field
      * @return the orientation of the robot

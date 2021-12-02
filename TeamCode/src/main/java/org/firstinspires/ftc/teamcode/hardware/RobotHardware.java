@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 /**
  * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
@@ -25,6 +27,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * <pre>Wheel spinning motor:                               <i>"wheel_motor"</i></pre>
  * <br>
  * <h2>Servos</h2>
+ * <pre>Arm base                                            <i>"arm_base"</i></pre>
+ * <pre>Claws                                               <i>"claws"</i></pre>
  * <br>
  * <h2>Sensors and misc</h2>
  * <h3>Integrated Gyroscope in REV Control Hub 1</h3>
@@ -41,6 +45,12 @@ public class RobotHardware {
     private DcMotor elevatorMotor = null;                    //elevator_motor
     private DcMotor wheelMotor = null;                       //wheel_motor
     private BNO055IMU gyroscope = null;                      //imu
+
+    /*
+    Servos
+     */
+    private Servo armBase = null;
+    private ServoController claws = null;
 
     private static RobotHardware instance = null;
 
@@ -92,6 +102,12 @@ public class RobotHardware {
         wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
 
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        /*
+        Servos
+         */
+        armBase = hardwareMap.get(Servo.class, "arm_base");
+        claws = hardwareMap.get(ServoController.class, "claws");
 
         /*
         Setting the power to 0f for starters
@@ -157,5 +173,13 @@ public class RobotHardware {
 
     public BNO055IMU getGyroscope() {
         return gyroscope;
+    }
+
+    public Servo getArmBase() {
+        return armBase;
+    }
+
+    public ServoController getClaws() {
+        return claws;
     }
 }

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
@@ -15,8 +14,7 @@ public class GamepadMappings extends Gamepads {
     private static final float SLIDING_POWER = 1f;
     private static final float DIAGONAL_DRIVING_POWER = 1f;
 
-    public GamepadMappings(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
-        super(hardwareMap);
+    public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
     }
