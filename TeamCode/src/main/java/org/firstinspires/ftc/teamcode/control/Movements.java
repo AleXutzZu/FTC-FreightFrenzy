@@ -231,7 +231,7 @@ public class Movements extends RobotMovementControls {
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
     }
-
+    /*FIXME*/
     @Override
     public void rotateLeft(float motorPower, float degrees) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
@@ -264,7 +264,7 @@ public class Movements extends RobotMovementControls {
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
     }
-
+    /*FIXME*/
     @Override
     public void rotateRight(float motorPower, float degrees) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
