@@ -44,12 +44,6 @@ public abstract class RobotMovementControls {
     protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
 
     /**
-     * <p>Gain coefficient</p>
-     * <p>Used for the gyroscope</p>
-     */
-    protected static final float GAIN_COEFFICIENT = 0.15f;
-
-    /**
      * Drives the robot forwards by the specified power
      *
      * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
@@ -189,12 +183,6 @@ public abstract class RobotMovementControls {
      * Stops the motors like a handbrake.
      */
     public abstract void stopMotors();
-
-    /**
-     * Corrects the given angle in order to stay on a straight line (angle = 0f) using the {@link com.qualcomm.hardware.bosch.BNO055IMU} gyroscope
-     * @return the corrected angle
-     */
-    protected abstract float errorCorrection();
 
     /**
      * Drives the robot using encoders. This method should be used inside an overloaded method designed for a specific direction

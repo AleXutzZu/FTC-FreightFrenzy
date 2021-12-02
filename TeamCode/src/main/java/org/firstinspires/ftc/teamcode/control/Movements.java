@@ -291,14 +291,6 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
-    protected float errorCorrection() {
-        float correction = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        while (correction < -180) correction += 360;
-        while (correction > 180) correction -= 360;
-        return correction;
-    }
-
-    @Override
     protected void encodedDriving(float motorPower, float distance){
         robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -321,13 +313,10 @@ public class Movements extends RobotMovementControls {
                 robotHardware.getLeftFrontMotor().isBusy() ||
                 robotHardware.getLeftBackMotor().isBusy()
         ) {
-            float correction = errorCorrection() * GAIN_COEFFICIENT;
-            correction = Range.clip(correction, -1f, 1f);
-
-            robotHardware.getRightFrontMotor().setPower(motorPower - correction);
-            robotHardware.getRightBackMotor().setPower(motorPower - correction);
-            robotHardware.getLeftFrontMotor().setPower(motorPower + correction);
-            robotHardware.getLeftBackMotor().setPower(motorPower + correction);
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
         }
     }
 }
