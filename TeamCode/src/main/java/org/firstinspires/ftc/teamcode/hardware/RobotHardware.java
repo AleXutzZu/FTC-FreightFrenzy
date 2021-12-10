@@ -107,7 +107,7 @@ public class RobotHardware {
         Servos
          */
         armBase = hardwareMap.get(Servo.class, "arm_base");
-        claws = hardwareMap.get(ServoController.class, "claws");
+        claws = hardwareMap.get(Servo.class, "claws").getController();
 
         /*
         Setting the power to 0f for starters

@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.util;
 
-
-import org.firstinspires.ftc.teamcode.control.Limbs;
 import org.firstinspires.ftc.teamcode.control.Movements;
 
 public abstract class Gamepads {
     protected final Movements robotMovements = Movements.getInstance();
-    protected final Limbs robotLimbs = Limbs.getInstance();
     /**
      * This method will drive the robot on the field
      * @return the orientation of the robot
