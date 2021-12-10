@@ -13,15 +13,13 @@ import org.firstinspires.ftc.teamcode.util.Direction;
 public class ProficientMovement extends OpMode {
     private GamepadMappings robotControl;
     private final ElapsedTime runtime = new ElapsedTime();
-
+    private final RobotHardware robotHardware = RobotHardware.getInstance();
     @Override
     public void init() {
         /*
         Initialize hardware
          */
-        RobotHardware robotHardware = RobotHardware.getInstance();
         robotHardware.init(hardwareMap);
-
         robotControl = new GamepadMappings(gamepad1, gamepad2);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");
