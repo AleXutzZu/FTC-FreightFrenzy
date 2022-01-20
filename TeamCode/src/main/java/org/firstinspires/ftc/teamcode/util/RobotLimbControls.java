@@ -9,12 +9,7 @@ public abstract class RobotLimbControls {
     /**
      * Opens the claws of the arm (at full speed)
      */
-    public abstract void openClaws();
-
-    /**
-     * Closes the claws of the arm (at full speed)
-     */
-    public abstract void closeClaws();
+    public abstract void useClaws();
 
     /**
      * Rotates the carousel wheel (at full speed)
@@ -22,26 +17,14 @@ public abstract class RobotLimbControls {
     public abstract void rotateWheel();
 
     /**
-     * Brings the arm up with the specified power
-     * @param servoPosition float value between 0.0 and 1.0 that dictates how fast the arm should retract
+     * Moves the arm up or down
+     * @param servoPosition float value between -1.0 and 1.0 that dictates how fast the arm should retract
      */
-    public abstract void bringArmUp(float servoPosition);
+    public abstract void useArm(float servoPosition);
 
     /**
-     * Puts the arm down with the specified power
-     * @param servoPosition float value between 0.0 and 1.0 that dictates how fast the arm should go down
+     * Brings the elevator up or puts it down
+     * @param motorPower float value between -1.0 and 1.0 that dictates how fast the elevator should come up
      */
-    public abstract void putArmDown(float servoPosition);
-
-    /**
-     * Brings the elevator up with the specified power
-     * @param motorPower float value between 0.0 and 1.0 that dictates how fast the elevator should come up
-     */
-    public abstract void elevatorUp(float motorPower);
-
-    /**
-     * Brings the elevator down with the specified power
-     * @param motorPower float value between 0.0 and 1.0 that dictates how fast the elevator should come down
-     */
-    public abstract void elevatorDown(float motorPower);
+    public abstract void useElevator(float motorPower);
 }

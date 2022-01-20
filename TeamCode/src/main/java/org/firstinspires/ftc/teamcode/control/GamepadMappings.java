@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
@@ -247,8 +246,37 @@ public class GamepadMappings extends Gamepads {
     }
 
     @Override
-    public void useLimbs() {
-        if (gamepad2.a) robotLimbs.rotateWheel();
+    public String useLimbs() {
+        //Wheel rotation
+        if (gamepad2.a) {
+            robotLimbs.rotateWheel();
+            return "ROTATE WHEEL";
+        }
+
+        //Elevator controls
+        float elevatorY = -gamepad2.right_stick_y;
+        boolean isRightJoyStickActive = (elevatorY != 0f);
+        if (isRightJoyStickActive) {
+            if (elevatorY > 0f) {
+                robotLimbs.useElevator(elevatorY / POWER_RATIO);
+                return "ELEVATOR UP";
+            } else if (elevatorY < 0f) {
+                robotLimbs.useElevator(elevatorY / POWER_RATIO);
+                return "ELEVATOR DOWN";
+            }
+        } else robotLimbs.useElevator(0f);
+
+        //Arm controls
+        float armY = -gamepad2.left_stick_y;
+
+        if (armY > 0f) {
+            robotLimbs.useArm(armY / POWER_RATIO);
+            return "ARM UP";
+        } else if (armY < 0f) {
+            robotLimbs.useArm(armY / POWER_RATIO);
+            return "ARM DOWN";
+        }
+        return "IDLE";
     }
 
     public boolean isDebug() {

@@ -25,12 +25,7 @@ public class Limbs extends RobotLimbControls {
     }
 
     @Override
-    public void openClaws() {
-
-    }
-
-    @Override
-    public void closeClaws() {
+    public void useClaws() {
 
     }
 
@@ -38,29 +33,18 @@ public class Limbs extends RobotLimbControls {
     public void rotateWheel() {
         robotHardware.getWheelMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getWheelMotor().setPower(1f);
+        robotHardware.getWheelMotor().setPower(0f);
     }
 
     @Override
-    public void bringArmUp(float servoPosition) {
+    public void useArm(float servoPosition) {
         robotHardware.getArmBase().setDirection(Servo.Direction.FORWARD);
         robotHardware.getArmBase().setPosition(servoPosition);
     }
 
     @Override
-    public void putArmDown(float servoPosition) {
-        robotHardware.getArmBase().setDirection(Servo.Direction.REVERSE);
-        robotHardware.getArmBase().setPosition(servoPosition);
-    }
-
-    @Override
-    public void elevatorUp(float motorPower) {
-        robotHardware.getElevatorMotor().setDirection(DcMotorSimple.Direction.REVERSE);
-        robotHardware.getElevatorMotor().setPower(motorPower);
-    }
-
-    @Override
-    public void elevatorDown(float motorPower) {
-        robotHardware.getElevatorMotor().setDirection(DcMotorSimple.Direction.FORWARD);
-        robotHardware.getElevatorMotor().setPower(motorPower);
+    public void useElevator(float motorPower) {
+        robotHardware.getElevatorMotor().setDirection(motorPower >= 0f ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
     }
 }
