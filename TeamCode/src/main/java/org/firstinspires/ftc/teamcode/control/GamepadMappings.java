@@ -257,25 +257,15 @@ public class GamepadMappings extends Gamepads {
         float elevatorY = -gamepad2.right_stick_y;
         boolean isRightJoyStickActive = (elevatorY != 0f);
         if (isRightJoyStickActive) {
+            robotLimbs.useElevator(elevatorY / POWER_RATIO);
             if (elevatorY > 0f) {
-                robotLimbs.useElevator(elevatorY / POWER_RATIO);
                 return "ELEVATOR UP";
-            } else if (elevatorY < 0f) {
-                robotLimbs.useElevator(elevatorY / POWER_RATIO);
+            } else {
                 return "ELEVATOR DOWN";
             }
         } else robotLimbs.useElevator(0f);
 
-        //Arm controls
-        float armY = -gamepad2.left_stick_y;
 
-        if (armY > 0f) {
-            robotLimbs.useArm(armY / POWER_RATIO);
-            return "ARM UP";
-        } else if (armY < 0f) {
-            robotLimbs.useArm(armY / POWER_RATIO);
-            return "ARM DOWN";
-        }
         return "IDLE";
     }
 
