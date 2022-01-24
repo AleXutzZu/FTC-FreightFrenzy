@@ -38,7 +38,7 @@ public class Limbs extends RobotLimbControls {
 
     @Override
     public void useArm(float servoPosition) {
-        robotHardware.getArmBase().setDirection(servoPosition >= 0f ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
+        robotHardware.getArmBase().setDirection(Servo.Direction.FORWARD);
         robotHardware.getArmBase().setPosition(servoPosition);
     }
 

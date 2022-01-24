@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.control.GamepadMappings;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Direction;
+import org.firstinspires.ftc.teamcode.util.LimbPosition;
 
 
 @TeleOp(name = "Proficient Movement", group = "Testing Purposes")
@@ -43,7 +44,7 @@ public class ProficientMovement extends OpMode {
         if (robotControl.isDebug()) {
             telemetry.addData("State", "Direction -> %s leftMotors: 0 rightMotors: 0", direction.toString());
         }
-        String limb = robotControl.useLimbs();
+        LimbPosition limb = robotControl.useLimbs();
         /*telemetry.addData("Limb %s",limb);*/
     }
 

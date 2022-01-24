@@ -18,7 +18,7 @@ public abstract class RobotLimbControls {
 
     /**
      * Moves the arm up or down
-     * @param servoPosition float value between -1.0 and 1.0 that dictates how fast the arm should retract
+     * @param servoPosition float value between 0 and 1.0 that sets its position
      */
     public abstract void useArm(float servoPosition);
 

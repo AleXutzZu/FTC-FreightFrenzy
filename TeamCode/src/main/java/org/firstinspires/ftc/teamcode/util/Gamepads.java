@@ -16,7 +16,7 @@ public abstract class Gamepads {
     /**
      * This method will use the claw and elevator
      */
-    public abstract String useLimbs();
+    public abstract LimbPosition useLimbs();
 
     /**
      * Getter for robot movements in case functionality is inaccessible through the gamepad.

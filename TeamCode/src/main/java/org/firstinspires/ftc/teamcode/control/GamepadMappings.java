@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
+import org.firstinspires.ftc.teamcode.util.LimbPosition;
 
 public class GamepadMappings extends Gamepads {
     private boolean debug = false;
@@ -246,11 +247,18 @@ public class GamepadMappings extends Gamepads {
     }
 
     @Override
-    public String useLimbs() {
+    public LimbPosition useLimbs() {
+        /*
+        Key mappings
+        A - Turn on/off wheel (hold to rotate)
+        Right joystick - bring up/down the elevator
+        dpad up/down - put up/down the arm
+        LB - open/close claws
+         */
         //Wheel rotation
         if (gamepad2.a) {
             robotLimbs.rotateWheel();
-            return "ROTATE WHEEL";
+            return LimbPosition.WHEEL_ROTATING;
         }
 
         //Elevator controls
@@ -259,14 +267,27 @@ public class GamepadMappings extends Gamepads {
         if (isRightJoyStickActive) {
             robotLimbs.useElevator(elevatorY / POWER_RATIO);
             if (elevatorY > 0f) {
-                return "ELEVATOR UP";
+                return LimbPosition.ELEVATOR_UP;
             } else {
-                return "ELEVATOR DOWN";
+                return LimbPosition.ELEVATOR_DOWN;
             }
         } else robotLimbs.useElevator(0f);
 
+        //Arm controls
+        boolean areMultipleButtonsPressed = !((gamepad2.dpad_up && !gamepad2.dpad_down) ||
+                (gamepad2.dpad_down && !gamepad2.dpad_up));
+        if (!areMultipleButtonsPressed) {
+            if (gamepad2.dpad_up) {
+                robotLimbs.useArm(0f);
+                return LimbPosition.ARM_UP;
+            } else {
+                robotLimbs.useArm(1f);
+                return LimbPosition.ARM_DOWN;
+            }
+        } else robotLimbs.useArm(0f);
 
-        return "IDLE";
+        
+        return LimbPosition.IDLE;
     }
 
     public boolean isDebug() {
