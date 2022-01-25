@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 /**
  * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
@@ -27,7 +26,8 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * <br>
  * <h2>Servos</h2>
  * <pre>Arm base                                            <i>"arm_base"</i></pre>
- * <pre>Claws                                               <i>"claws"</i></pre>
+ * <pre>Left claw                                           <i>"left_claw"</i></pre>
+ * <pre>Right claw                                          <i>"right_claw"</i></pre>
  * <br>
  * <h2>Sensors and misc</h2>
  */
@@ -48,7 +48,8 @@ public class RobotHardware {
     Servos
      */
     private Servo armBase = null;
-    private ServoController claws = null;
+    private Servo leftClaw = null;
+    private Servo rightClaw = null;
 
     private static RobotHardware instance = null;
 
@@ -103,7 +104,8 @@ public class RobotHardware {
         Servos
          */
         armBase = hardwareMap.get(Servo.class, "arm_base");
-        claws = hardwareMap.get(Servo.class, "claws").getController();
+        leftClaw = hardwareMap.get(Servo.class, "left_claw");
+        rightClaw = hardwareMap.get(Servo.class, "right_claw");
 
         /*
         Setting the power to 0f for starters
@@ -144,7 +146,11 @@ public class RobotHardware {
         return armBase;
     }
 
-    public ServoController getClaws() {
-        return claws;
+    public Servo getLeftClaw() {
+        return leftClaw;
+    }
+
+    public Servo getRightClaw() {
+        return rightClaw;
     }
 }
