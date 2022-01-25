@@ -12,20 +12,21 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <br>
  * <p>Used Motors (driving): <a href="https://www.pitsco.com/TETRIX-MAX-TorqueNADO-Motor-with-Encoder">TETRIX-MAX TorqueNADO Motor with Encoder</a></p>
  * <p>Used Motors (lift and wheel): <a href="https://www.andymark.com/products/neverest-classic-40-gearmotor">NeveRest Classic 40 Gearmotor</a></p>
- * <h2>Motors for driving the robot</h2>
+ * <h2>Motors</h2>
+ * <h3>Motors for driving the robot</h3>
  * <pre>Right front motor:                                  <i>"right_front"</i></pre>
  * <pre>Right back motor:                                   <i>"right_back"</i></pre>
  * <pre>Left front motor:                                   <i>"left_front"</i></pre>
  * <pre>Left back motor:                                    <i>"right_back"</i></pre>
- * <br>
- * <h2>Motor for using the elevator</h2>
+ * <h3>Motor for using the elevator</h3>
  * <pre>Elevator motor:                                 <i>"elevator_motor"</i></pre>
- * <br>
- * <h2>Motor to spin the carousel</h2>
+ * <h3>Motor to spin the carousel</h3>
  * <pre>Wheel spinning motor:                               <i>"wheel_motor"</i></pre>
  * <br>
  * <h2>Servos</h2>
+ * <h3>Arm Servos</h3>
  * <pre>Arm base                                            <i>"arm_base"</i></pre>
+ * <h3>Claw Servos</h3>
  * <pre>Left claw                                           <i>"left_claw"</i></pre>
  * <pre>Right claw                                          <i>"right_claw"</i></pre>
  * <br>
@@ -47,9 +48,9 @@ public class RobotHardware {
     /*
     Servos
      */
-    private Servo armBase = null;
-    private Servo leftClaw = null;
-    private Servo rightClaw = null;
+    private Servo armBase = null;                           //arm_base
+    private Servo leftClaw = null;                          //left_claw
+    private Servo rightClaw = null;                         //right_claw
 
     private static RobotHardware instance = null;
 
