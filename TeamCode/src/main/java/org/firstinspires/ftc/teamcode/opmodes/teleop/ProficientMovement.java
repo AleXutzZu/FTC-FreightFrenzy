@@ -36,6 +36,7 @@ public class ProficientMovement extends OpMode {
     public void start() {
         runtime.reset();
         robotControl.getRobotMovements().stopMotors();
+        telemetry.clear();
         robotControl.getTimer().reset();
     }
 
