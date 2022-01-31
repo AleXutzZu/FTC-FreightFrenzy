@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Gamepad Debugging", group = "Testing Purposes")
+@Disabled
 public class GamepadDebugging extends OpMode {
 
     private final ElapsedTime runtime = new ElapsedTime();
