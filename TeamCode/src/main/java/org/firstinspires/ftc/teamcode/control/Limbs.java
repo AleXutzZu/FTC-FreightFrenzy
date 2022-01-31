@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.RobotLimbControls;
 
 public class Limbs extends RobotLimbControls {
     private static Limbs instance = null;
-
+    private boolean claws = false;
     //prevent instantiation
     private Limbs() {
 
@@ -25,8 +25,17 @@ public class Limbs extends RobotLimbControls {
     }
 
     @Override
-    public void useClaws() {
+    public void useClaws(boolean stance) {
+        robotHardware.getLeftClaw().setDirection(Servo.Direction.FORWARD);
+        robotHardware.getRightClaw().setDirection(Servo.Direction.FORWARD);
 
+        if (stance) {
+            robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
+            robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
+        } else {
+            robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
+            robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
+        }
     }
 
     @Override
@@ -37,14 +46,22 @@ public class Limbs extends RobotLimbControls {
     }
 
     @Override
-    public void useArm(float servoPosition) {
+    public void useArm(boolean stance) {
         robotHardware.getArmBase().setDirection(Servo.Direction.FORWARD);
-        robotHardware.getArmBase().setPosition(servoPosition);
+        robotHardware.getArmBase().setPosition(stance ? ARM_UP : ARM_DOWN);
     }
 
     @Override
     public void useElevator(float motorPower) {
         robotHardware.getElevatorMotor().setDirection(motorPower >= 0f ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
+    }
+
+    public boolean isClaws() {
+        return claws;
+    }
+
+    public void setClaws(boolean claws) {
+        this.claws = claws;
     }
 }

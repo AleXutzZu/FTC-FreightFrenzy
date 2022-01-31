@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
@@ -14,6 +15,7 @@ public class GamepadMappings extends Gamepads {
     private static final float ROTATION_POWER = 1f;
     private static final float SLIDING_POWER = 1f;
     private static final float DIAGONAL_DRIVING_POWER = 1f;
+    private final ElapsedTime timer = new ElapsedTime(1);
 
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
@@ -274,19 +276,30 @@ public class GamepadMappings extends Gamepads {
         } else robotLimbs.useElevator(0f);
 
         //Arm controls
-        boolean areMultipleButtonsPressed = !((gamepad2.dpad_up && !gamepad2.dpad_down) ||
-                (gamepad2.dpad_down && !gamepad2.dpad_up));
-        if (!areMultipleButtonsPressed) {
-            if (gamepad2.dpad_up) {
-                robotLimbs.useArm(0f);
+        if (gamepad2.dpad_down || gamepad2.dpad_up) {
+            if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                robotLimbs.useArm(true);
                 return LimbPosition.ARM_UP;
-            } else {
-                robotLimbs.useArm(1f);
+            }
+            if (!gamepad2.dpad_up) {
+                robotLimbs.useArm(false);
                 return LimbPosition.ARM_DOWN;
             }
-        } else robotLimbs.useArm(0f);
+        }
 
-        
+        //Claw control
+        if (gamepad2.b) {
+            if (timer.time() >= 1f) {
+                timer.reset();
+                if (robotLimbs.isClaws()) {
+                    robotLimbs.setClaws(false);
+                    robotLimbs.useClaws(false);
+                } else {
+                    robotLimbs.setClaws(true);
+                    robotLimbs.useClaws(true);
+                }
+            }
+        }
         return LimbPosition.IDLE;
     }
 
