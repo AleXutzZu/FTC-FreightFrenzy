@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.util;
 
 
+import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class RobotLimbControls {
-    /*
-    FIXME
-    - Values might need to be adjusted accordingly
-     */
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
@@ -53,4 +51,13 @@ public abstract class RobotLimbControls {
      * @param motorPower float value between -1.0 and 1.0 that dictates how fast the elevator should come up
      */
     public abstract void useElevator(float motorPower);
+
+    /**
+     * Returns the hardware of the robot
+     *
+     * @return never-null hardware class with all installed devices
+     */
+    public @NonNull RobotHardware getRobotHardware() {
+        return robotHardware;
+    }
 }

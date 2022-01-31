@@ -1,9 +1,34 @@
 package org.firstinspires.ftc.teamcode.util;
 
+import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class RobotMovementControls {
-    protected RobotHardware robotHardware = RobotHardware.getInstance();
+
+    /**
+     * Dictates how small the output from the joystick/trigger should be
+     */
+    public static final float POWER_RATIO = 2f;
+
+    /**
+     * Power input for rotating around the central axis
+     */
+    public static final float ROTATION_POWER = 1f;
+
+    /**
+     * Power input for sliding operation (left or right)
+     */
+    public static final float SLIDING_POWER = 1f;
+
+    /**
+     * Power input for diagonal driving (in all 4 directions)
+     */
+    public static final float DIAGONAL_DRIVING_POWER = 1f;
+    /**
+     * Robot Hardware necessary for movement
+     */
+    protected final RobotHardware robotHardware = RobotHardware.getInstance();
 
     /**
      * Drives the robot forwards by the specified power
@@ -98,4 +123,13 @@ public abstract class RobotMovementControls {
      * Stops the motors like a handbrake.
      */
     public abstract void stopMotors();
+
+    /**
+     * Returns the hardware of the robot
+     *
+     * @return never-null hardware class with all installed devices
+     */
+    public @NonNull RobotHardware getRobotHardware() {
+        return robotHardware;
+    }
 }

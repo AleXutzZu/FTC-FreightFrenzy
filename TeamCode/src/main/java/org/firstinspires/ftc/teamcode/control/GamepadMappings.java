@@ -6,20 +6,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
 import org.firstinspires.ftc.teamcode.util.LimbPosition;
+import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
 public class GamepadMappings extends Gamepads {
     private boolean debug = false;
     private final Gamepad gamepad1, gamepad2;
-    private static final float POWER_RATIO = 2f;
-    private static final float DEFAULT_POWER = 0.5f;
-    private static final float ROTATION_POWER = 1f;
-    private static final float SLIDING_POWER = 1f;
-    private static final float DIAGONAL_DRIVING_POWER = 1f;
-    private final ElapsedTime timer = new ElapsedTime(1);
+    private final ElapsedTime timer = new ElapsedTime();
 
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        timer.reset();
     }
 
     @Override
@@ -53,26 +50,26 @@ public class GamepadMappings extends Gamepads {
                 return Direction.IDLE;
             }
             if (gamepad1.left_bumper) {
-                robotMovements.rotateLeft(ROTATION_POWER);
+                robotMovements.rotateLeft(RobotMovementControls.ROTATION_POWER);
                 direction = Direction.ROTATE_LEFT;
             }
             if (gamepad1.right_bumper) {
-                robotMovements.rotateRight(ROTATION_POWER);
+                robotMovements.rotateRight(RobotMovementControls.ROTATION_POWER);
                 direction = Direction.ROTATE_RIGHT;
             }
             if (gamepad1.dpad_left) {
-                robotMovements.driveLeft(SLIDING_POWER);
+                robotMovements.driveLeft(RobotMovementControls.SLIDING_POWER);
                 direction = Direction.SLIDE_LEFT;
             }
             if (gamepad1.dpad_right) {
-                robotMovements.driveRight(SLIDING_POWER);
+                robotMovements.driveRight(RobotMovementControls.SLIDING_POWER);
                 direction = Direction.SLIDE_RIGHT;
             }
             return direction;
         }
 
-        float forwardPower = gamepad1.right_trigger / POWER_RATIO;
-        float backwardPower = -gamepad1.left_trigger / POWER_RATIO;
+        float forwardPower = gamepad1.right_trigger / RobotMovementControls.POWER_RATIO;
+        float backwardPower = -gamepad1.left_trigger / RobotMovementControls.POWER_RATIO;
         float totalPower = forwardPower + backwardPower;
 
         /*
@@ -112,18 +109,18 @@ public class GamepadMappings extends Gamepads {
              */
             if (horizontalCoordinate > 0f) {
                 if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyRightForward(DIAGONAL_DRIVING_POWER);
+                    robotMovements.driveDiagonallyRightForward(RobotMovementControls.DIAGONAL_DRIVING_POWER);
                     return Direction.DIAGONALLY_RIGHT_FORWARD;
                 } else {
-                    robotMovements.driveDiagonallyRightBackward(DIAGONAL_DRIVING_POWER);
+                    robotMovements.driveDiagonallyRightBackward(RobotMovementControls.DIAGONAL_DRIVING_POWER);
                     return Direction.DIAGONALLY_RIGHT_BACKWARD;
                 }
             } else {
                 if (verticalCoordinate > 0f) {
-                    robotMovements.driveDiagonallyLeftForward(DIAGONAL_DRIVING_POWER);
+                    robotMovements.driveDiagonallyLeftForward(RobotMovementControls.DIAGONAL_DRIVING_POWER);
                     return Direction.DIAGONALLY_LEFT_FORWARD;
                 } else {
-                    robotMovements.driveDiagonallyLeftBackward(DIAGONAL_DRIVING_POWER);
+                    robotMovements.driveDiagonallyLeftBackward(RobotMovementControls.DIAGONAL_DRIVING_POWER);
                     return Direction.DIAGONALLY_LEFT_BACKWARD;
                 }
             }
@@ -198,7 +195,7 @@ public class GamepadMappings extends Gamepads {
             float basePower;
             //UP
             if (horizontalCoordinate <= verticalCoordinate && -horizontalCoordinate <= verticalCoordinate) {
-                basePower = verticalCoordinate / POWER_RATIO;
+                basePower = verticalCoordinate / RobotMovementControls.POWER_RATIO;
                 if (totalPower > 0f) {
                     robotMovements.driveForward(basePower + totalPower);
                     direction = Direction.STRAIGHT_FORWARD;
@@ -210,7 +207,7 @@ public class GamepadMappings extends Gamepads {
             }
             //DOWN
             if (horizontalCoordinate >= verticalCoordinate && -horizontalCoordinate >= verticalCoordinate) {
-                basePower = -verticalCoordinate / POWER_RATIO;
+                basePower = -verticalCoordinate / RobotMovementControls.POWER_RATIO;
                 if (totalPower < 0f) {
                     robotMovements.driveBackward(basePower - totalPower);
                     direction = Direction.STRAIGHT_BACKWARD;
@@ -222,24 +219,24 @@ public class GamepadMappings extends Gamepads {
             }
             //RIGHT
             if (horizontalCoordinate > verticalCoordinate && -horizontalCoordinate < verticalCoordinate) {
-                basePower = horizontalCoordinate / POWER_RATIO;
+                basePower = horizontalCoordinate / RobotMovementControls.POWER_RATIO;
                 if (totalPower >= 0f) {
-                    robotMovements.steerForward(basePower / POWER_RATIO, basePower + totalPower);
+                    robotMovements.steerForward(basePower / RobotMovementControls.POWER_RATIO, basePower + totalPower);
                     direction = Direction.TURN_RIGHT_FORWARDS;
                 } else {
-                    robotMovements.steerBackward(basePower - totalPower, basePower / POWER_RATIO);
+                    robotMovements.steerBackward(basePower - totalPower, basePower / RobotMovementControls.POWER_RATIO);
                     direction = Direction.TURN_RIGHT_BACKWARDS;
                 }
                 return direction;
             }
             //LEFT
             if (horizontalCoordinate < verticalCoordinate && -horizontalCoordinate > verticalCoordinate) {
-                basePower = -horizontalCoordinate / POWER_RATIO;
+                basePower = -horizontalCoordinate / RobotMovementControls.POWER_RATIO;
                 if (totalPower >= 0f) {
-                    robotMovements.steerForward(basePower + totalPower, basePower / POWER_RATIO);
+                    robotMovements.steerForward(basePower + totalPower, basePower / RobotMovementControls.POWER_RATIO);
                     direction = Direction.TURN_LEFT_FORWARDS;
                 } else {
-                    robotMovements.steerBackward(basePower / POWER_RATIO, basePower - totalPower);
+                    robotMovements.steerBackward(basePower / RobotMovementControls.POWER_RATIO, basePower - totalPower);
                     direction = Direction.TURN_LEFT_BACKWARDS;
                 }
                 return direction;
@@ -267,7 +264,7 @@ public class GamepadMappings extends Gamepads {
         float elevatorY = -gamepad2.right_stick_y;
         boolean isRightJoyStickActive = (elevatorY != 0f);
         if (isRightJoyStickActive) {
-            robotLimbs.useElevator(elevatorY / POWER_RATIO);
+            robotLimbs.useElevator(elevatorY / RobotMovementControls.POWER_RATIO);
             if (elevatorY > 0f) {
                 return LimbPosition.ELEVATOR_UP;
             } else {
@@ -294,9 +291,11 @@ public class GamepadMappings extends Gamepads {
                 if (robotLimbs.isClaws()) {
                     robotLimbs.setClaws(false);
                     robotLimbs.useClaws(false);
+                    return LimbPosition.CLAWS_CLOSED;
                 } else {
                     robotLimbs.setClaws(true);
                     robotLimbs.useClaws(true);
+                    return LimbPosition.CLAWS_OPEN;
                 }
             }
         }
@@ -305,5 +304,45 @@ public class GamepadMappings extends Gamepads {
 
     public boolean isDebug() {
         return debug;
+    }
+
+    public ElapsedTime getTimer() {
+        return timer;
+    }
+
+    /**
+     * Debug function
+     *
+     * @return the power in the left front motor (double)
+     */
+    public double getLeftFrontMotorPower() {
+        return robotMovements.getRobotHardware().getLeftFrontMotor().getPower();
+    }
+
+    /**
+     * Debug function
+     *
+     * @return the power in the right front motor (double)
+     */
+    public double getRightFrontMotorPower() {
+        return robotMovements.getRobotHardware().getRightFrontMotor().getPower();
+    }
+
+    /**
+     * Debug function
+     *
+     * @return the power in the left back motor (double)
+     */
+    public double getLeftBackMotorPower() {
+        return robotMovements.getRobotHardware().getLeftBackMotor().getPower();
+    }
+
+    /**
+     * Debug function
+     *
+     * @return the power in the right back motor (double)
+     */
+    public double getRightBackMotorPower() {
+        return robotMovements.getRobotHardware().getRightBackMotor().getPower();
     }
 }

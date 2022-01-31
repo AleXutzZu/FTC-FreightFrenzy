@@ -36,16 +36,22 @@ public class ProficientMovement extends OpMode {
     public void start() {
         runtime.reset();
         robotControl.getRobotMovements().stopMotors();
+        robotControl.getTimer().reset();
     }
 
     @Override
     public void loop() {
         Direction direction = robotControl.drive();
-        if (robotControl.isDebug()) {
-            telemetry.addData("State", "Direction -> %s leftMotors: 0 rightMotors: 0", direction.toString());
-        }
         LimbPosition limb = robotControl.useLimbs();
-        /*telemetry.addData("Limb %s",limb);*/
+        if (robotControl.isDebug()) {
+            telemetry.addData("Motor State", "Direction -> %s Left Front: %.2f Right Front: %.2f Left Back: %.2f Right Back: %.2f",
+                    direction.toString(),
+                    robotControl.getLeftFrontMotorPower(),
+                    robotControl.getRightFrontMotorPower(),
+                    robotControl.getLeftBackMotorPower(),
+                    robotControl.getRightBackMotorPower())
+                    .addData("Limb State", "Direction -> %s", limb);
+        }
     }
 
     @Override
