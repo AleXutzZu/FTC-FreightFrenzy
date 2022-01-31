@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.control;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
+import org.firstinspires.ftc.teamcode.util.LimbPosition;
 
 public class GamepadMappings extends Gamepads {
     private boolean debug = false;
@@ -14,9 +15,9 @@ public class GamepadMappings extends Gamepads {
     private static final float ROTATION_POWER = 1f;
     private static final float SLIDING_POWER = 1f;
     private static final float DIAGONAL_DRIVING_POWER = 1f;
+    private final ElapsedTime timer = new ElapsedTime(1);
 
-    public GamepadMappings(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2) {
-        super(hardwareMap);
+    public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
     }
@@ -248,8 +249,58 @@ public class GamepadMappings extends Gamepads {
     }
 
     @Override
-    public void useLimbs() {
+    public LimbPosition useLimbs() {
+        /*
+        Key mappings
+        A - Turn on/off wheel (hold to rotate)
+        Right joystick - bring up/down the elevator
+        dpad up/down - put up/down the arm
+        LB - open/close claws
+         */
+        //Wheel rotation
+        if (gamepad2.a) {
+            robotLimbs.rotateWheel();
+            return LimbPosition.WHEEL_ROTATING;
+        }
 
+        //Elevator controls
+        float elevatorY = -gamepad2.right_stick_y;
+        boolean isRightJoyStickActive = (elevatorY != 0f);
+        if (isRightJoyStickActive) {
+            robotLimbs.useElevator(elevatorY / POWER_RATIO);
+            if (elevatorY > 0f) {
+                return LimbPosition.ELEVATOR_UP;
+            } else {
+                return LimbPosition.ELEVATOR_DOWN;
+            }
+        } else robotLimbs.useElevator(0f);
+
+        //Arm controls
+        if (gamepad2.dpad_down || gamepad2.dpad_up) {
+            if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                robotLimbs.useArm(true);
+                return LimbPosition.ARM_UP;
+            }
+            if (!gamepad2.dpad_up) {
+                robotLimbs.useArm(false);
+                return LimbPosition.ARM_DOWN;
+            }
+        }
+
+        //Claw control
+        if (gamepad2.b) {
+            if (timer.time() >= 1f) {
+                timer.reset();
+                if (robotLimbs.isClaws()) {
+                    robotLimbs.setClaws(false);
+                    robotLimbs.useClaws(false);
+                } else {
+                    robotLimbs.setClaws(true);
+                    robotLimbs.useClaws(true);
+                }
+            }
+        }
+        return LimbPosition.IDLE;
     }
 
     public boolean isDebug() {

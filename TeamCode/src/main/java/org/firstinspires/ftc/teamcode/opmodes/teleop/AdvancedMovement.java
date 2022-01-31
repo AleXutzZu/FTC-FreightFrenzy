@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.Movements;
+import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 
 @TeleOp(name = "Advanced Movement", group = "Testing Purposes")
+@Disabled
 public class AdvancedMovement extends OpMode {
 
     private static final float POWER_RATIO = 2f;
@@ -20,8 +23,9 @@ public class AdvancedMovement extends OpMode {
 
     @Override
     public void init() {
+        RobotHardware robotHardware = RobotHardware.getInstance();
+        robotHardware.init(hardwareMap);
         robotMovements = Movements.getInstance();
-        robotMovements.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
