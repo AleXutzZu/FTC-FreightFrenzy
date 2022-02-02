@@ -11,12 +11,14 @@ import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 public class GamepadMappings extends Gamepads {
     private boolean debug = false;
     private final Gamepad gamepad1, gamepad2;
-    private final ElapsedTime timer = new ElapsedTime();
+    private final ElapsedTime rotateWheelKeyCooldown = new ElapsedTime();
+    private final ElapsedTime debugKeyCooldown = new ElapsedTime();
 
     public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        timer.reset();
+        rotateWheelKeyCooldown.reset();
+        debugKeyCooldown.reset();
     }
 
     @Override
@@ -24,7 +26,12 @@ public class GamepadMappings extends Gamepads {
         /*
         Debug Key = Y
          */
-        if (gamepad1.y) debug = !debug;
+        if (gamepad1.y) {
+            if (debugKeyCooldown.time() >= 2f) {
+                debugKeyCooldown.reset();
+                debug = !debug;
+            }
+        }
         Direction direction = null;
         /*
         Button mappings
@@ -286,8 +293,8 @@ public class GamepadMappings extends Gamepads {
 
         //Claw control
         if (gamepad2.b) {
-            if (timer.time() >= 1f) {
-                timer.reset();
+            if (rotateWheelKeyCooldown.time() >= 1f) {
+                rotateWheelKeyCooldown.reset();
                 if (robotLimbs.isClaws()) {
                     robotLimbs.setClaws(false);
                     robotLimbs.useClaws(false);
@@ -306,8 +313,12 @@ public class GamepadMappings extends Gamepads {
         return debug;
     }
 
-    public ElapsedTime getTimer() {
-        return timer;
+    public ElapsedTime getRotateWheelKeyCooldown() {
+        return rotateWheelKeyCooldown;
+    }
+
+    public ElapsedTime getDebugKeyCooldown() {
+        return debugKeyCooldown;
     }
 
     /**
@@ -347,11 +358,11 @@ public class GamepadMappings extends Gamepads {
     }
 
     /**
-     * Debug function
+     * Debug and helper function
      *
      * @return the position in ticks at which the motor is at (int)
      */
-    public int getElevatorMotorTicks(){
+    public int getElevatorMotorTicks() {
         return robotLimbs.getRobotHardware().getElevatorMotor().getCurrentPosition();
     }
 }

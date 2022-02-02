@@ -37,7 +37,8 @@ public class ProficientMovement extends OpMode {
         runtime.reset();
         robotControl.getRobotMovements().stopMotors();
         telemetry.clear();
-        robotControl.getTimer().reset();
+        robotControl.getRotateWheelKeyCooldown().reset();
+        robotControl.getDebugKeyCooldown().reset();
     }
 
     @Override
