@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.util.RobotLimbControls;
 public class Limbs extends RobotLimbControls {
     private static Limbs instance = null;
     private boolean claws = false;
+
     //prevent instantiation
     private Limbs() {
 
@@ -52,7 +53,7 @@ public class Limbs extends RobotLimbControls {
 
     @Override
     public void useElevator(float motorPower) {
-        robotHardware.getElevatorMotor().setDirection(motorPower >= 0f ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+        robotHardware.getElevatorMotor().setDirection(motorPower > 0f ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
     }
 

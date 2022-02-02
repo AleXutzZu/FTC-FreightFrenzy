@@ -27,7 +27,7 @@ public abstract class RobotLimbControls {
      * Elevator tick at which the motor should stop to prevent the string from
      * going in the opposite direction, resulting in inverting the elevator controls.
      */
-    protected static final int ELEVATOR_THRESHOLD = 800;
+    protected static final int ELEVATOR_THRESHOLD = 0;
     /**
      * Robot hardware instance to access the servos & motors
      */
