@@ -16,7 +16,6 @@ public class Movements extends RobotMovementControls {
 
     }
 
-
     public static Movements getInstance() {
         if (instance == null) instance = new Movements();
         return instance;
@@ -212,6 +211,7 @@ public class Movements extends RobotMovementControls {
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
     }
+
     /*FIXME*/
     @Override
     public void rotateLeft(float motorPower, float degrees) {
@@ -220,15 +220,23 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
 
-        float offset = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        float angle = offset;
+        float lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle, globalAngle = 0f;
 
-        robotHardware.getRightFrontMotor().setPower(motorPower);
-        robotHardware.getRightBackMotor().setPower(motorPower);
-        robotHardware.getLeftFrontMotor().setPower(motorPower);
-        robotHardware.getLeftBackMotor().setPower(motorPower);
+        do {
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
 
-        while (angle - offset < degrees) angle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float delta = lastAngle - currentAngle;
+            if (delta < -180) delta += 360;
+            else if (delta > 180) delta -= 360;
+
+            globalAngle += delta;
+
+            lastAngle = currentAngle;
+        } while (globalAngle < degrees);
 
         stopMotors();
     }
@@ -245,6 +253,7 @@ public class Movements extends RobotMovementControls {
         robotHardware.getLeftFrontMotor().setPower(motorPower);
         robotHardware.getLeftBackMotor().setPower(motorPower);
     }
+
     /*FIXME*/
     @Override
     public void rotateRight(float motorPower, float degrees) {
@@ -253,15 +262,39 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
-        float offset = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
-        float angle = offset;
+        float lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle, globalAngle = 0f;
 
-        robotHardware.getRightFrontMotor().setPower(motorPower);
-        robotHardware.getRightBackMotor().setPower(motorPower);
-        robotHardware.getLeftFrontMotor().setPower(motorPower);
-        robotHardware.getLeftBackMotor().setPower(motorPower);
+        do {
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
 
-        while (angle - offset < degrees) angle = -robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float delta = lastAngle - currentAngle;
+            if (delta < -180) delta += 360;
+            else if (delta > 180) delta -= 360;
+
+            globalAngle += delta;
+
+            lastAngle = currentAngle;
+        } while (globalAngle == 0f);
+
+        do {
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
+
+            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
+            float delta = lastAngle - currentAngle;
+            if (delta < -180) delta += 360;
+            else if (delta > 180) delta -= 360;
+
+            globalAngle += delta;
+
+            lastAngle = currentAngle;
+        } while (-globalAngle < degrees);
 
         stopMotors();
     }
@@ -274,13 +307,17 @@ public class Movements extends RobotMovementControls {
         robotHardware.getLeftBackMotor().setPower(0f);
     }
 
-    @Override
-    protected float errorCorrection() {
-        return 0;
-    }
-
-    @Override
-    protected void encodedDriving(float motorPower, float distance){
+    /**
+     * Drives the robot using encoders. This method should be used inside an overloaded method designed for a specific direction
+     *
+     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
+     * @param distance   desired distance in centimetres
+     * @see RobotMovementControls#driveForward(float, float)
+     * @see RobotMovementControls#driveBackward(float, float)
+     * @see RobotMovementControls#driveLeft(float, float)
+     * @see RobotMovementControls#driveRight(float, float)
+     */
+    private void encodedDriving(float motorPower, float distance) {
         robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
