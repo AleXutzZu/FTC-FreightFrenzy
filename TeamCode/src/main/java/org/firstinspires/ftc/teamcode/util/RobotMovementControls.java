@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.util;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import androidx.annotation.NonNull;
-
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
@@ -48,10 +44,6 @@ public abstract class RobotMovementControls {
      * @see RobotMovementControls#MOTOR_TICK_RATE
      */
     protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
-
-    protected RobotMovementControls(HardwareMap hardwareMap) {
-        robotHardware.init(hardwareMap);
-    }
 
     /**
      * Dictates how small the output from the joystick/trigger should be

@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.Gamepads;
+import org.firstinspires.ftc.teamcode.util.LimbPosition;
+import org.firstinspires.ftc.teamcode.util.RobotMovementControls;
 
 public class GamepadMappings extends Gamepads {
     private boolean debug = false;

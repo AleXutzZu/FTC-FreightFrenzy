@@ -16,14 +16,7 @@ public class Movements extends RobotMovementControls {
 
     }
 
-    /**
-     * Creates an instance for control with the specified hardware map
-     *
-     * @param hardwareMap Object responsible for mapping the physical names to their virtual counterparts
-     * Get the Movements instance
-     *
-     * @return the instance of the class
-     */
+
     public static Movements getInstance() {
         if (instance == null) instance = new Movements();
         return instance;
@@ -279,6 +272,11 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setPower(0f);
         robotHardware.getLeftFrontMotor().setPower(0f);
         robotHardware.getLeftBackMotor().setPower(0f);
+    }
+
+    @Override
+    protected float errorCorrection() {
+        return 0;
     }
 
     @Override

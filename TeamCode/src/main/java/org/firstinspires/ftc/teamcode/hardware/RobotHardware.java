@@ -6,7 +6,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 /**
  * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
@@ -194,11 +193,4 @@ public class RobotHardware {
         return gyroscope;
     }
 
-    public Servo getArmBase() {
-        return armBase;
-    }
-
-    public ServoController getClaws() {
-        return claws;
-    }
 }
