@@ -24,6 +24,11 @@ public abstract class RobotLimbControls {
     protected static final float CLAWS_OPENED = 0f;
 
     /**
+     * Elevator tick at which the motor should stop to prevent the string from
+     * going in the opposite direction, resulting in inverting the elevator controls.
+     */
+    protected static final int ELEVATOR_THRESHOLD = 800;
+    /**
      * Robot hardware instance to access the servos & motors
      */
     protected RobotHardware robotHardware = RobotHardware.getInstance();
