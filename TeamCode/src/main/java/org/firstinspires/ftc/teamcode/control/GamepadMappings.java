@@ -345,4 +345,13 @@ public class GamepadMappings extends Gamepads {
     public double getRightBackMotorPower() {
         return robotMovements.getRobotHardware().getRightBackMotor().getPower();
     }
+
+    /**
+     * Debug function
+     *
+     * @return the position in ticks at which the motor is at (int)
+     */
+    public int getElevatorMotorTicks(){
+        return robotLimbs.getRobotHardware().getElevatorMotor().getCurrentPosition();
+    }
 }

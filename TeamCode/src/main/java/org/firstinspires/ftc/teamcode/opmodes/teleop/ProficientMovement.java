@@ -51,7 +51,8 @@ public class ProficientMovement extends OpMode {
                     robotControl.getRightFrontMotorPower(),
                     robotControl.getLeftBackMotorPower(),
                     robotControl.getRightBackMotorPower())
-                    .addData("Limb State", "Direction -> %s", limb);
+                    .addData("Limb State", "Direction -> %s Elevator Motor Tick: %d", limb,
+                            robotControl.getElevatorMotorTicks());
         }
     }
 
