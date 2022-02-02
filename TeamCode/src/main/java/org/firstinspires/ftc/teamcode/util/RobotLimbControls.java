@@ -58,6 +58,11 @@ public abstract class RobotLimbControls {
     public abstract void useElevator(float motorPower);
 
     /**
+     * Brings the wheel motor to a full stop.
+     */
+    public abstract void pauseWheelMotor();
+
+    /**
      * Returns the hardware of the robot
      *
      * @return never-null hardware class with all installed devices

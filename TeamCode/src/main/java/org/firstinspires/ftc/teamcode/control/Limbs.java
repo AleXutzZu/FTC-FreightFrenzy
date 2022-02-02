@@ -42,7 +42,6 @@ public class Limbs extends RobotLimbControls {
     public void rotateWheel() {
         robotHardware.getWheelMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getWheelMotor().setPower(1f);
-        robotHardware.getWheelMotor().setPower(0f);
     }
 
     @Override
@@ -55,6 +54,11 @@ public class Limbs extends RobotLimbControls {
     public void useElevator(float motorPower) {
         robotHardware.getElevatorMotor().setDirection(motorPower >= 0f ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
+    }
+
+    @Override
+    public void pauseWheelMotor() {
+        robotHardware.getWheelMotor().setPower(0f);
     }
 
     public boolean isClaws() {

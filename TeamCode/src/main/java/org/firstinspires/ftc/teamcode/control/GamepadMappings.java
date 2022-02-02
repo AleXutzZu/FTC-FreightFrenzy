@@ -265,7 +265,7 @@ public class GamepadMappings extends Gamepads {
         if (gamepad2.a) {
             robotLimbs.rotateWheel();
             return LimbPosition.WHEEL_ROTATING;
-        }
+        } else robotLimbs.pauseWheelMotor();
 
         //Elevator controls
         float elevatorY = -gamepad2.right_stick_y;
