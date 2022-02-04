@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -31,9 +35,16 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <pre>Right claw                                          <i>"right_claw"</i></pre>
  * <br>
  * <h2>Sensors and misc</h2>
+ * <h3>Digital Touch Sensors</h3>
+ * <pre>Right side on the rear touch sensor                 <i>"right_touch"</i></pre>
+ * <pre>Left side on the rear touch sensor                  <i>"left_touch"</i></pre>
+ * <h3>2M Distance Sensors</h3>
+ * <pre>Rear sensor                                         <i>"back_2m"</i></pre>
+ * <pre>Left side sensor                                    <i>"left_2m"</i></pre>
+ * <pre>Right side sensor                                   <i>"right_2m</i></pre>
+ * <h3>Misc</h3>
+ * <pre>BNO55IMU Gyroscope                                  <i>"imu"</i></pre>
  */
-
-
 public class RobotHardware {
     /*
     Motors
@@ -44,6 +55,10 @@ public class RobotHardware {
     private DcMotor leftBackMotor = null;                    //left_back
     private DcMotor elevatorMotor = null;                    //elevator_motor
     private DcMotor wheelMotor = null;                       //wheel_motor
+    /*
+    Inertial Measurement Unit
+     */
+    private BNO055IMU gyroscope = null;                      //imu
 
     /*
     Servos
@@ -52,16 +67,27 @@ public class RobotHardware {
     private Servo leftClaw = null;                          //left_claw
     private Servo rightClaw = null;                         //right_claw
 
+    /*
+    Sensors
+     */
+    private DigitalChannel leftTouchSensor = null;         //left_touch
+    private DigitalChannel rightTouchSensor = null;        //right_touch
+    private Rev2mDistanceSensor rearDistanceSensor = null; //back_2m
+    private Rev2mDistanceSensor leftDistanceSensor = null; //left_2m
+    private Rev2mDistanceSensor rightDistanceSensor = null; //right_2m
+
     private static RobotHardware instance = null;
 
     /**
      * Gets the instance of the hardware class
+     *
      * @return the current instance
      */
     public static RobotHardware getInstance() {
         if (instance == null) instance = new RobotHardware();
         return instance;
     }
+
     //prevent direct instantiation
     private RobotHardware() {
 
@@ -74,7 +100,7 @@ public class RobotHardware {
      */
     public void init(@NonNull HardwareMap hardwareMap) {
         /*
-         Defining motors used for controlling the movement
+         Defining motors used for movement
          */
         rightFrontMotor = hardwareMap.get(DcMotor.class, "right_front");
         rightBackMotor = hardwareMap.get(DcMotor.class, "right_back");
@@ -117,6 +143,48 @@ public class RobotHardware {
         leftFrontMotor.setPower(0f);
         elevatorMotor.setPower(0f);
         wheelMotor.setPower(0f);
+
+        /*
+        Defining the sensors used
+         */
+        rearDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "back_2m");
+        leftDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "left_2m");
+        rightDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "right_2m");
+
+        leftTouchSensor = hardwareMap.get(DigitalChannel.class, "left_touch");
+        rightTouchSensor = hardwareMap.get(DigitalChannel.class, "right_touch");
+
+        leftTouchSensor.setMode(DigitalChannel.Mode.INPUT);
+        rightTouchSensor.setMode(DigitalChannel.Mode.INPUT);
+
+        /*
+        Gyroscope setup
+         */
+        gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        gyroscope.initialize(parameters);
+    }
+
+    /**
+     * Sets the corresponding run mode across all four motors
+     *
+     * @param runMode new run mode
+     * @see DcMotor.RunMode#RUN_TO_POSITION
+     * @see DcMotor.RunMode#STOP_AND_RESET_ENCODER
+     * @see DcMotor.RunMode#RUN_USING_ENCODER
+     */
+    public void setMotorModes(DcMotor.RunMode runMode) {
+        rightFrontMotor.setMode(runMode);
+        rightBackMotor.setMode(runMode);
+        leftFrontMotor.setMode(runMode);
+        leftBackMotor.setMode(runMode);
+        elevatorMotor.setPower(0f);
+        wheelMotor.setPower(0f);
     }
 
     public DcMotor getRightFrontMotor() {
@@ -153,5 +221,29 @@ public class RobotHardware {
 
     public Servo getRightClaw() {
         return rightClaw;
+    }
+
+    public BNO055IMU getGyroscope() {
+        return gyroscope;
+    }
+
+    public DigitalChannel getLeftTouchSensor() {
+        return leftTouchSensor;
+    }
+
+    public DigitalChannel getRightTouchSensor() {
+        return rightTouchSensor;
+    }
+
+    public Rev2mDistanceSensor getRearDistanceSensor() {
+        return rearDistanceSensor;
+    }
+
+    public Rev2mDistanceSensor getLeftDistanceSensor() {
+        return leftDistanceSensor;
+    }
+
+    public Rev2mDistanceSensor getRightDistanceSensor() {
+        return rightDistanceSensor;
     }
 }

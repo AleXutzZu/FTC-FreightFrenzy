@@ -40,8 +40,8 @@ public class Limbs extends RobotLimbControls {
     }
 
     @Override
-    public void rotateWheel() {
-        robotHardware.getWheelMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+    public void rotateWheel(DcMotorSimple.Direction direction) {
+        robotHardware.getWheelMotor().setDirection(direction);
         robotHardware.getWheelMotor().setPower(1f);
     }
 

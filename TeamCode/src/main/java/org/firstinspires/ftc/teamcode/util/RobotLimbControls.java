@@ -3,17 +3,19 @@ package org.firstinspires.ftc.teamcode.util;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class RobotLimbControls {
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
-    protected static final float ARM_UP = 0.8f;
+    protected static final float ARM_UP = 1f;
     /**
      * Servo position to put the arm down (Arm base Servo)
      */
-    protected static final float ARM_DOWN = 0.3f;
+    protected static final float ARM_DOWN = 0.5f;
     /**
      * Servo position to close the claws (Claw servos)
      */
@@ -41,7 +43,7 @@ public abstract class RobotLimbControls {
     /**
      * Rotates the carousel wheel (at full speed)
      */
-    public abstract void rotateWheel();
+    public abstract void rotateWheel(DcMotorSimple.Direction direction);
 
     /**
      * Moves the arm up or down
