@@ -11,10 +11,6 @@ public abstract class RobotMovementControls {
         - Currently using TETRIX Motors and HD Mecanum Wheels
      */
     /**
-     * <p>Wheel diameter in <b>centimetres</b></p>
-     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
-     *
-     * Ticks used for encoder driving in the overloaded methods with distance parameter
      * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
      * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
      *
@@ -68,12 +64,6 @@ public abstract class RobotMovementControls {
      * Robot Hardware necessary for movement
      */
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
-
-    /**
-     * <p>Gain coefficient</p>
-     * <p>Used for the gyroscope</p>
-     */
-    protected static final float GAIN_COEFFICIENT = 0.15f;
 
     /**
      * Drives the robot forwards by the specified power
