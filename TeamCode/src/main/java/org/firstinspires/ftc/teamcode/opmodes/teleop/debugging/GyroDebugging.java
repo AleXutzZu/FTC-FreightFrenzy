@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.debugging;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.control.GamepadMappings;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 @TeleOp(name = "Gyroscope Debugging", group = "Debugging")
+@Disabled
 public class GyroDebugging extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private final RobotHardware robotHardware = RobotHardware.getInstance();
@@ -19,7 +22,7 @@ public class GyroDebugging extends OpMode {
     @Override
     public void init() {
         robotHardware.init(hardwareMap);
-        robotControl = new GamepadMappings(gamepad1, gamepad2);
+        robotControl = new GamepadMappings(gamepad1, gamepad2, DcMotorSimple.Direction.FORWARD);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");
     }

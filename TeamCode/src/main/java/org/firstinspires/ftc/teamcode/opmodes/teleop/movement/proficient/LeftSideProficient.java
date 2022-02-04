@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.movement.proficient;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.GamepadMappings;
@@ -10,8 +11,8 @@ import org.firstinspires.ftc.teamcode.util.Direction;
 import org.firstinspires.ftc.teamcode.util.LimbPosition;
 
 
-@TeleOp(name = "Proficient Movement", group = "Testing Purposes")
-public class ProficientMovement extends OpMode {
+@TeleOp(name = "Left Side Proficient Movement", group = "Final OpModes")
+public class LeftSideProficient extends OpMode {
     private GamepadMappings robotControl;
     private final ElapsedTime runtime = new ElapsedTime();
     private final RobotHardware robotHardware = RobotHardware.getInstance();
@@ -21,7 +22,7 @@ public class ProficientMovement extends OpMode {
         Initialize hardware
          */
         robotHardware.init(hardwareMap);
-        robotControl = new GamepadMappings(gamepad1, gamepad2);
+        robotControl = new GamepadMappings(gamepad1, gamepad2, DcMotorSimple.Direction.FORWARD);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");
     }
