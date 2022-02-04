@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.control;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -35,17 +34,12 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    @Deprecated
     public void driveForward(float motorPower, float distance) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
-
-        encodedDriving(motorPower, distance);
-
-        stopMotors();
-
-        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -62,17 +56,12 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    @Deprecated
     public void driveBackward(float motorPower, float distance) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
-
-        encodedDriving(motorPower, distance);
-
-        stopMotors();
-
-        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -89,17 +78,12 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    @Deprecated
     public void driveLeft(float motorPower, float distance) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
-
-        encodedDriving(motorPower, distance);
-
-        stopMotors();
-
-        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -116,17 +100,13 @@ public class Movements extends RobotMovementControls {
     }
 
     @Override
+    @Deprecated
     public void driveRight(float motorPower, float distance) {
         robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
         robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
 
-        encodedDriving(motorPower, distance);
-
-        stopMotors();
-
-        robotHardware.setMotorModes(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -307,44 +287,5 @@ public class Movements extends RobotMovementControls {
         robotHardware.getRightBackMotor().setPower(0f);
         robotHardware.getLeftFrontMotor().setPower(0f);
         robotHardware.getLeftBackMotor().setPower(0f);
-    }
-
-    /**
-     * Drives the robot using encoders. This method should be used inside an overloaded method designed for a specific direction
-     *
-     * @param motorPower float value between 0.0 and 1.0 representing the power given to the motors (Less power means less speed)
-     * @param distance   desired distance in centimetres
-     * @see RobotMovementControls#driveForward(float, float)
-     * @see RobotMovementControls#driveBackward(float, float)
-     * @see RobotMovementControls#driveLeft(float, float)
-     * @see RobotMovementControls#driveRight(float, float)
-     */
-    private void encodedDriving(float motorPower, float distance) {
-        robotHardware.setMotorModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
-
-        robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
-        robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
-        robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
-        robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
-
-        robotHardware.getRightFrontMotor().setPower(motorPower);
-        robotHardware.getRightBackMotor().setPower(motorPower);
-        robotHardware.getLeftFrontMotor().setPower(motorPower);
-        robotHardware.getLeftBackMotor().setPower(motorPower);
-
-        robotHardware.setMotorModes(DcMotor.RunMode.RUN_TO_POSITION);
-
-        while (robotHardware.getRightFrontMotor().isBusy() &&
-                robotHardware.getRightBackMotor().isBusy() &&
-                robotHardware.getLeftFrontMotor().isBusy() &&
-                robotHardware.getLeftBackMotor().isBusy()
-        ) {
-            robotHardware.getRightFrontMotor().setPower(motorPower);
-            robotHardware.getRightBackMotor().setPower(motorPower);
-            robotHardware.getLeftFrontMotor().setPower(motorPower);
-            robotHardware.getLeftBackMotor().setPower(motorPower);
-        }
     }
 }
