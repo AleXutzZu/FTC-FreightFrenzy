@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.hardware;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -70,8 +72,8 @@ public class RobotHardware {
     /*
     Sensors
      */
-    private DigitalChannel leftTouchSensor = null;         //left_touch
-    private DigitalChannel rightTouchSensor = null;        //right_touch
+    private RevTouchSensor leftTouchSensor = null;         //left_touch
+    private RevTouchSensor rightTouchSensor = null;        //right_touch
     private Rev2mDistanceSensor rearDistanceSensor = null; //back_2m
     private Rev2mDistanceSensor leftDistanceSensor = null; //left_2m
     private Rev2mDistanceSensor rightDistanceSensor = null; //right_2m
@@ -97,8 +99,9 @@ public class RobotHardware {
      * Initializes motors, servos and other hardware installed on the robot
      *
      * @param hardwareMap never null map with the configuration from the robot controller app
+     * @throws RuntimeException this is thrown if the gyroscope fails to initialize
      */
-    public void init(@NonNull HardwareMap hardwareMap) {
+    public void init(@NonNull HardwareMap hardwareMap) throws RuntimeException {
         /*
          Defining motors used for movement
          */
@@ -112,12 +115,19 @@ public class RobotHardware {
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         /*
         Defining the motor for the elevator
          */
         elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
 
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        elevatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*
         Defining the motor to rotate the carousel
@@ -127,6 +137,8 @@ public class RobotHardware {
 
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        wheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
         /*
         Servos
          */
@@ -134,8 +146,12 @@ public class RobotHardware {
         leftClaw = hardwareMap.get(Servo.class, "left_claw");
         rightClaw = hardwareMap.get(Servo.class, "right_claw");
 
+        armBase.setDirection(Servo.Direction.FORWARD);
+        leftClaw.setDirection(Servo.Direction.FORWARD);
+        rightClaw.setDirection(Servo.Direction.FORWARD);
+
         /*
-        Setting the power to 0f for starters
+        Doing initialization of position/power
          */
         rightFrontMotor.setPower(0f);
         rightBackMotor.setPower(0f);
@@ -144,6 +160,10 @@ public class RobotHardware {
         elevatorMotor.setPower(0f);
         wheelMotor.setPower(0f);
 
+        armBase.setPosition(1f);
+        leftClaw.setPosition(0f);
+        rightClaw.setPosition(0f);
+
         /*
         Defining the sensors used
          */
@@ -151,40 +171,23 @@ public class RobotHardware {
         leftDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "left_2m");
         rightDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "right_2m");
 
-        leftTouchSensor = hardwareMap.get(DigitalChannel.class, "left_touch");
-        rightTouchSensor = hardwareMap.get(DigitalChannel.class, "right_touch");
-
-        leftTouchSensor.setMode(DigitalChannel.Mode.INPUT);
-        rightTouchSensor.setMode(DigitalChannel.Mode.INPUT);
+        leftTouchSensor = hardwareMap.get(RevTouchSensor.class, "left_touch");
+        rightTouchSensor = hardwareMap.get(RevTouchSensor.class, "right_touch");
 
         /*
         Gyroscope setup
          */
         gyroscope = hardwareMap.get(BNO055IMU.class, "imu");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        gyroscope.initialize(parameters);
-    }
-
-    /**
-     * Sets the corresponding run mode across all four motors
-     *
-     * @param runMode new run mode
-     * @see DcMotor.RunMode#RUN_TO_POSITION
-     * @see DcMotor.RunMode#STOP_AND_RESET_ENCODER
-     * @see DcMotor.RunMode#RUN_USING_ENCODER
-     */
-    public void setMotorModes(DcMotor.RunMode runMode) {
-        rightFrontMotor.setMode(runMode);
-        rightBackMotor.setMode(runMode);
-        leftFrontMotor.setMode(runMode);
-        leftBackMotor.setMode(runMode);
-        elevatorMotor.setPower(0f);
-        wheelMotor.setPower(0f);
+        BNO055IMU.Parameters imuParameters = new BNO055IMU.Parameters();
+        imuParameters.mode = BNO055IMU.SensorMode.IMU;
+        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuParameters.loggingEnabled = false;
+        imuParameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        if (!gyroscope.initialize(imuParameters))
+            throw new RuntimeException("Could not initialize Gyroscope");
     }
 
     public DcMotor getRightFrontMotor() {
@@ -227,11 +230,11 @@ public class RobotHardware {
         return gyroscope;
     }
 
-    public DigitalChannel getLeftTouchSensor() {
+    public RevTouchSensor getLeftTouchSensor() {
         return leftTouchSensor;
     }
 
-    public DigitalChannel getRightTouchSensor() {
+    public RevTouchSensor getRightTouchSensor() {
         return rightTouchSensor;
     }
 
