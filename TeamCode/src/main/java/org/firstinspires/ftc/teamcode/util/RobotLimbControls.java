@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.util;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class RobotLimbControls {
@@ -41,7 +43,7 @@ public abstract class RobotLimbControls {
     /**
      * Rotates the carousel wheel (at full speed)
      */
-    public abstract void rotateWheel();
+    public abstract void rotateWheel(DcMotorSimple.Direction direction);
 
     /**
      * Moves the arm up or down

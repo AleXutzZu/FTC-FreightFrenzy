@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.control;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,12 +14,14 @@ public class GamepadMappings extends Gamepads {
     private final Gamepad gamepad1, gamepad2;
     private final ElapsedTime rotateWheelKeyCooldown = new ElapsedTime();
     private final ElapsedTime debugKeyCooldown = new ElapsedTime();
+    private final DcMotorSimple.Direction wheelMotorDirection;
 
-    public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2) {
+    public GamepadMappings(Gamepad gamepad1, Gamepad gamepad2, DcMotorSimple.Direction wheelMotorDirection) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         rotateWheelKeyCooldown.reset();
         debugKeyCooldown.reset();
+        this.wheelMotorDirection = wheelMotorDirection;
     }
 
     @Override
@@ -263,7 +266,7 @@ public class GamepadMappings extends Gamepads {
          */
         //Wheel rotation
         if (gamepad2.a) {
-            robotLimbs.rotateWheel();
+            robotLimbs.rotateWheel(wheelMotorDirection);
             return LimbPosition.WHEEL_ROTATING;
         } else robotLimbs.pauseWheelMotor();
 
