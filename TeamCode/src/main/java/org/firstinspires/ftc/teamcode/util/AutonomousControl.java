@@ -38,10 +38,30 @@ public abstract class AutonomousControl extends LinearOpMode {
     protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
 
     /**
+     * Servo position to bring the arms up (Arm base Servo)
+     */
+    protected static final float ARM_UP = 1f;
+    /**
+     * Servo position to put the arm down (Arm base Servo)
+     */
+    protected static final float ARM_DOWN = 0.5f;
+    /**
+     * Servo position to close the claws (Claw servos)
+     */
+    protected static final float CLAWS_CLOSED = 1f;
+    /**
+     * Servo position to open the claws (Claw servos)
+     */
+    protected static final float CLAWS_OPENED = 0f;
+
+    /**
      * Robot Hardware necessary for movement
      */
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
 
+    /**
+     * Directions a robot may take while driving straight or sideways
+     */
     private enum DrivingDirection {
         FORWARD, BACKWARD, STRAFE_LEFT, STRAFE_RIGHT
     }
@@ -102,7 +122,11 @@ public abstract class AutonomousControl extends LinearOpMode {
 
         float lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
         float relativeAngle = 0f;
-
+        /*
+        TODO
+            - Implement error check
+            - Experiment with lower speeds
+         */
         while (opModeIsActive() && Math.abs(relativeAngle) < degrees) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
             robotHardware.getRightBackMotor().setPower(rightBackPower);
@@ -209,9 +233,61 @@ public abstract class AutonomousControl extends LinearOpMode {
         }
     }
 
+    /**
+     * Operates the arm on the front of the robot. It uses the ARM_UP position
+     * the arm up, and ARM_DOWN to position it down
+     *
+     * @param armUp true if the arm should come up, false if it should come down
+     * @see AutonomousControl#ARM_UP
+     * @see AutonomousControl#ARM_DOWN
+     */
+    protected void useArm(boolean armUp) {
+        if ((opModeIsActive() || isStarted()) && !isStopRequested()) {
+            if (armUp) robotHardware.getArmBase().setPosition(ARM_UP);
+            else robotHardware.getArmBase().setPosition(ARM_DOWN);
+        }
+    }
+
+    /**
+     * Operates the claws on the robot arm. It uses the CLAWS_CLOSED position to close
+     * the claws, and CLAWS_OPENED to open them
+     *
+     * @param closeClaws true if the claws should close, false if they should open
+     * @see AutonomousControl#CLAWS_CLOSED
+     * @see AutonomousControl#CLAWS_OPENED
+     */
+    protected void useClaws(boolean closeClaws) {
+        if (opModeIsActive()) {
+            if (closeClaws) {
+                robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
+                robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
+            } else {
+                robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
+                robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
+            }
+        }
+    }
+
+    //TODO
+
+    /**
+     * Operates the wheel on the back of the robot
+     */
+    protected void useWheel() {
+        if (opModeIsActive()) {
+            robotHardware.getWheelMotor().setPower(1f);
+        }
+    }
+
+    //TODO
+    protected void useElevator(int level) {
+
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         robotHardware.init(hardwareMap);
+
         waitForStart();
         run();
     }
