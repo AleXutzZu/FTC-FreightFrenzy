@@ -141,26 +141,26 @@ public abstract class AutonomousControl extends LinearOpMode {
         switch (direction) {
 
             case FORWARD:
-                leftBackPower = motorPower;
+                rightFrontPower = motorPower;
                 leftFrontPower = motorPower;
                 rightBackPower = motorPower;
-                rightFrontPower = motorPower;
+                leftBackPower = motorPower;
                 break;
             case BACKWARD:
-                leftBackPower = -motorPower;
+                rightFrontPower = -motorPower;
                 leftFrontPower = -motorPower;
                 rightBackPower = -motorPower;
-                rightFrontPower = -motorPower;
+                leftBackPower = -motorPower;
                 break;
             case STRAFE_LEFT:
-                leftFrontPower = -motorPower;
                 rightFrontPower = motorPower;
+                leftFrontPower = -motorPower;
                 rightBackPower = -motorPower;
                 leftBackPower = motorPower;
                 break;
             case STRAFE_RIGHT:
-                leftFrontPower = motorPower;
                 rightFrontPower = -motorPower;
+                leftFrontPower = motorPower;
                 rightBackPower = motorPower;
                 leftBackPower = -motorPower;
                 break;
@@ -208,4 +208,13 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        robotHardware.init(hardwareMap);
+        waitForStart();
+        run();
+    }
+
+    protected abstract void run();
 }
