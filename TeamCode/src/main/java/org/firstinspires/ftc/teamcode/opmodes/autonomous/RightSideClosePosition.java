@@ -1,31 +1,16 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.control.Limbs;
-import org.firstinspires.ftc.teamcode.control.Movements;
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.AutonomousControl;
 
 @Autonomous(name = "Demo: Right Side Close Position", group = "Demo Cluj-Napoca")
-public class RightSideClosePosition extends LinearOpMode {
-    private final ElapsedTime runtime = new ElapsedTime();
-    private final RobotHardware robotHardware = RobotHardware.getInstance();
-    private final Limbs robotLimbs = Limbs.getInstance();
-    private final Movements robotMovements = Movements.getInstance();
+public class RightSideClosePosition extends AutonomousControl {
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        robotHardware.init(hardwareMap);
-        robotLimbs.useArm(true);
-        waitForStart();
-
-        if (opModeIsActive()) {
-            robotMovements.driveForward(1f, 32);
-            robotMovements.rotateRight(1f);
-            sleep(1000);
-            robotMovements.driveForward(1f, 100);
-        }
+    protected void run() {
+        driveStraight(1, 32);
+        rotate(-1f, 90);
+        driveStraight(1, 100);
     }
 }
