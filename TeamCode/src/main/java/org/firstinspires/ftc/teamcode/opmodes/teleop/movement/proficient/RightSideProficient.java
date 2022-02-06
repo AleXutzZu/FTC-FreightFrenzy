@@ -21,7 +21,7 @@ public class RightSideProficient extends OpMode {
         /*
         Initialize hardware
          */
-        robotHardware.init(hardwareMap);
+        robotHardware.initMotors(hardwareMap);
         robotControl = new GamepadMappings(gamepad1, gamepad2, DcMotorSimple.Direction.REVERSE);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");

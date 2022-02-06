@@ -20,7 +20,7 @@ public class BasicMovement extends OpMode {
     @Override
     public void init() {
         RobotHardware robotHardware = RobotHardware.getInstance();
-        robotHardware.init(hardwareMap);
+        robotHardware.initMotors(hardwareMap);
         robotMovements = Movements.getInstance();
         telemetry.addData("Status", "Initialized");
     }

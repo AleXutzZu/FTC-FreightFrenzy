@@ -286,8 +286,11 @@ public abstract class AutonomousControl extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robotHardware.init(hardwareMap);
-
+        robotHardware.initMotors(hardwareMap);
+        robotHardware.initGyro(hardwareMap);
+        robotHardware.initSensors(hardwareMap);
+        useClaws(true);
+        useArm(true);
         waitForStart();
         run();
     }

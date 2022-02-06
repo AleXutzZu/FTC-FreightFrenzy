@@ -96,12 +96,11 @@ public class RobotHardware {
     }
 
     /**
-     * Initializes motors, servos and other hardware installed on the robot
+     * Initializes motors and servos installed on the robot
      *
      * @param hardwareMap never null map with the configuration from the robot controller app
-     * @throws RuntimeException this is thrown if the gyroscope fails to initialize
      */
-    public void init(@NonNull HardwareMap hardwareMap) throws RuntimeException {
+    public void initMotors(@NonNull HardwareMap hardwareMap) {
         /*
          Defining motors used for movement
          */
@@ -163,7 +162,14 @@ public class RobotHardware {
         armBase.setPosition(1f);
         leftClaw.setPosition(0f);
         rightClaw.setPosition(0f);
+    }
 
+    /**
+     * Initializes sensors on the robot for the autonomous period
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initSensors(@NonNull HardwareMap hardwareMap) {
         /*
         Defining the sensors used
          */
@@ -173,7 +179,15 @@ public class RobotHardware {
 
         leftTouchSensor = hardwareMap.get(RevTouchSensor.class, "left_touch");
         rightTouchSensor = hardwareMap.get(RevTouchSensor.class, "right_touch");
+    }
 
+    /**
+     * Initializes gyroscope for the autonomous period
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     * @throws RuntimeException if the gyro fails to initialize
+     */
+    public void initGyro(@NonNull HardwareMap hardwareMap) throws RuntimeException {
         /*
         Gyroscope setup
          */

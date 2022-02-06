@@ -18,7 +18,7 @@ public class ServoDebugging extends OpMode {
     public void init() {
         telemetry.addData("Status", "Initialized");
         robotHardware = RobotHardware.getInstance();
-        robotHardware.init(hardwareMap);
+        robotHardware.initMotors(hardwareMap);
         robotHardware.getArmBase().setDirection(Servo.Direction.FORWARD);
     }
 

@@ -21,7 +21,7 @@ public class GyroDebugging extends OpMode {
 
     @Override
     public void init() {
-        robotHardware.init(hardwareMap);
+        robotHardware.initMotors(hardwareMap);
         robotControl = new GamepadMappings(gamepad1, gamepad2, DcMotorSimple.Direction.FORWARD);
         robotControl.getRobotMovements().stopMotors();
         telemetry.addData("Status", "Initialized");
