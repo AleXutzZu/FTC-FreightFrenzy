@@ -46,6 +46,20 @@ public abstract class TeleOpControl extends OpMode {
     protected final ElapsedTime debugButtonCooldown = new ElapsedTime();
 
     /**
+     * Whether or not the claws are open or not (true = open, false = closed)
+     */
+    protected boolean clawState = true;
+
+    /**
+     * Shows debug state
+     * 0 = no debug
+     * 1 = start debugging
+     * 2 = freeze debug
+     * 3 = clear debug then goes to state 0
+     */
+    protected int debugState = 0;
+
+    /**
      * All possible directions a robot may take
      */
     private enum Direction {
