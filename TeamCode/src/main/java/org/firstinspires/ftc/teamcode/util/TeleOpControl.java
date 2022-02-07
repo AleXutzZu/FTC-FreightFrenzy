@@ -7,23 +7,48 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
+import java.util.Locale;
+
 public abstract class TeleOpControl extends OpMode {
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
     protected static final float ARM_UP = 1f;
+
     /**
      * Servo position to put the arm down (Arm base Servo)
      */
     protected static final float ARM_DOWN = 0.5f;
+
     /**
      * Servo position to close the claws (Claw servos)
      */
     protected static final float CLAWS_CLOSED = 1f;
+
     /**
      * Servo position to open the claws (Claw servos)
      */
     protected static final float CLAWS_OPENED = 0f;
+
+    /**
+     * Dictates how small the output from the joystick/trigger should be
+     */
+    public static final float POWER_RATIO = 2f;
+
+    /**
+     * Power input for rotating around the central axis
+     */
+    public static final float ROTATION_POWER = 1f;
+
+    /**
+     * Power input for sliding operation (left or right)
+     */
+    public static final float SLIDING_POWER = 1f;
+
+    /**
+     * Power input for diagonal driving (in all 4 directions)
+     */
+    public static final float DIAGONAL_DRIVING_POWER = 1f;
 
     /**
      * Robot Hardware necessary for movement
@@ -48,7 +73,7 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * Whether or not the claws are open or not (true = open, false = closed)
      */
-    protected boolean clawState = true;
+    protected boolean clawState = false;
 
     /**
      * Shows debug state
@@ -62,12 +87,24 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * All possible directions a robot may take
      */
-    private enum Direction {
+    protected enum Direction {
         FORWARD, BACKWARD,
         STRAFE_LEFT, STRAFE_RIGHT,
         ROTATE_LEFT, ROTATE_RIGHT,
         DIAGONALLY_RIGHT_FORWARD, DIAGONALLY_RIGHT_BACKWARD,
-        DIAGONALLY_LEFT_FORWARD, DIAGONALLY_LEFT_BACKWARD
+        DIAGONALLY_LEFT_FORWARD, DIAGONALLY_LEFT_BACKWARD,
+        IDLE
+    }
+
+    /**
+     * All possible limb functions
+     */
+    protected enum Limb {
+        ELEVATOR_UP, ELEVATOR_DOWN,
+        ROTATING_WHEEL,
+        CLAWS_OPEN, CLAWS_CLOSED,
+        ARM_UP, ARM_DOWN,
+        IDLE
     }
 
     /**
@@ -182,6 +219,12 @@ public abstract class TeleOpControl extends OpMode {
                 rightBackPower = 0;
                 leftBackPower = -motorPower;
                 break;
+            case IDLE:
+                rightFrontPower = 0f;
+                leftFrontPower = 0f;
+                rightBackPower = 0f;
+                leftBackPower = 0f;
+                break;
         }
         robotHardware.getRightFrontMotor().setPower(rightFrontPower);
         robotHardware.getRightBackMotor().setPower(rightBackPower);
@@ -193,10 +236,7 @@ public abstract class TeleOpControl extends OpMode {
      * Brings the motors to a halt
      */
     protected void stopMotors() {
-        robotHardware.getRightFrontMotor().setPower(0f);
-        robotHardware.getRightBackMotor().setPower(0f);
-        robotHardware.getLeftFrontMotor().setPower(0f);
-        robotHardware.getLeftBackMotor().setPower(0f);
+        drive(0, Direction.IDLE);
     }
 
     /**
@@ -255,7 +295,7 @@ public abstract class TeleOpControl extends OpMode {
         runtime.reset();
         clawButtonCooldown.reset();
         debugButtonCooldown.reset();
-        telemetry.addData("Runtime", runtime.toString());
+        telemetry.addData("Runtime", runtime::toString);
     }
 
     @Override
@@ -264,4 +304,49 @@ public abstract class TeleOpControl extends OpMode {
         useClaws(false);
         useArm(true);
     }
+
+    @Override
+    public void loop() {
+        Direction direction = drive();
+        Limb limb = useLimbs();
+
+        if (debugState == 3) {
+            telemetry.clear();
+            debugState = 0;
+            return;
+        }
+        if (debugState == 2) {
+            return;
+        }
+        if (debugState == 1) {
+            telemetry.addData("Driving Systems", formatDrivingData(direction))
+                    .addData("Crane Systems", formatCraneData(limb));
+        }
+    }
+
+    private String formatDrivingData(Direction direction) {
+        String info = "Left front: %.2f\n Right front: %.2f\n Left back: %.2f\n Right back: %.2f\n Average power: %.2f\n Direction: %s";
+        double averagePower = (robotHardware.getLeftFrontMotor().getPower() + robotHardware.getRightFrontMotor().getPower() + robotHardware.getLeftBackMotor().getPower()
+                + robotHardware.getRightBackMotor().getPower()) / 4d;
+        return String.format(Locale.ENGLISH, info, robotHardware.getLeftFrontMotor().getPower(), robotHardware.getRightFrontMotor().getPower(), robotHardware.getLeftBackMotor().getPower(),
+                robotHardware.getRightBackMotor().getPower(), averagePower, direction);
+    }
+
+    private String formatCraneData(Limb limb) {
+        String info = "Wheel power: %.2f\n Elevator: pow %.2f ticks %d\n Arm: pos %.2f\n Claws: state " + (clawState ? "open" : "closed") + "\nStatus: %s";
+        return String.format(Locale.ENGLISH, info, robotHardware.getWheelMotor().getPower(), robotHardware.getElevatorMotor().getPower(), robotHardware.getElevatorMotor().getCurrentPosition(),
+                robotHardware.getArmBase().getPosition(), limb);
+    }
+
+    /**
+     * Drives the robot on the field
+     * @return the direction the robot took, IDLE otherwise
+     */
+    protected abstract Direction drive();
+
+    /**
+     * Operates the limbs of the robot on the field
+     * @return the limb currently used, IDLE otherwise
+     */
+    protected abstract Limb useLimbs();
 }
