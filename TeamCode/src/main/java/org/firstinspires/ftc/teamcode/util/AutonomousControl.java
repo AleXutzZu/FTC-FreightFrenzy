@@ -103,16 +103,15 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Rotates the robot around its central axis with the desired power for the desired degrees
      *
-     * @param rotateLeft whether or not the robot should rotate to the left or right
-     * @param degrees    Value between 0 and 180 (inclusive) which the robot should rotate to
-     * @throws IllegalArgumentException if degrees < 0 or degrees > 180
+     * @param degrees    Value between -180 and 180 (inclusive) which the robot should rotate to
+     * @throws IllegalArgumentException if Math.abs(degrees) > 180
      */
-    protected void rotate(boolean rotateLeft, float degrees) throws IllegalArgumentException {
-        if (degrees < 0f || degrees > 180f) {
-            throw new IllegalArgumentException("Expected degrees between 0 and 180");
+    protected void rotate(float degrees) throws IllegalArgumentException {
+        if (Math.abs(degrees) > 180) {
+            throw new IllegalArgumentException("Expected a number between -180 and 180");
         }
         float leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
-        if (rotateLeft) {
+        if (degrees > 0f) {
             rightFrontPower = -ROTATION_POWER;
             leftFrontPower = ROTATION_POWER;
             rightBackPower = -ROTATION_POWER;
@@ -128,29 +127,8 @@ public abstract class AutonomousControl extends LinearOpMode {
         float relativeAngle = 0f;
         /*
         TODO
-            - Implement error check
             - Experiment with lower speeds
          */
-
-        /*
-        Might need to change -2f back to 0f
-        while (opModeIsActive() && Math.abs(relativeAngle) - degrees < -2f) {
-            robotHardware.getRightFrontMotor().setPower(rightFrontPower);
-            robotHardware.getRightBackMotor().setPower(rightBackPower);
-            robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
-            robotHardware.getLeftBackMotor().setPower(leftBackPower);
-
-            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
-
-            float delta = currentAngle - lastAngle;
-
-            if (delta > 180) delta -= 360;
-            else if (delta <= -180) delta += 360;
-
-            relativeAngle += delta;
-            lastAngle = currentAngle;
-        }*/
-
         float yaw = degrees;
 
         while (opModeIsActive() && Math.abs(yaw) > 2f) {

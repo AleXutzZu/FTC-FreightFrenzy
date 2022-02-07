@@ -10,7 +10,7 @@ public class LeftSideFarPosition extends AutonomousControl {
     @Override
     protected void run() {
         driveStraight(1, 32);
-        rotate(true, 90);
+        rotate(90);
         driveStraight(1, 230);
     }
 }
