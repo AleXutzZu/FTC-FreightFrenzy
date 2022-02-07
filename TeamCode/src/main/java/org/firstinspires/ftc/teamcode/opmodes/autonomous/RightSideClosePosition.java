@@ -10,7 +10,7 @@ public class RightSideClosePosition extends AutonomousControl {
     @Override
     protected void run() {
         driveStraight(1, 32);
-        rotate(-1f, 90);
+        rotate(false, 90);
         driveStraight(1, 100);
     }
 }

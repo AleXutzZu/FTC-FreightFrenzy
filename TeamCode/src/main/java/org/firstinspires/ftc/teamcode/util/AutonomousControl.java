@@ -55,6 +55,10 @@ public abstract class AutonomousControl extends LinearOpMode {
     protected static final float CLAWS_OPENED = 0f;
 
     /**
+     * Power used when rotating the robot
+     */
+    protected static final float ROTATION_POWER = 0.4f;
+    /**
      * Robot Hardware necessary for movement
      */
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
@@ -99,25 +103,25 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Rotates the robot around its central axis with the desired power for the desired degrees
      *
-     * @param motorPower power that should be given to the motors. Positive power will result in trigonometric sense, while negative power will be counter-trigonometric sense.
+     * @param rotateLeft whether or not the robot should rotate to the left or right
      * @param degrees    Value between 0 and 180 (inclusive) which the robot should rotate to
      * @throws IllegalArgumentException if degrees < 0 or degrees > 180
      */
-    protected void rotate(float motorPower, float degrees) throws IllegalArgumentException {
+    protected void rotate(boolean rotateLeft, float degrees) throws IllegalArgumentException {
         if (degrees < 0f || degrees > 180f) {
             throw new IllegalArgumentException("Expected degrees between 0 and 180");
         }
         float leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
-        if (motorPower >= 0f) {
-            rightFrontPower = -motorPower;
-            leftFrontPower = motorPower;
-            rightBackPower = -motorPower;
-            leftBackPower = motorPower;
+        if (rotateLeft) {
+            rightFrontPower = -ROTATION_POWER;
+            leftFrontPower = ROTATION_POWER;
+            rightBackPower = -ROTATION_POWER;
+            leftBackPower = ROTATION_POWER;
         } else {
-            rightFrontPower = motorPower;
-            leftFrontPower = -motorPower;
-            rightBackPower = motorPower;
-            leftBackPower = -motorPower;
+            rightFrontPower = ROTATION_POWER;
+            leftFrontPower = -ROTATION_POWER;
+            rightBackPower = ROTATION_POWER;
+            leftBackPower = -ROTATION_POWER;
         }
 
         float lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
@@ -127,7 +131,10 @@ public abstract class AutonomousControl extends LinearOpMode {
             - Implement error check
             - Experiment with lower speeds
          */
-        while (opModeIsActive() && Math.abs(relativeAngle) < degrees) {
+
+        /*
+        Might need to change -2f back to 0f
+        while (opModeIsActive() && Math.abs(relativeAngle) - degrees < -2f) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
             robotHardware.getRightBackMotor().setPower(rightBackPower);
             robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
@@ -142,6 +149,26 @@ public abstract class AutonomousControl extends LinearOpMode {
 
             relativeAngle += delta;
             lastAngle = currentAngle;
+        }*/
+
+        float yaw = degrees;
+
+        while (opModeIsActive() && Math.abs(yaw) > 2f) {
+            robotHardware.getRightFrontMotor().setPower(rightFrontPower);
+            robotHardware.getRightBackMotor().setPower(rightBackPower);
+            robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
+            robotHardware.getLeftBackMotor().setPower(leftBackPower);
+
+            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+
+            float delta = currentAngle - lastAngle;
+
+            if (delta > 180) delta -= 360;
+            else if (delta <= -180) delta += 360;
+
+            relativeAngle += delta;
+            lastAngle = currentAngle;
+            yaw = degrees - relativeAngle;
         }
         stopMotors();
     }
