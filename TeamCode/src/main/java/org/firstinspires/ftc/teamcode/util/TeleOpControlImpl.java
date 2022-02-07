@@ -13,7 +13,7 @@ public class TeleOpControlImpl extends TeleOpControl {
         Debug Key = Y
          */
         if (gamepad1.y) {
-            if (debugButtonCooldown.time() >= 0.5f) {
+            if (debugButtonCooldown.time() >= 0.5) {
                 debugButtonCooldown.reset();
                 debugState++;
             }
@@ -61,9 +61,9 @@ public class TeleOpControlImpl extends TeleOpControl {
             return direction;
         }
 
-        float forwardPower = gamepad1.right_trigger / POWER_RATIO;
-        float backwardPower = -gamepad1.left_trigger / POWER_RATIO;
-        float totalPower = forwardPower + backwardPower;
+        double forwardPower = gamepad1.right_trigger / POWER_RATIO;
+        double backwardPower = -gamepad1.left_trigger / POWER_RATIO;
+        double totalPower = forwardPower + backwardPower;
 
         /*
         Joysticks and triggers mappings
@@ -95,13 +95,13 @@ public class TeleOpControlImpl extends TeleOpControl {
             /*
             Reverting the xOy axis
              */
-            float horizontalCoordinate = -gamepad1.right_stick_x;
-            float verticalCoordinate = -gamepad1.right_stick_y;
+            double horizontalCoordinate = -gamepad1.right_stick_x;
+            double verticalCoordinate = -gamepad1.right_stick_y;
             /*
             Finding in which quadrant the controller is
              */
-            if (horizontalCoordinate > 0f) {
-                if (verticalCoordinate > 0f) {
+            if (horizontalCoordinate > 0) {
+                if (verticalCoordinate > 0) {
                     driveDiagonally(DIAGONAL_DRIVING_POWER, false);
                     return Direction.DIAGONALLY_RIGHT_FORWARD;
                 } else {
@@ -109,7 +109,7 @@ public class TeleOpControlImpl extends TeleOpControl {
                     return Direction.DIAGONALLY_RIGHT_BACKWARD;
                 }
             } else {
-                if (verticalCoordinate > 0f) {
+                if (verticalCoordinate > 0) {
                     driveDiagonally(RobotMovementControls.DIAGONAL_DRIVING_POWER, true);
                     return Direction.DIAGONALLY_LEFT_FORWARD;
                 } else {
@@ -122,21 +122,21 @@ public class TeleOpControlImpl extends TeleOpControl {
         Left joystick mappings
          */
         if (!isLeftJoyStickActive) {
-            if (totalPower == 0f) {
+            if (totalPower == 0) {
                 stopMotors();
                 return Direction.IDLE;
             }
 
             driveStraight(totalPower);
 
-            return (totalPower < 0f ? Direction.BACKWARD : Direction.FORWARD);
+            return (totalPower < 0 ? Direction.BACKWARD : Direction.FORWARD);
         } else {
             /*
             Reverting the xOy axis
              */
-            float verticalCoordinate = -gamepad1.left_stick_y;
+            double verticalCoordinate = -gamepad1.left_stick_y;
 
-            float boostPower = verticalCoordinate / POWER_RATIO;
+            double boostPower = verticalCoordinate / POWER_RATIO;
             //UP
             if (boostPower >= 0f) {
                 if (totalPower > 0f) {
@@ -173,22 +173,22 @@ public class TeleOpControlImpl extends TeleOpControl {
          */
         //Wheel rotation
         float wheelPower = -gamepad2.right_trigger + gamepad2.left_trigger;
-        if (wheelPower != 0f) {
+        if (wheelPower != 0) {
             useWheelMotor(wheelPower);
             return Limb.ROTATING_WHEEL;
-        } else useWheelMotor(0f);
+        } else useWheelMotor(0);
 
         //Elevator controls
         float elevatorY = -gamepad2.right_stick_y;
-        boolean isRightJoyStickActive = (elevatorY != 0f);
+        boolean isRightJoyStickActive = (elevatorY != 0);
         if (isRightJoyStickActive) {
             useElevator(elevatorY);
-            if (elevatorY > 0f) {
+            if (elevatorY > 0) {
                 return Limb.ELEVATOR_UP;
             } else {
                 return Limb.ELEVATOR_DOWN;
             }
-        } else useElevator(0f);
+        } else useElevator(0);
 
         //Arm controls
         if (gamepad2.dpad_down || gamepad2.dpad_up) {
@@ -204,7 +204,7 @@ public class TeleOpControlImpl extends TeleOpControl {
 
         //Claw control
         if (gamepad2.b) {
-            if (clawButtonCooldown.time() >= 0.5f) {
+            if (clawButtonCooldown.time() >= 0.5) {
                 clawButtonCooldown.reset();
                 if (clawState) {
                     clawState = false;

@@ -13,42 +13,42 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
-    protected static final float ARM_UP = 1f;
+    protected static final double ARM_UP = 1f;
 
     /**
      * Servo position to put the arm down (Arm base Servo)
      */
-    protected static final float ARM_DOWN = 0.5f;
+    protected static final double ARM_DOWN = 0.5f;
 
     /**
      * Servo position to close the claws (Claw servos)
      */
-    protected static final float CLAWS_CLOSED = 1f;
+    protected static final double CLAWS_CLOSED = 1f;
 
     /**
      * Servo position to open the claws (Claw servos)
      */
-    protected static final float CLAWS_OPENED = 0f;
+    protected static final double CLAWS_OPENED = 0f;
 
     /**
      * Dictates how small the output from the joystick/trigger should be
      */
-    public static final float POWER_RATIO = 2f;
+    public static final double POWER_RATIO = 2;
 
     /**
      * Power input for rotating around the central axis
      */
-    public static final float ROTATION_POWER = 1f;
+    public static final double ROTATION_POWER = 1;
 
     /**
      * Power input for sliding operation (left or right)
      */
-    public static final float SLIDING_POWER = 1f;
+    public static final double SLIDING_POWER = 1;
 
     /**
      * Power input for diagonal driving (in all 4 directions)
      */
-    public static final float DIAGONAL_DRIVING_POWER = 1f;
+    public static final double DIAGONAL_DRIVING_POWER = 1;
 
     /**
      * Robot Hardware necessary for movement
@@ -112,7 +112,7 @@ public abstract class TeleOpControl extends OpMode {
      *
      * @param motorPower positive value will result in forward movement, while negative in backward movement
      */
-    protected void driveStraight(float motorPower) {
+    protected void driveStraight(double motorPower) {
         drive(motorPower, (motorPower < 0f ? Direction.BACKWARD : Direction.FORWARD));
     }
 
@@ -121,7 +121,7 @@ public abstract class TeleOpControl extends OpMode {
      *
      * @param motorPower positive value will result in strafing to the left, while negative in strafing to the right
      */
-    protected void driveSideways(float motorPower) {
+    protected void driveSideways(double motorPower) {
         drive(motorPower, (motorPower > 0f ? Direction.STRAFE_LEFT : Direction.STRAFE_RIGHT));
     }
 
@@ -132,7 +132,7 @@ public abstract class TeleOpControl extends OpMode {
      *                     in backwards movement
      * @param leftDiagonal whether or not to use the left diagonal (false = right diagonal, true = left diagonal)
      */
-    protected void driveDiagonally(float motorPower, boolean leftDiagonal) {
+    protected void driveDiagonally(double motorPower, boolean leftDiagonal) {
         if (leftDiagonal) {
             drive(motorPower, motorPower < 0f ? Direction.DIAGONALLY_LEFT_BACKWARD : Direction.DIAGONALLY_LEFT_FORWARD);
         } else {
@@ -145,7 +145,7 @@ public abstract class TeleOpControl extends OpMode {
      *
      * @param motorPower Positive power will result in rotation to the left, while negative power will result in rotation to the right
      */
-    protected void rotate(float motorPower) {
+    protected void rotate(double motorPower) {
         drive(motorPower, (motorPower >= 0f ? Direction.ROTATE_LEFT : Direction.ROTATE_RIGHT));
     }
 
@@ -155,8 +155,8 @@ public abstract class TeleOpControl extends OpMode {
      * @param motorPower power to give to the motors
      * @param direction  non-null direction that tells which direction the robot should take
      */
-    private void drive(float motorPower, @NonNull Direction direction) {
-        float leftFrontPower = 0f, rightFrontPower = 0f, leftBackPower = 0f, rightBackPower = 0f;
+    private void drive(double motorPower, @NonNull Direction direction) {
+        double leftFrontPower = 0, rightFrontPower = 0, leftBackPower = 0, rightBackPower = 0;
         motorPower = Math.abs(motorPower);
         switch (direction) {
             case FORWARD:
@@ -276,7 +276,7 @@ public abstract class TeleOpControl extends OpMode {
      * @param motorPower Positive value will bring the elevator up, while a negative
      *                   value will bring it down
      */
-    protected void useElevator(float motorPower) {
+    protected void useElevator(double motorPower) {
         robotHardware.getElevatorMotor().setPower(motorPower);
     }
 
@@ -286,7 +286,7 @@ public abstract class TeleOpControl extends OpMode {
      * @param motorPower Positive value will rotate the robot in left direction,
      *                   while negative value in the right direction
      */
-    protected void useWheelMotor(float motorPower) {
+    protected void useWheelMotor(double motorPower) {
         robotHardware.getWheelMotor().setPower(motorPower);
     }
 
