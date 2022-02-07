@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,7 +27,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      * <p>Wheel diameter in <b>centimetres</b></p>
      * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
      */
-    protected static final float WHEEL_DIAMETER = 10.16f;
+    protected static final double WHEEL_DIAMETER = 10.16;
 
     /**
      * <p>Ticks per centimetre based on motor and wheel specs</p>
@@ -35,29 +36,29 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @see AutonomousControl#WHEEL_DIAMETER
      * @see AutonomousControl#MOTOR_TICK_RATE
      */
-    protected static final float TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * (float) Math.PI);
+    protected static final double TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * Math.PI);
 
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
-    protected static final float ARM_UP = 1f;
+    protected static final double ARM_UP = 1;
     /**
      * Servo position to put the arm down (Arm base Servo)
      */
-    protected static final float ARM_DOWN = 0.5f;
+    protected static final double ARM_DOWN = 0.5;
     /**
      * Servo position to close the claws (Claw servos)
      */
-    protected static final float CLAWS_CLOSED = 1f;
+    protected static final double CLAWS_CLOSED = 1;
     /**
      * Servo position to open the claws (Claw servos)
      */
-    protected static final float CLAWS_OPENED = 0f;
+    protected static final double CLAWS_OPENED = 0;
 
     /**
      * Power used when rotating the robot
      */
-    protected static final float ROTATION_POWER = 0.4f;
+    protected static final double ROTATION_POWER = 0.4;
     /**
      * Robot Hardware necessary for movement
      */
@@ -78,7 +79,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @param distance   positive value representing the desired distance in centimetres.
      * @throws IllegalArgumentException if the distance is negative
      */
-    protected void driveStraight(float motorPower, float distance) throws IllegalArgumentException {
+    protected void driveStraight(double motorPower, double distance) throws IllegalArgumentException {
         if (distance < 0f) {
             throw new IllegalArgumentException("Expected a positive value for distance parameter");
         }
@@ -93,7 +94,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @param distance   positive value representing the desired distance in centimetres.
      * @throws IllegalArgumentException if the distance is negative
      */
-    protected void driveSideways(float motorPower, float distance) throws IllegalArgumentException {
+    protected void driveSideways(double motorPower, double distance) throws IllegalArgumentException {
         if (distance < 0f) {
             throw new IllegalArgumentException("Expected a positive value for distance parameter");
         }
@@ -103,14 +104,11 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Rotates the robot around its central axis with the desired power for the desired degrees
      *
-     * @param degrees    Value between -180 and 180 (inclusive) which the robot should rotate to
-     * @throws IllegalArgumentException if Math.abs(degrees) > 180
+     * @param degrees Value between -180 and 180 (inclusive) which the robot should rotate to
      */
-    protected void rotate(float degrees) throws IllegalArgumentException {
-        if (Math.abs(degrees) > 180) {
-            throw new IllegalArgumentException("Expected a number between -180 and 180");
-        }
-        float leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
+    protected void rotate(double degrees) {
+        degrees = Range.clip(degrees, -180, 180);
+        double leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
         if (degrees > 0f) {
             rightFrontPower = -ROTATION_POWER;
             leftFrontPower = ROTATION_POWER;
@@ -123,13 +121,13 @@ public abstract class AutonomousControl extends LinearOpMode {
             leftBackPower = -ROTATION_POWER;
         }
 
-        float lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
-        float relativeAngle = 0f;
+        double lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+        double relativeAngle = 0f;
         /*
         TODO
             - Experiment with lower speeds
          */
-        float yaw = degrees;
+        double yaw = degrees;
 
         while (opModeIsActive() && Math.abs(yaw) > 2f) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
@@ -137,9 +135,9 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
             robotHardware.getLeftBackMotor().setPower(leftBackPower);
 
-            float currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+            double currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
 
-            float delta = currentAngle - lastAngle;
+            double delta = currentAngle - lastAngle;
 
             if (delta > 180) delta -= 360;
             else if (delta <= -180) delta += 360;
@@ -152,19 +150,63 @@ public abstract class AutonomousControl extends LinearOpMode {
     }
 
     /**
+     * Rotates the robot to the absolute angle (based on the current orientation of the robot)
+     *
+     * @param target value representing the target to turn to
+     */
+    protected void rotateTo(double target) {
+        target = Range.clip(target, -180, 180);
+        double currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+
+        double yaw = target - currentAngle;
+
+        if (yaw > 180) yaw -= 360;
+        else if (yaw < -180) yaw += 360;
+
+        rotate(yaw);
+    }
+
+    protected void rotateToPID(double target) {
+        target = Range.clip(target, -180, 180);
+        /*
+        TODO
+            - Experiment with P, I and D values
+         */
+        PIDController driveSystem = new PIDController(0.01, 0, 0.003, target);
+
+        while (opModeIsActive()
+                &&
+                Math.abs(target -
+                        robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle) > 1) {
+            double motorPower = driveSystem.update(robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle);
+            robotHardware.getRightFrontMotor().setPower(motorPower);
+            robotHardware.getRightBackMotor().setPower(motorPower);
+            robotHardware.getLeftFrontMotor().setPower(motorPower);
+            robotHardware.getLeftBackMotor().setPower(motorPower);
+        }
+        stopMotors();
+    }
+
+    protected void rotatePID(double degrees) {
+        double angle = degrees + robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
+        angle = Range.clip(angle, -180, 180);
+        rotateToPID(angle);
+    }
+
+    /**
      * Completely brings the motors to a halt.
      */
     protected void stopMotors() {
         if (opModeIsActive()) {
-            robotHardware.getRightFrontMotor().setPower(0f);
-            robotHardware.getRightBackMotor().setPower(0f);
-            robotHardware.getLeftFrontMotor().setPower(0f);
-            robotHardware.getLeftBackMotor().setPower(0f);
+            robotHardware.getRightFrontMotor().setPower(0);
+            robotHardware.getRightBackMotor().setPower(0);
+            robotHardware.getLeftFrontMotor().setPower(0);
+            robotHardware.getLeftBackMotor().setPower(0);
         }
     }
 
-    private void drive(float motorPower, float distance, @NonNull DrivingDirection direction) {
-        float leftFrontPower = 0f, rightFrontPower = 0f, leftBackPower = 0f, rightBackPower = 0f;
+    private void drive(double motorPower, double distance, @NonNull DrivingDirection direction) {
+        double leftFrontPower = 0f, rightFrontPower = 0f, leftBackPower = 0f, rightBackPower = 0f;
         motorPower = Math.abs(motorPower);
 
         switch (direction) {
@@ -280,7 +322,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      */
     protected void useWheel() {
         if (opModeIsActive()) {
-            robotHardware.getWheelMotor().setPower(1f);
+            robotHardware.getWheelMotor().setPower(1);
         }
     }
 
