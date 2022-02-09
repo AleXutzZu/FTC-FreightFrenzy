@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.control;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
-
-import java.util.Locale;
 
 public abstract class TeleOpControl extends OpMode {
     /**
@@ -58,26 +58,34 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * Shows runtime since pressing start
      */
-    protected final ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
+
+    /**
+     * Cooldown for resetting encoders button
+     */
+    private final ElapsedTime resetEncodersKeyCooldown = new ElapsedTime();
 
     /**
      * Whether or not the claws are open or not (true = open, false = closed)
      */
     private boolean clawState = false;
 
-    /**
-     * Shows debug state
-     * 0 = no debug
-     * 1 = start debugging
-     * 2 = freeze debug
-     * 3 = clear debug then goes to state 0
-     */
-    protected int debugState = 0;
+    private Telemetry.Item drivingTelemetry;
+    private Telemetry.Item leftFrontMotorTelemetry;
+    private Telemetry.Item rightFrontMotorTelemetry;
+    private Telemetry.Item leftBackMotorTelemetry;
+    private Telemetry.Item rightBackMotorTelemetry;
+    private Telemetry.Item runtimeTelemetry;
+    private Telemetry.Item craneTelemetry;
+    private Telemetry.Item armTelemetry;
+    private Telemetry.Item clawsTelemetry;
+    private Telemetry.Item wheelMotorTelemetry;
+    private Telemetry.Item elevatorMotorTelemetry;
 
     /**
      * All possible directions a robot may take
      */
-    protected enum Direction {
+    private enum Direction {
         FORWARD, BACKWARD,
         STRAFE_LEFT, STRAFE_RIGHT,
         ROTATE_LEFT, ROTATE_RIGHT,
@@ -89,7 +97,7 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * All possible limb functions
      */
-    protected enum Limb {
+    private enum Limb {
         ELEVATOR_UP, ELEVATOR_DOWN,
         ROTATING_WHEEL,
         CLAWS_OPEN, CLAWS_CLOSED,
@@ -220,6 +228,15 @@ public abstract class TeleOpControl extends OpMode {
         robotHardware.getRightBackMotor().setPower(rightBackPower);
         robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
         robotHardware.getLeftBackMotor().setPower(leftBackPower);
+
+        double averagePower = (robotHardware.getLeftFrontMotor().getPower() + robotHardware.getLeftBackMotor().getPower() + robotHardware.getRightBackMotor().getPower() + robotHardware.getRightFrontMotor().getPower()) / 4d;
+
+        this.drivingTelemetry.setValue("dir %d avg. pow %.2f", direction, averagePower);
+        this.leftFrontMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getLeftFrontMotor().getDirection(), robotHardware.getLeftFrontMotor().getPower(), robotHardware.getLeftFrontMotor().getCurrentPosition());
+        this.rightFrontMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getRightFrontMotor().getDirection(), robotHardware.getRightFrontMotor().getPower(), robotHardware.getRightFrontMotor().getCurrentPosition());
+        this.leftBackMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getLeftBackMotor().getDirection(), robotHardware.getLeftBackMotor().getPower(), robotHardware.getLeftBackMotor().getCurrentPosition());
+        this.rightBackMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getRightBackMotor().getDirection(), robotHardware.getRightBackMotor().getPower(), robotHardware.getRightBackMotor().getCurrentPosition());
+        telemetry.update();
     }
 
     /**
@@ -239,6 +256,10 @@ public abstract class TeleOpControl extends OpMode {
      */
     protected void useArm(boolean armUp) {
         robotHardware.getArmBase().setPosition(armUp ? ARM_UP : ARM_DOWN);
+
+        craneTelemetry.setValue(armUp ? Limb.ARM_UP : Limb.ARM_DOWN);
+        armTelemetry.setValue(armUp ? "up" : "dwn");
+        telemetry.update();
     }
 
     /**
@@ -259,6 +280,10 @@ public abstract class TeleOpControl extends OpMode {
             robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
             robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
         }
+
+        craneTelemetry.setValue(clawState ? Limb.CLAWS_CLOSED : Limb.CLAWS_OPEN);
+        clawsTelemetry.setValue(clawState ? "opn" : "cls");
+        telemetry.update();
     }
 
     /**
@@ -269,6 +294,11 @@ public abstract class TeleOpControl extends OpMode {
      */
     protected void useElevator(double motorPower) {
         robotHardware.getElevatorMotor().setPower(motorPower);
+
+        craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
+        if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
+        elevatorMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getElevatorMotor().getDirection(), robotHardware.getElevatorMotor().getPower(), robotHardware.getElevatorMotor().getCurrentPosition());
+        telemetry.update();
     }
 
     /**
@@ -279,63 +309,63 @@ public abstract class TeleOpControl extends OpMode {
      */
     protected void useWheelMotor(double motorPower) {
         robotHardware.getWheelMotor().setPower(motorPower);
+
+        craneTelemetry.setValue(Limb.ROTATING_WHEEL);
+        if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
+        wheelMotorTelemetry.setValue("pow %.2f dir %s", robotHardware.getWheelMotor().getPower(), robotHardware.getWheelMotor().getDirection());
+        telemetry.update();
     }
 
     @Override
     public void init() {
         robotHardware.initTeleOp(hardwareMap);
+        telemetry.setAutoClear(false);
+        drivingTelemetry = telemetry.addData("Driving Systems", " ");
+        leftFrontMotorTelemetry = telemetry.addData("Left front Motor", " ");
+        rightFrontMotorTelemetry = telemetry.addData("Right front Motor", " ");
+        leftBackMotorTelemetry = telemetry.addData("Left back Motor", " ");
+        rightBackMotorTelemetry = telemetry.addData("Right back Motor", " ");
+
+        craneTelemetry = telemetry.addData("Crane Systems", " ");
+        elevatorMotorTelemetry = telemetry.addData("Elevator", " ");
+        wheelMotorTelemetry = telemetry.addData("Carousel Wheel", " ");
+        armTelemetry = telemetry.addData("Arm", " ");
+        clawsTelemetry = telemetry.addData("Claws", " ");
+        runtimeTelemetry = telemetry.addData("Runtime", 0);
         useClaws();
         useArm(true);
     }
 
     @Override
     public void loop() {
-        Direction direction = drive();
-        Limb limb = useLimbs();
+        drive();
+        useLimbs();
+        runtimeTelemetry.setValue(runtime.toString());
+        if (gamepad1.y) {
+            if (resetEncodersKeyCooldown.time() > 1) {
+                resetEncodersKeyCooldown.reset();
+                robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        if (debugState == 3) {
-            telemetry.clear();
-            debugState = 0;
-            return;
+                robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
         }
-        if (debugState == 2) {
-            return;
-        }
-        if (debugState == 1) {
-            telemetry.addData("Driving Systems", formatDrivingData(direction))
-                    .addData("Crane Systems", formatCraneData(limb));
-        }
-    }
-
-    private String formatDrivingData(Direction direction) {
-        String info = "Left front: %.2f\n Right front: %.2f\n Left back: %.2f\n Right back: %.2f\n Average power: %.2f\n Direction: %s";
-        double averagePower = (robotHardware.getLeftFrontMotor().getPower() + robotHardware.getRightFrontMotor().getPower() + robotHardware.getLeftBackMotor().getPower()
-                + robotHardware.getRightBackMotor().getPower()) / 4d;
-        return String.format(Locale.ENGLISH, info, robotHardware.getLeftFrontMotor().getPower(), robotHardware.getRightFrontMotor().getPower(), robotHardware.getLeftBackMotor().getPower(),
-                robotHardware.getRightBackMotor().getPower(), averagePower, direction);
-    }
-
-    private String formatCraneData(Limb limb) {
-        String info = "Wheel power: %.2f\n Elevator: pow %.2f ticks %d\n Arm: pos %.2f\n Claws: state " + (clawState ? "open" : "closed") + "\nStatus: %s";
-        return String.format(Locale.ENGLISH, info, robotHardware.getWheelMotor().getPower(), robotHardware.getElevatorMotor().getPower(), robotHardware.getElevatorMotor().getCurrentPosition(),
-                robotHardware.getArmBase().getPosition(), limb);
     }
 
     /**
      * Drives the robot on the field
-     *
-     * @return the direction the robot took, IDLE otherwise
      */
-    protected abstract Direction drive();
+    protected abstract void drive();
 
     /**
      * Operates the limbs of the robot on the field
-     *
-     * @return the limb currently used, IDLE otherwise
      */
-    protected abstract Limb useLimbs();
-
-    protected boolean isClawState() {
-        return clawState;
-    }
+    protected abstract void useLimbs();
 }

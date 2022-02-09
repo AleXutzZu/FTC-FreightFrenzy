@@ -6,39 +6,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.control.TeleOpControl;
 
 @TeleOp(name = "Proficient Movement", group = "Regio")
-public class ProficientMovement extends TeleOpControl {
+public final class ProficientMovement extends TeleOpControl {
     /**
      * Cooldown for opening/closing claws
      */
     private final ElapsedTime clawButtonCooldown = new ElapsedTime();
 
-    /**
-     * Cooldown for using debug options
-     */
-    private final ElapsedTime debugButtonCooldown = new ElapsedTime();
-
-
     @Override
     public void start() {
-        runtime.reset();
         clawButtonCooldown.reset();
-        debugButtonCooldown.reset();
-        telemetry.addData("Runtime", runtime::toString);
     }
 
 
     @Override
-    protected Direction drive() {
-        /*
-        Debug Key = Y
-         */
-        if (gamepad1.y) {
-            if (debugButtonCooldown.time() >= 0.5) {
-                debugButtonCooldown.reset();
-                debugState++;
-            }
-        }
-        Direction direction = null;
+    protected void drive() {
+
         /*
         Button mappings
         A = Handbrake
@@ -50,7 +32,7 @@ public class ProficientMovement extends TeleOpControl {
 
         if (gamepad1.a) {
             stopMotors();
-            return Direction.IDLE;
+            return;
         }
 
         if (gamepad1.left_bumper || gamepad1.right_bumper || gamepad1.dpad_right || gamepad1.dpad_left) {
@@ -60,25 +42,13 @@ public class ProficientMovement extends TeleOpControl {
                     || (gamepad1.dpad_left && !gamepad1.left_bumper && !gamepad1.right_bumper && !gamepad1.dpad_right);
             if (!areMultipleButtonsPressed) {
                 stopMotors();
-                return Direction.IDLE;
+                return;
             }
-            if (gamepad1.left_bumper) {
-                rotate(ROTATION_POWER);
-                direction = Direction.ROTATE_LEFT;
-            }
-            if (gamepad1.right_bumper) {
-                rotate(-ROTATION_POWER);
-                direction = Direction.ROTATE_RIGHT;
-            }
-            if (gamepad1.dpad_left) {
-                driveSideways(SLIDING_POWER);
-                direction = Direction.STRAFE_LEFT;
-            }
-            if (gamepad1.dpad_right) {
-                driveSideways(-SLIDING_POWER);
-                direction = Direction.STRAFE_RIGHT;
-            }
-            return direction;
+            if (gamepad1.left_bumper) rotate(ROTATION_POWER);
+            if (gamepad1.right_bumper) rotate(-ROTATION_POWER);
+            if (gamepad1.dpad_left) driveSideways(SLIDING_POWER);
+            if (gamepad1.dpad_right) driveSideways(-SLIDING_POWER);
+            return;
         }
 
         double forwardPower = gamepad1.right_trigger / POWER_RATIO;
@@ -106,7 +76,7 @@ public class ProficientMovement extends TeleOpControl {
 
         if (isLeftJoyStickActive && isRightJoyStickActive) {
             stopMotors();
-            return Direction.IDLE;
+            return;
         }
         /*
         Right joystick mappings
@@ -123,19 +93,17 @@ public class ProficientMovement extends TeleOpControl {
             if (horizontalCoordinate > 0) {
                 if (verticalCoordinate > 0) {
                     driveDiagonally(DIAGONAL_DRIVING_POWER, false);
-                    return Direction.DIAGONALLY_RIGHT_FORWARD;
                 } else {
                     driveDiagonally(-DIAGONAL_DRIVING_POWER, false);
-                    return Direction.DIAGONALLY_RIGHT_BACKWARD;
                 }
+                return;
             } else {
                 if (verticalCoordinate > 0) {
                     driveDiagonally(DIAGONAL_DRIVING_POWER, true);
-                    return Direction.DIAGONALLY_LEFT_FORWARD;
                 } else {
                     driveDiagonally(-DIAGONAL_DRIVING_POWER, true);
-                    return Direction.DIAGONALLY_LEFT_BACKWARD;
                 }
+                return;
             }
         }
         /*
@@ -144,12 +112,9 @@ public class ProficientMovement extends TeleOpControl {
         if (!isLeftJoyStickActive) {
             if (totalPower == 0) {
                 stopMotors();
-                return Direction.IDLE;
+                return;
             }
-
             driveStraight(totalPower);
-
-            return (totalPower < 0 ? Direction.BACKWARD : Direction.FORWARD);
         } else {
             /*
             Reverting the xOy axis
@@ -161,28 +126,23 @@ public class ProficientMovement extends TeleOpControl {
             if (boostPower >= 0f) {
                 if (totalPower > 0f) {
                     driveStraight(boostPower + totalPower);
-                    direction = Direction.FORWARD;
                 } else {
                     stopMotors();
-                    direction = Direction.IDLE;
                 }
             }
             //DOWN
             else {
                 if (totalPower < 0f) {
                     driveStraight(boostPower + totalPower);
-                    direction = Direction.BACKWARD;
                 } else {
                     stopMotors();
-                    direction = Direction.IDLE;
                 }
             }
-            return direction;
         }
     }
 
     @Override
-    protected Limb useLimbs() {
+    protected void useLimbs() {
         /*
         Key mappings
         Right Trigger - Rotate wheel to the right
@@ -195,7 +155,7 @@ public class ProficientMovement extends TeleOpControl {
         float wheelPower = -gamepad2.right_trigger + gamepad2.left_trigger;
         if (wheelPower != 0) {
             useWheelMotor(wheelPower);
-            return Limb.ROTATING_WHEEL;
+            return;
         } else useWheelMotor(0);
 
         //Elevator controls
@@ -203,22 +163,18 @@ public class ProficientMovement extends TeleOpControl {
         boolean isRightJoyStickActive = (elevatorY != 0);
         if (isRightJoyStickActive) {
             useElevator(elevatorY);
-            if (elevatorY > 0) {
-                return Limb.ELEVATOR_UP;
-            } else {
-                return Limb.ELEVATOR_DOWN;
-            }
+            return;
         } else useElevator(0);
 
         //Arm controls
         if (gamepad2.dpad_down || gamepad2.dpad_up) {
             if (gamepad2.dpad_up && !gamepad2.dpad_down) {
                 useArm(true);
-                return Limb.ARM_UP;
+                return;
             }
             if (!gamepad2.dpad_up) {
                 useArm(false);
-                return Limb.ARM_DOWN;
+                return;
             }
         }
 
@@ -227,9 +183,7 @@ public class ProficientMovement extends TeleOpControl {
             if (clawButtonCooldown.time() >= 0.5) {
                 clawButtonCooldown.reset();
                 useClaws();
-                return isClawState() ? Limb.CLAWS_OPEN : Limb.CLAWS_CLOSED;
             }
         }
-        return Limb.IDLE;
     }
 }

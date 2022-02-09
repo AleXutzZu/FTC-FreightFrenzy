@@ -13,13 +13,18 @@ public class TeleOpControlImpl extends TeleOpControl {
     private boolean motorDirection = false;
 
     @Override
+    public void init() {
+        robotHardware.initTeleOp(hardwareMap);
+    }
+
+    @Override
     public void start() {
         buttonTimer.reset();
     }
 
     @Override
-    protected Direction drive() {
-        if (gamepad1.y){
+    protected void drive() {
+        if (gamepad1.y) {
             if (buttonTimer.time() > 1f) {
                 buttonTimer.reset();
                 if (motorDirection) {
@@ -32,15 +37,12 @@ public class TeleOpControlImpl extends TeleOpControl {
             }
         }
         double power = gamepad1.right_trigger - gamepad1.left_trigger;
-        useWheelMotor(power);
+        robotHardware.getWheelMotor().setPower(power);
 
         telemetry.addData("Wheel Info", "Direction %s, ticks %d, pow %.2f", robotHardware.getWheelMotor().getDirection(), robotHardware.getWheelMotor().getCurrentPosition(), power);
-
-        return null;
     }
 
     @Override
-    protected Limb useLimbs() {
-        return null;
+    protected void useLimbs() {
     }
 }
