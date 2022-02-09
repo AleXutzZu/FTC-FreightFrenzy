@@ -96,7 +96,7 @@ public class RobotHardware {
     }
 
     /**
-     * Initializes motors and servos installed on the robot
+     * Initializes motors installed on the robot
      *
      * @param hardwareMap never null map with the configuration from the robot controller app
      */
@@ -139,17 +139,6 @@ public class RobotHardware {
         wheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /*
-        Servos
-         */
-        armBase = hardwareMap.get(Servo.class, "arm_base");
-        leftClaw = hardwareMap.get(Servo.class, "left_claw");
-        rightClaw = hardwareMap.get(Servo.class, "right_claw");
-
-        armBase.setDirection(Servo.Direction.FORWARD);
-        leftClaw.setDirection(Servo.Direction.FORWARD);
-        rightClaw.setDirection(Servo.Direction.FORWARD);
-
-        /*
         Doing initialization of position/power
          */
         rightFrontMotor.setPower(0f);
@@ -159,7 +148,29 @@ public class RobotHardware {
         elevatorMotor.setPower(0f);
         wheelMotor.setPower(0f);
 
-        armBase.setPosition(1f);
+
+    }
+
+    /**
+     * Initializes servos installed on the robot
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initServos(@NonNull HardwareMap hardwareMap) {
+        /*
+        Servos
+         */
+        armBase = hardwareMap.get(Servo.class, "arm_base");
+        leftClaw = hardwareMap.get(Servo.class, "left_claw");
+        rightClaw = hardwareMap.get(Servo.class, "right_claw");
+
+        armBase.setDirection(Servo.Direction.FORWARD);
+        leftClaw.setDirection(Servo.Direction.FORWARD);
+        rightClaw.setDirection(Servo.Direction.FORWARD);
+        /*
+        Doing initialization of position/power
+         */
+        armBase.setPosition(0f);
         leftClaw.setPosition(0f);
         rightClaw.setPosition(0f);
     }
@@ -200,8 +211,31 @@ public class RobotHardware {
         imuParameters.loggingEnabled = false;
         imuParameters.calibrationDataFile = "BNO055IMUCalibration.json";
         imuParameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        if (!gyroscope.initialize(imuParameters))
+        if (!gyroscope.initialize(imuParameters)) {
             throw new RuntimeException("Could not initialize Gyroscope");
+        }
+    }
+
+    /**
+     * Initializes all hardware necessary for TeleOps.
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initTeleOp(@NonNull HardwareMap hardwareMap) {
+        initMotors(hardwareMap);
+        initServos(hardwareMap);
+    }
+
+    /**
+     * Initializes all hardware necessary for Autonomous OpModes
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initAutonomous(@NonNull HardwareMap hardwareMap) {
+        initMotors(hardwareMap);
+        initServos(hardwareMap);
+        initSensors(hardwareMap);
+        initGyro(hardwareMap);
     }
 
     public DcMotor getRightFrontMotor() {

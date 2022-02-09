@@ -283,7 +283,7 @@ public abstract class TeleOpControl extends OpMode {
 
     @Override
     public void init() {
-        robotHardware.initMotors(hardwareMap);
+        robotHardware.initTeleOp(hardwareMap);
         useClaws();
         useArm(true);
     }
