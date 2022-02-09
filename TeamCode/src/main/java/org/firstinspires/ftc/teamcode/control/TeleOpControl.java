@@ -33,22 +33,22 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * Dictates how small the output from the joystick/trigger should be
      */
-    public static final double POWER_RATIO = 2;
+    protected static final double POWER_RATIO = 2;
 
     /**
      * Power input for rotating around the central axis
      */
-    public static final double ROTATION_POWER = 1;
+    protected static final double ROTATION_POWER = 1;
 
     /**
      * Power input for sliding operation (left or right)
      */
-    public static final double SLIDING_POWER = 1;
+    protected static final double SLIDING_POWER = 1;
 
     /**
      * Power input for diagonal driving (in all 4 directions)
      */
-    public static final double DIAGONAL_DRIVING_POWER = 1;
+    protected static final double DIAGONAL_DRIVING_POWER = 1;
 
     /**
      * Robot Hardware necessary for movement
@@ -61,19 +61,9 @@ public abstract class TeleOpControl extends OpMode {
     protected final ElapsedTime runtime = new ElapsedTime();
 
     /**
-     * Cooldown for opening/closing claws
-     */
-    protected final ElapsedTime clawButtonCooldown = new ElapsedTime();
-
-    /**
-     * Cooldown for using debug options
-     */
-    protected final ElapsedTime debugButtonCooldown = new ElapsedTime();
-
-    /**
      * Whether or not the claws are open or not (true = open, false = closed)
      */
-    protected boolean clawState = false;
+    private boolean clawState = false;
 
     /**
      * Shows debug state
@@ -256,17 +246,18 @@ public abstract class TeleOpControl extends OpMode {
      * It closes the claws by putting them in the CLAWS_CLOSED position and opens them by putting the servos
      * in the CLAWS_OPENED position
      *
-     * @param openClaws whether or not the claws should open or not (true = open claws, false = close claws)
      * @see TeleOpControl#CLAWS_OPENED
      * @see TeleOpControl#CLAWS_CLOSED
      */
-    protected void useClaws(boolean openClaws) {
-        if (openClaws) {
-            robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
-            robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
-        } else {
+    protected void useClaws() {
+        if (clawState) {
+            clawState = false;
             robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
             robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
+        } else {
+            clawState = true;
+            robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
+            robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
         }
     }
 
@@ -291,17 +282,9 @@ public abstract class TeleOpControl extends OpMode {
     }
 
     @Override
-    public void start() {
-        runtime.reset();
-        clawButtonCooldown.reset();
-        debugButtonCooldown.reset();
-        telemetry.addData("Runtime", runtime::toString);
-    }
-
-    @Override
     public void init() {
         robotHardware.initMotors(hardwareMap);
-        useClaws(false);
+        useClaws();
         useArm(true);
     }
 
@@ -340,13 +323,19 @@ public abstract class TeleOpControl extends OpMode {
 
     /**
      * Drives the robot on the field
+     *
      * @return the direction the robot took, IDLE otherwise
      */
     protected abstract Direction drive();
 
     /**
      * Operates the limbs of the robot on the field
+     *
      * @return the limb currently used, IDLE otherwise
      */
     protected abstract Limb useLimbs();
+
+    protected boolean isClawState() {
+        return clawState;
+    }
 }

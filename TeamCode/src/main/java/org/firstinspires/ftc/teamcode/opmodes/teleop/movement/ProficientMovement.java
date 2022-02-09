@@ -1,11 +1,31 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.movement;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.TeleOpControl;
 
 @TeleOp(name = "Proficient Movement", group = "Regio")
 public class ProficientMovement extends TeleOpControl {
+    /**
+     * Cooldown for opening/closing claws
+     */
+    private final ElapsedTime clawButtonCooldown = new ElapsedTime();
+
+    /**
+     * Cooldown for using debug options
+     */
+    private final ElapsedTime debugButtonCooldown = new ElapsedTime();
+
+
+    @Override
+    public void start() {
+        runtime.reset();
+        clawButtonCooldown.reset();
+        debugButtonCooldown.reset();
+        telemetry.addData("Runtime", runtime::toString);
+    }
+
 
     @Override
     protected Direction drive() {
@@ -206,15 +226,8 @@ public class ProficientMovement extends TeleOpControl {
         if (gamepad2.b) {
             if (clawButtonCooldown.time() >= 0.5) {
                 clawButtonCooldown.reset();
-                if (clawState) {
-                    clawState = false;
-                    useClaws(false);
-                    return Limb.CLAWS_CLOSED;
-                } else {
-                    clawState = true;
-                    useClaws(true);
-                    return Limb.CLAWS_OPEN;
-                }
+                useClaws();
+                return isClawState() ? Limb.CLAWS_OPEN : Limb.CLAWS_CLOSED;
             }
         }
         return Limb.IDLE;
