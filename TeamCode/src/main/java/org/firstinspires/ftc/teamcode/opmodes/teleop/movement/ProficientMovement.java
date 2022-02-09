@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.movement;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "New TeleOp System Attempt", group = "Testing Purposes")
-@Disabled
-public class TeleOpControlImpl extends TeleOpControl {
+import org.firstinspires.ftc.teamcode.control.TeleOpControl;
+
+@TeleOp(name = "Proficient Movement", group = "Regio")
+public class ProficientMovement extends TeleOpControl {
 
     @Override
     protected Direction drive() {
@@ -110,10 +110,10 @@ public class TeleOpControlImpl extends TeleOpControl {
                 }
             } else {
                 if (verticalCoordinate > 0) {
-                    driveDiagonally(RobotMovementControls.DIAGONAL_DRIVING_POWER, true);
+                    driveDiagonally(DIAGONAL_DRIVING_POWER, true);
                     return Direction.DIAGONALLY_LEFT_FORWARD;
                 } else {
-                    driveDiagonally(-RobotMovementControls.DIAGONAL_DRIVING_POWER, true);
+                    driveDiagonally(-DIAGONAL_DRIVING_POWER, true);
                     return Direction.DIAGONALLY_LEFT_BACKWARD;
                 }
             }

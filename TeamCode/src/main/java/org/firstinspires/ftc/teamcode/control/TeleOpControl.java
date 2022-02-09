@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.control;
 
 import androidx.annotation.NonNull;
 
@@ -184,16 +184,16 @@ public abstract class TeleOpControl extends OpMode {
                 leftBackPower = -motorPower;
                 break;
             case ROTATE_LEFT:
-                rightFrontPower = -motorPower;
-                leftFrontPower = motorPower;
-                rightBackPower = -motorPower;
-                leftBackPower = motorPower;
-                break;
-            case ROTATE_RIGHT:
                 rightFrontPower = motorPower;
                 leftFrontPower = -motorPower;
                 rightBackPower = motorPower;
                 leftBackPower = -motorPower;
+                break;
+            case ROTATE_RIGHT:
+                rightFrontPower = -motorPower;
+                leftFrontPower = motorPower;
+                rightBackPower = -motorPower;
+                leftBackPower = motorPower;
                 break;
             case DIAGONALLY_RIGHT_FORWARD:
                 rightFrontPower = motorPower;

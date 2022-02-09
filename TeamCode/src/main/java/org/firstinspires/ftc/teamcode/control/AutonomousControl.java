@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.util;
+package org.firstinspires.ftc.teamcode.control;
 
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -58,7 +59,12 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Power used when rotating the robot
      */
-    protected static final double ROTATION_POWER = 0.4;
+    protected static final double ROTATION_POWER = 1;
+
+    /**
+     * Power used when the robot is driving straight or sideways
+     */
+    protected static final double DRIVING_POWER = 1d;
     /**
      * Robot Hardware necessary for movement
      */
@@ -74,31 +80,19 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Drives the robot in a straight direction for the desired distance with the desired power
      *
-     * @param motorPower power that should be given to the motors. Negative power will result in backwards movement, while positive will be forwards.
-     *                   The value should range from -1.0 to 1.0
-     * @param distance   positive value representing the desired distance in centimetres.
-     * @throws IllegalArgumentException if the distance is negative
+     * @param distance value representing the desired distance in centimetres. If negative, the robot will go backwards, forwards otherwise
      */
-    protected void driveStraight(double motorPower, double distance) throws IllegalArgumentException {
-        if (distance < 0f) {
-            throw new IllegalArgumentException("Expected a positive value for distance parameter");
-        }
-        drive(motorPower, distance, (motorPower < 0f ? DrivingDirection.BACKWARD : DrivingDirection.FORWARD));
+    protected void driveStraight(double distance) {
+        drive(distance, (distance < 0d ? DrivingDirection.BACKWARD : DrivingDirection.FORWARD));
     }
 
     /**
      * Drives the robot on a horizontal direction for the desired distance with the desired power
      *
-     * @param motorPower power that should be given to the motors. Negative power will result in left movement, while positive will be right movement.
-     *                   The value should range from -1.0 to 1.0
-     * @param distance   positive value representing the desired distance in centimetres.
-     * @throws IllegalArgumentException if the distance is negative
+     * @param distance positive value representing the desired distance in centimetres.
      */
-    protected void driveSideways(double motorPower, double distance) throws IllegalArgumentException {
-        if (distance < 0f) {
-            throw new IllegalArgumentException("Expected a positive value for distance parameter");
-        }
-        drive(motorPower, distance, (motorPower < 0f ? DrivingDirection.STRAFE_LEFT : DrivingDirection.STRAFE_RIGHT));
+    protected void driveSideways(double distance) {
+        drive(distance, (distance < 0f ? DrivingDirection.STRAFE_LEFT : DrivingDirection.STRAFE_RIGHT));
     }
 
     /**
@@ -110,15 +104,15 @@ public abstract class AutonomousControl extends LinearOpMode {
         degrees = Range.clip(degrees, -180, 180);
         double leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
         if (degrees > 0f) {
-            rightFrontPower = -ROTATION_POWER;
-            leftFrontPower = ROTATION_POWER;
-            rightBackPower = -ROTATION_POWER;
-            leftBackPower = ROTATION_POWER;
-        } else {
             rightFrontPower = ROTATION_POWER;
             leftFrontPower = -ROTATION_POWER;
             rightBackPower = ROTATION_POWER;
             leftBackPower = -ROTATION_POWER;
+        } else {
+            rightFrontPower = -ROTATION_POWER;
+            leftFrontPower = ROTATION_POWER;
+            rightBackPower = -ROTATION_POWER;
+            leftBackPower = ROTATION_POWER;
         }
 
         double lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
@@ -129,7 +123,7 @@ public abstract class AutonomousControl extends LinearOpMode {
          */
         double yaw = degrees;
 
-        while (opModeIsActive() && Math.abs(yaw) > 2f) {
+        while (opModeIsActive() && Math.abs(yaw) > 14f) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
             robotHardware.getRightBackMotor().setPower(rightBackPower);
             robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
@@ -166,33 +160,6 @@ public abstract class AutonomousControl extends LinearOpMode {
         rotate(yaw);
     }
 
-    protected void rotateToPID(double target) {
-        target = Range.clip(target, -180, 180);
-        /*
-        TODO
-            - Experiment with P, I and D values
-         */
-        PIDController driveSystem = new PIDController(0.01, 0, 0.003, target);
-
-        while (opModeIsActive()
-                &&
-                Math.abs(target -
-                        robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle) > 1) {
-            double motorPower = driveSystem.update(robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle);
-            robotHardware.getRightFrontMotor().setPower(motorPower);
-            robotHardware.getRightBackMotor().setPower(motorPower);
-            robotHardware.getLeftFrontMotor().setPower(motorPower);
-            robotHardware.getLeftBackMotor().setPower(motorPower);
-        }
-        stopMotors();
-    }
-
-    protected void rotatePID(double degrees) {
-        double angle = degrees + robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
-        angle = Range.clip(angle, -180, 180);
-        rotateToPID(angle);
-    }
-
     /**
      * Completely brings the motors to a halt.
      */
@@ -205,35 +172,36 @@ public abstract class AutonomousControl extends LinearOpMode {
         }
     }
 
-    private void drive(double motorPower, double distance, @NonNull DrivingDirection direction) {
-        double leftFrontPower = 0f, rightFrontPower = 0f, leftBackPower = 0f, rightBackPower = 0f;
-        motorPower = Math.abs(motorPower);
+    private void drive(double distance, @NonNull DrivingDirection direction) {
+        distance = Math.abs(distance);
+
+        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
 
         switch (direction) {
 
             case FORWARD:
-                rightFrontPower = motorPower;
-                leftFrontPower = motorPower;
-                rightBackPower = motorPower;
-                leftBackPower = motorPower;
+                robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
                 break;
             case BACKWARD:
-                rightFrontPower = -motorPower;
-                leftFrontPower = -motorPower;
-                rightBackPower = -motorPower;
-                leftBackPower = -motorPower;
+                robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
                 break;
             case STRAFE_LEFT:
-                rightFrontPower = motorPower;
-                leftFrontPower = -motorPower;
-                rightBackPower = -motorPower;
-                leftBackPower = motorPower;
+                robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
                 break;
             case STRAFE_RIGHT:
-                rightFrontPower = -motorPower;
-                leftFrontPower = motorPower;
-                rightBackPower = motorPower;
-                leftBackPower = -motorPower;
+                robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+                robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+                robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
                 break;
         }
 
@@ -242,28 +210,26 @@ public abstract class AutonomousControl extends LinearOpMode {
         robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
-
         robotHardware.getLeftFrontMotor().setTargetPosition(drivingTarget);
         robotHardware.getLeftBackMotor().setTargetPosition(drivingTarget);
         robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
         robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
 
-        robotHardware.getRightFrontMotor().setPower(rightFrontPower);
-        robotHardware.getRightBackMotor().setPower(rightBackPower);
-        robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
-        robotHardware.getLeftBackMotor().setPower(leftBackPower);
+        robotHardware.getRightFrontMotor().setPower(DRIVING_POWER);
+        robotHardware.getRightBackMotor().setPower(DRIVING_POWER);
+        robotHardware.getLeftFrontMotor().setPower(DRIVING_POWER);
+        robotHardware.getLeftBackMotor().setPower(DRIVING_POWER);
 
         robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (opModeIsActive() &&
+        while (opModeIsActive() && (
                 robotHardware.getRightFrontMotor().isBusy() &&
-                robotHardware.getRightBackMotor().isBusy() &&
-                robotHardware.getLeftFrontMotor().isBusy() &&
-                robotHardware.getLeftBackMotor().isBusy()
+                        robotHardware.getRightBackMotor().isBusy() &&
+                        robotHardware.getLeftFrontMotor().isBusy() &&
+                        robotHardware.getLeftBackMotor().isBusy())
         ) {
             /*
             TODO
@@ -277,6 +243,11 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            robotHardware.getRightFrontMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+            robotHardware.getLeftFrontMotor().setDirection(DcMotorSimple.Direction.REVERSE);
+            robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
+            robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         }
     }
 
