@@ -119,6 +119,11 @@ public class RobotHardware {
         rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         /*
         Defining the motor for the elevator
          */
@@ -127,6 +132,8 @@ public class RobotHardware {
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elevatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         /*
         Defining the motor to rotate the carousel
@@ -137,6 +144,8 @@ public class RobotHardware {
         wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         wheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        wheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         /*
         Doing initialization of position/power
@@ -167,12 +176,6 @@ public class RobotHardware {
         armBase.setDirection(Servo.Direction.FORWARD);
         leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.FORWARD);
-        /*
-        Doing initialization of position/power
-         */
-        armBase.setPosition(0f);
-        leftClaw.setPosition(0f);
-        rightClaw.setPosition(0f);
     }
 
     /**

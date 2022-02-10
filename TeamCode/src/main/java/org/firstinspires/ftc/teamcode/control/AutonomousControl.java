@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class AutonomousControl extends LinearOpMode {
@@ -123,7 +124,7 @@ public abstract class AutonomousControl extends LinearOpMode {
          */
         double yaw = degrees;
 
-        while (opModeIsActive() && Math.abs(yaw) > 14f) {
+        while (opModeIsActive() && Math.abs(yaw) > 18f) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
             robotHardware.getRightBackMotor().setPower(rightBackPower);
             robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
@@ -141,6 +142,7 @@ public abstract class AutonomousControl extends LinearOpMode {
             yaw = degrees - relativeAngle;
         }
         stopMotors();
+        sleep(100);
     }
 
     /**
@@ -249,6 +251,7 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getRightBackMotor().setDirection(DcMotorSimple.Direction.FORWARD);
             robotHardware.getLeftBackMotor().setDirection(DcMotorSimple.Direction.REVERSE);
         }
+        sleep(100);
     }
 
     /**
@@ -260,10 +263,11 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @see AutonomousControl#ARM_DOWN
      */
     protected void useArm(boolean armUp) {
-        if ((opModeIsActive() || isStarted()) && !isStopRequested()) {
+        if (!isStopRequested()) {
             if (armUp) robotHardware.getArmBase().setPosition(ARM_UP);
             else robotHardware.getArmBase().setPosition(ARM_DOWN);
         }
+        sleep(100);
     }
 
     /**
@@ -275,7 +279,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @see AutonomousControl#CLAWS_OPENED
      */
     protected void useClaws(boolean closeClaws) {
-        if (opModeIsActive()) {
+        if (!isStopRequested()) {
             if (closeClaws) {
                 robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
                 robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
@@ -284,6 +288,7 @@ public abstract class AutonomousControl extends LinearOpMode {
                 robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
             }
         }
+        sleep(100);
     }
 
     //TODO
@@ -295,11 +300,50 @@ public abstract class AutonomousControl extends LinearOpMode {
         if (opModeIsActive()) {
             robotHardware.getWheelMotor().setPower(1);
         }
+        sleep(100);
     }
 
-    //TODO
-    protected void useElevator(int level) {
 
+    protected void useElevator(int level) {
+        int targetPos = 0;
+        switch (level) {
+            case 1:
+                targetPos = 1200;
+                break;
+            case 2:
+                targetPos = 3600;
+                break;
+            case 3:
+                targetPos = 6000;
+        }
+        robotHardware.getElevatorMotor().setTargetPosition(targetPos);
+        robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robotHardware.getElevatorMotor().setPower(1);
+        while (robotHardware.getElevatorMotor().isBusy()) ;
+
+        robotHardware.getElevatorMotor().setPower(0);
+        robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
+     * This function will identify where the team element is located and return the
+     * elevator level necessary
+     *
+     * @return the elevator level corresponding to the position, level 1 if no position
+     * is found
+     */
+    protected int identifyElement() {
+        if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
+            return 2;
+        }
+
+        driveStraight(15);
+
+        if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
+            return 3;
+        }
+
+        return 1;
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public abstract class TeleOpControl extends OpMode {
@@ -68,9 +67,9 @@ public abstract class TeleOpControl extends OpMode {
     /**
      * Whether or not the claws are open or not (true = open, false = closed)
      */
-    private boolean clawState = false;
+    private boolean clawState = true;
 
-    private Telemetry.Item drivingTelemetry;
+    /*private Telemetry.Item drivingTelemetry;
     private Telemetry.Item leftFrontMotorTelemetry;
     private Telemetry.Item rightFrontMotorTelemetry;
     private Telemetry.Item leftBackMotorTelemetry;
@@ -80,7 +79,7 @@ public abstract class TeleOpControl extends OpMode {
     private Telemetry.Item armTelemetry;
     private Telemetry.Item clawsTelemetry;
     private Telemetry.Item wheelMotorTelemetry;
-    private Telemetry.Item elevatorMotorTelemetry;
+    private Telemetry.Item elevatorMotorTelemetry;*/
 
     /**
      * All possible directions a robot may take
@@ -231,12 +230,12 @@ public abstract class TeleOpControl extends OpMode {
 
         double averagePower = (robotHardware.getLeftFrontMotor().getPower() + robotHardware.getLeftBackMotor().getPower() + robotHardware.getRightBackMotor().getPower() + robotHardware.getRightFrontMotor().getPower()) / 4d;
 
-        this.drivingTelemetry.setValue("dir %d avg. pow %.2f", direction, averagePower);
+        /*this.drivingTelemetry.setValue("dir %s avg. pow %.2f", direction, averagePower);
         this.leftFrontMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getLeftFrontMotor().getDirection(), robotHardware.getLeftFrontMotor().getPower(), robotHardware.getLeftFrontMotor().getCurrentPosition());
         this.rightFrontMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getRightFrontMotor().getDirection(), robotHardware.getRightFrontMotor().getPower(), robotHardware.getRightFrontMotor().getCurrentPosition());
         this.leftBackMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getLeftBackMotor().getDirection(), robotHardware.getLeftBackMotor().getPower(), robotHardware.getLeftBackMotor().getCurrentPosition());
         this.rightBackMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getRightBackMotor().getDirection(), robotHardware.getRightBackMotor().getPower(), robotHardware.getRightBackMotor().getCurrentPosition());
-        telemetry.update();
+        telemetry.update();*/
     }
 
     /**
@@ -257,9 +256,9 @@ public abstract class TeleOpControl extends OpMode {
     protected void useArm(boolean armUp) {
         robotHardware.getArmBase().setPosition(armUp ? ARM_UP : ARM_DOWN);
 
-        craneTelemetry.setValue(armUp ? Limb.ARM_UP : Limb.ARM_DOWN);
+        /*craneTelemetry.setValue(armUp ? Limb.ARM_UP : Limb.ARM_DOWN);
         armTelemetry.setValue(armUp ? "up" : "dwn");
-        telemetry.update();
+        telemetry.update();*/
     }
 
     /**
@@ -281,9 +280,9 @@ public abstract class TeleOpControl extends OpMode {
             robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
         }
 
-        craneTelemetry.setValue(clawState ? Limb.CLAWS_CLOSED : Limb.CLAWS_OPEN);
+        /*craneTelemetry.setValue(clawState ? Limb.CLAWS_CLOSED : Limb.CLAWS_OPEN);
         clawsTelemetry.setValue(clawState ? "opn" : "cls");
-        telemetry.update();
+        telemetry.update();*/
     }
 
     /**
@@ -295,10 +294,10 @@ public abstract class TeleOpControl extends OpMode {
     protected void useElevator(double motorPower) {
         robotHardware.getElevatorMotor().setPower(motorPower);
 
-        craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
+        /*craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
         if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
         elevatorMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getElevatorMotor().getDirection(), robotHardware.getElevatorMotor().getPower(), robotHardware.getElevatorMotor().getCurrentPosition());
-        telemetry.update();
+        telemetry.update();*/
     }
 
     /**
@@ -310,17 +309,17 @@ public abstract class TeleOpControl extends OpMode {
     protected void useWheelMotor(double motorPower) {
         robotHardware.getWheelMotor().setPower(motorPower);
 
-        craneTelemetry.setValue(Limb.ROTATING_WHEEL);
+        /*craneTelemetry.setValue(Limb.ROTATING_WHEEL);
         if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
         wheelMotorTelemetry.setValue("pow %.2f dir %s", robotHardware.getWheelMotor().getPower(), robotHardware.getWheelMotor().getDirection());
-        telemetry.update();
+        telemetry.update();*/
     }
 
     @Override
     public void init() {
         robotHardware.initTeleOp(hardwareMap);
         telemetry.setAutoClear(false);
-        drivingTelemetry = telemetry.addData("Driving Systems", " ");
+        /*drivingTelemetry = telemetry.addData("Driving Systems", " ");
         leftFrontMotorTelemetry = telemetry.addData("Left front Motor", " ");
         rightFrontMotorTelemetry = telemetry.addData("Right front Motor", " ");
         leftBackMotorTelemetry = telemetry.addData("Left back Motor", " ");
@@ -331,7 +330,7 @@ public abstract class TeleOpControl extends OpMode {
         wheelMotorTelemetry = telemetry.addData("Carousel Wheel", " ");
         armTelemetry = telemetry.addData("Arm", " ");
         clawsTelemetry = telemetry.addData("Claws", " ");
-        runtimeTelemetry = telemetry.addData("Runtime", 0);
+        runtimeTelemetry = telemetry.addData("Runtime", 0);*/
         useClaws();
         useArm(true);
     }
@@ -340,7 +339,7 @@ public abstract class TeleOpControl extends OpMode {
     public void loop() {
         drive();
         useLimbs();
-        runtimeTelemetry.setValue(runtime.toString());
+//        runtimeTelemetry.setValue(runtime.toString());
         if (gamepad1.y) {
             if (resetEncodersKeyCooldown.time() > 1) {
                 resetEncodersKeyCooldown.reset();
