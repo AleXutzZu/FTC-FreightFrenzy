@@ -18,7 +18,7 @@ public class RedSideFarPosition extends AutonomousControl {
         driveStraight(distance);
         rotate(90);
         useArm(false);
-        distance = 22;
+        distance = 14;
         if (level == 3) distance += 2;
         if (level == 2) distance++;
         driveStraight(distance);
