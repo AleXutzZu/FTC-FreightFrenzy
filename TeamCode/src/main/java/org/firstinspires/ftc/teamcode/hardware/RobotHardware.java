@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -37,11 +36,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <pre>Right claw                                          <i>"right_claw"</i></pre>
  * <br>
  * <h2>Sensors and misc</h2>
- * <h3>Digital Touch Sensors</h3>
- * <pre>Right side on the rear touch sensor                 <i>"right_touch"</i></pre>
- * <pre>Left side on the rear touch sensor                  <i>"left_touch"</i></pre>
  * <h3>2M Distance Sensors</h3>
- * <pre>Rear sensor                                         <i>"back_2m"</i></pre>
  * <pre>Left side sensor                                    <i>"left_2m"</i></pre>
  * <pre>Right side sensor                                   <i>"right_2m</i></pre>
  * <h3>Misc</h3>
@@ -72,9 +67,6 @@ public class RobotHardware {
     /*
     Sensors
      */
-    private RevTouchSensor leftTouchSensor = null;         //left_touch
-    private RevTouchSensor rightTouchSensor = null;        //right_touch
-    private Rev2mDistanceSensor rearDistanceSensor = null; //back_2m
     private Rev2mDistanceSensor leftDistanceSensor = null; //left_2m
     private Rev2mDistanceSensor rightDistanceSensor = null; //right_2m
 
@@ -114,10 +106,10 @@ public class RobotHardware {
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -187,12 +179,8 @@ public class RobotHardware {
         /*
         Defining the sensors used
          */
-        rearDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "back_2m");
         leftDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "left_2m");
         rightDistanceSensor = (Rev2mDistanceSensor) hardwareMap.get(DistanceSensor.class, "right_2m");
-
-        leftTouchSensor = hardwareMap.get(RevTouchSensor.class, "left_touch");
-        rightTouchSensor = hardwareMap.get(RevTouchSensor.class, "right_touch");
     }
 
     /**
@@ -279,18 +267,6 @@ public class RobotHardware {
 
     public BNO055IMU getGyroscope() {
         return gyroscope;
-    }
-
-    public RevTouchSensor getLeftTouchSensor() {
-        return leftTouchSensor;
-    }
-
-    public RevTouchSensor getRightTouchSensor() {
-        return rightTouchSensor;
-    }
-
-    public Rev2mDistanceSensor getRearDistanceSensor() {
-        return rearDistanceSensor;
     }
 
     public Rev2mDistanceSensor getLeftDistanceSensor() {
