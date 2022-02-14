@@ -169,52 +169,52 @@ public abstract class TeleOpControl extends OpMode {
                 leftBackPower = -motorPower;
                 break;
             case STRAFE_LEFT:
-                rightFrontPower = motorPower;
-                leftFrontPower = -motorPower;
-                rightBackPower = -motorPower;
-                leftBackPower = motorPower;
+                rightFrontPower = -motorPower;
+                leftFrontPower = motorPower;
+                rightBackPower = motorPower;
+                leftBackPower = -motorPower;
                 break;
             case STRAFE_RIGHT:
-                rightFrontPower = -motorPower;
-                leftFrontPower = motorPower;
-                rightBackPower = motorPower;
-                leftBackPower = -motorPower;
+                rightFrontPower = motorPower;
+                leftFrontPower = -motorPower;
+                rightBackPower = -motorPower;
+                leftBackPower = motorPower;
                 break;
             case ROTATE_LEFT:
-                rightFrontPower = motorPower;
-                leftFrontPower = -motorPower;
-                rightBackPower = motorPower;
-                leftBackPower = -motorPower;
+                rightFrontPower = -motorPower;
+                leftFrontPower = motorPower;
+                rightBackPower = -motorPower;
+                leftBackPower = motorPower;
                 break;
             case ROTATE_RIGHT:
-                rightFrontPower = -motorPower;
-                leftFrontPower = motorPower;
-                rightBackPower = -motorPower;
-                leftBackPower = motorPower;
+                rightFrontPower = motorPower;
+                leftFrontPower = -motorPower;
+                rightBackPower = motorPower;
+                leftBackPower = -motorPower;
                 break;
             case DIAGONALLY_RIGHT_FORWARD:
-                rightFrontPower = motorPower;
-                leftFrontPower = 0;
-                rightBackPower = 0;
-                leftBackPower = motorPower;
-                break;
-            case DIAGONALLY_RIGHT_BACKWARD:
                 rightFrontPower = 0;
                 leftFrontPower = -motorPower;
                 rightBackPower = -motorPower;
                 leftBackPower = 0;
                 break;
-            case DIAGONALLY_LEFT_FORWARD:
-                rightFrontPower = 0;
-                leftFrontPower = motorPower;
-                rightBackPower = motorPower;
-                leftBackPower = 0;
+            case DIAGONALLY_RIGHT_BACKWARD:
+                rightFrontPower = motorPower;
+                leftFrontPower = 0;
+                rightBackPower = 0;
+                leftBackPower = motorPower;
                 break;
-            case DIAGONALLY_LEFT_BACKWARD:
+            case DIAGONALLY_LEFT_FORWARD:
                 rightFrontPower = -motorPower;
                 leftFrontPower = 0;
                 rightBackPower = 0;
                 leftBackPower = -motorPower;
+                break;
+            case DIAGONALLY_LEFT_BACKWARD:
+                rightFrontPower = 0;
+                leftFrontPower = motorPower;
+                rightBackPower = motorPower;
+                leftBackPower = 0;
                 break;
             case IDLE:
                 rightFrontPower = 0f;
