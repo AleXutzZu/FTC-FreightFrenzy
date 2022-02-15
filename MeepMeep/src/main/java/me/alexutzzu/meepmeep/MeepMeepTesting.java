@@ -13,18 +13,29 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, -65, Math.toRadians(90)))
-                                .forward(15)
+                                .splineToSplineHeading(new Pose2d(-35, -50, Math.toRadians(0)), Math.toRadians(0))
+                                .waitSeconds(1.5)
+                                .addTemporalMarker(() -> {
+                                    //Logic to access sensor and lift elevator
+                                })
+                                .forward(8)
+                                .waitSeconds(1.5)
+                                .addTemporalMarker(() -> {
+                                    //Logic to access the sensor and lift elevator to the correct level
+                                })
+                                .splineToSplineHeading(new Pose2d(-12, -43, Math.toRadians(90)), Math.toRadians(0))
+                                .waitSeconds(3)
+                                .addTemporalMarker(() -> {
+                                    //Logic to bring the arm down and drop the cube
+                                })
+                                .strafeLeft(47)
+                                .back(16)
+                                .waitSeconds(6)
+                                .addTemporalMarker(() -> {
+                                    //Logic to rotate the carousel wheel and make a duck fall
+                                })
                                 .turn(Math.toRadians(-90))
-                                .addDisplacementMarker(() -> {
-
-                                })
-                                .forward(10)
-                                .addDisplacementMarker(() -> {
-
-                                })
-                                .forward(14)
-                                .turn(Math.toRadians(90))
-                                .forward(7)
+                                .forward(115)
                                 .build()
                 );
         meepMeep.setBackground(MeepMeep.Background.FIELD_FREIGHTFRENZY_ADI_DARK).setDarkMode(true).setBackgroundAlpha(1).addEntity(myBot).start();
