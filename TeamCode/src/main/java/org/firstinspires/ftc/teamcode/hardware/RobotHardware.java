@@ -88,23 +88,65 @@ public class RobotHardware {
     }
 
     /**
-     * Initializes motors installed on the robot
+     * Types of OpModes for initialization
+     */
+    private enum OpModeType {
+        AUTONOMOUS, TELE_OP
+    }
+
+    /**
+     * Initializes all hardware necessary for TeleOps.
      *
      * @param hardwareMap never null map with the configuration from the robot controller app
      */
-    public void initMotors(@NonNull HardwareMap hardwareMap) {
-        /*
+    public void initTeleOp(@NonNull HardwareMap hardwareMap) {
+        initMotorsTeleOp(hardwareMap);
+        initServos(hardwareMap);
+    }
+
+    /**
+     * Initializes all hardware necessary for Autonomous OpModes
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initAutonomous(@NonNull HardwareMap hardwareMap) {
+        initMotorsAutonomous(hardwareMap);
+        initServos(hardwareMap);
+        initSensors(hardwareMap);
+        initGyro(hardwareMap);
+    }
+
+    /**
+     * Initializes the drivetrain motors with their specified run-modes
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     * @param opModeType  the type of OpMode for which the initialization is done
+     * @throws IllegalStateException if the opModeType parameter is invalid
+     */
+    private void initDriveTrainMotors(@NonNull HardwareMap hardwareMap, @NonNull OpModeType opModeType) throws IllegalStateException {
+         /*
          Defining motors used for movement
          */
         rightFrontMotor = hardwareMap.get(DcMotor.class, "right_front");
         rightBackMotor = hardwareMap.get(DcMotor.class, "right_back");
         leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
         leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
-
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        switch (opModeType) {
+            case AUTONOMOUS:
+                rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                break;
+            case TELE_OP:
+                rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + opModeType);
+        }
 
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -115,41 +157,68 @@ public class RobotHardware {
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         /*
-        Defining the motor for the elevator
-         */
-        elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
-
-        elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        elevatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        /*
-        Defining the motor to rotate the carousel
-        There is no need for an encoder
-         */
-        wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
-
-        wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        wheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        wheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        /*
-        Doing initialization of position/power
+        Doing initialization of power
          */
         rightFrontMotor.setPower(0f);
         rightBackMotor.setPower(0f);
         leftBackMotor.setPower(0f);
         leftFrontMotor.setPower(0f);
+    }
+
+    /**
+     * Initializes motors installed on the robot for the TeleOp mode(it sets the drivetrain motors to run without encoders)
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initMotorsTeleOp(@NonNull HardwareMap hardwareMap) {
+        initDriveTrainMotors(hardwareMap, OpModeType.TELE_OP);
+        initElevator(hardwareMap);
+        initWheelMotor(hardwareMap);
+    }
+
+    /**
+     * Initializes motors installed on the robot for the autonomous mode(it sets the drivetrain motors to run using encoders)
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initMotorsAutonomous(@NonNull HardwareMap hardwareMap) {
+        initDriveTrainMotors(hardwareMap, OpModeType.AUTONOMOUS);
+        initElevator(hardwareMap);
+        initWheelMotor(hardwareMap);
+    }
+
+    /**
+     * Initializes the elevator on the drivetrain to run with encoders regardless of OpMode (TeleOp or Autonomous)
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initElevator(@NonNull HardwareMap hardwareMap) {
+         /*
+        Defining the motor for the elevator
+         */
+        elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
+        elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        elevatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevatorMotor.setPower(0f);
+    }
+
+    /**
+     * Initializes the wheel motor on the drivetrain to run without encoders regardless of OpMode (TeleOp or Autonomous)
+     *
+     * @param hardwareMap never null map with the configuration from the robot controller app
+     */
+    public void initWheelMotor(@NonNull HardwareMap hardwareMap) {
+        /*
+        Defining the motor to rotate the carousel
+        There is no need for an encoder
+         */
+        wheelMotor = hardwareMap.get(DcMotor.class, "wheel_motor");
+        wheelMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wheelMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wheelMotor.setPower(0f);
-
-
     }
 
     /**
@@ -205,28 +274,6 @@ public class RobotHardware {
         if (!gyroscope.initialize(imuParameters)) {
             throw new RuntimeException("Could not initialize Gyroscope");
         }
-    }
-
-    /**
-     * Initializes all hardware necessary for TeleOps.
-     *
-     * @param hardwareMap never null map with the configuration from the robot controller app
-     */
-    public void initTeleOp(@NonNull HardwareMap hardwareMap) {
-        initMotors(hardwareMap);
-        initServos(hardwareMap);
-    }
-
-    /**
-     * Initializes all hardware necessary for Autonomous OpModes
-     *
-     * @param hardwareMap never null map with the configuration from the robot controller app
-     */
-    public void initAutonomous(@NonNull HardwareMap hardwareMap) {
-        initMotors(hardwareMap);
-        initServos(hardwareMap);
-        initSensors(hardwareMap);
-        initGyro(hardwareMap);
     }
 
     public DcMotor getRightFrontMotor() {
