@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <h1>This class can be used to define all the specific hardware for the Perpetuum Mobile Robot.</h1>
  * This is NOT an OpMode.
  * <br>
- * <p>Used Motors (driving): <a href="https://www.pitsco.com/TETRIX-MAX-TorqueNADO-Motor-with-Encoder">TETRIX-MAX TorqueNADO Motor with Encoder</a></p>
- * <p>Used Motors (lift and wheel): <a href="https://www.andymark.com/products/neverest-classic-40-gearmotor">NeveRest Classic 40 Gearmotor</a></p>
+ * <p>Used Motors (driving & lift): <a href="https://www.pitsco.com/TETRIX-MAX-TorqueNADO-Motor-with-Encoder">TETRIX-MAX TorqueNADO Motor with Encoder</a></p>
+ * <p>Used Motors (wheel): <a href="https://www.andymark.com/products/neverest-classic-40-gearmotor">NeveRest Classic 40 Gearmotor</a></p>
  * <h2>Motors</h2>
  * <h3>Motors for driving the robot</h3>
  * <pre>Right front motor:                                  <i>"right_front"</i></pre>

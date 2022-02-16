@@ -12,60 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.Constants;
 
 public abstract class AutonomousControl extends LinearOpMode {
-    /*
-    TODO
-        - Possibly update values to match goBILDA motors and wheels.
-        - Currently using TETRIX Motors and HD Mecanum Wheels
-     */
-    /**
-     * <p>Ticks used for encoder driving in the overloaded methods with distance parameter</p>
-     * <a href="https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecs.pdf">TETRIX Motor Documentation</a>
-     */
-    protected static final int MOTOR_TICK_RATE = 1440;
-
-    /**
-     * <p>Wheel diameter in <b>centimetres</b></p>
-     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
-     */
-    protected static final double WHEEL_DIAMETER = 10.16;
-
-    /**
-     * <p>Ticks per centimetre based on motor and wheel specs</p>
-     * <p>Defined as <b>MOTOR_TICK_RATE / WHEEL_DIAMETER</b></p>
-     *
-     * @see AutonomousControl#WHEEL_DIAMETER
-     * @see AutonomousControl#MOTOR_TICK_RATE
-     */
-    protected static final double TICKS_PER_CENTIMETRE = MOTOR_TICK_RATE / (WHEEL_DIAMETER * Math.PI);
-
-    /**
-     * Servo position to bring the arms up (Arm base Servo)
-     */
-    protected static final double ARM_UP = 1;
-    /**
-     * Servo position to put the arm down (Arm base Servo)
-     */
-    protected static final double ARM_DOWN = 0.5;
-    /**
-     * Servo position to close the claws (Claw servos)
-     */
-    protected static final double CLAWS_CLOSED = 1;
-    /**
-     * Servo position to open the claws (Claw servos)
-     */
-    protected static final double CLAWS_OPENED = 0;
-
-    /**
-     * Power used when rotating the robot
-     */
-    protected static final double ROTATION_POWER = 1;
-
-    /**
-     * Power used when the robot is driving straight or sideways
-     */
-    protected static final double DRIVING_POWER = 1d;
     /**
      * Robot Hardware necessary for movement
      */
@@ -76,6 +25,24 @@ public abstract class AutonomousControl extends LinearOpMode {
      */
     private enum DrivingDirection {
         FORWARD, BACKWARD, STRAFE_LEFT, STRAFE_RIGHT
+    }
+
+    /**
+     * Elevator distances for each level in centimetres
+     */
+    private enum ElevatorLevels {
+        START(0), LEVEL_ONE(0), LEVEL_TWO(0), LEVEL_THREE(0), MAX(0);
+
+        ElevatorLevels(double distance) {
+
+            this.distance = distance;
+        }
+
+        private final double distance;
+
+        public double getDistance() {
+            return distance;
+        }
     }
 
     /**
@@ -105,15 +72,15 @@ public abstract class AutonomousControl extends LinearOpMode {
         degrees = Range.clip(degrees, -180, 180);
         double leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
         if (degrees > 0f) {
-            rightFrontPower = ROTATION_POWER;
-            leftFrontPower = -ROTATION_POWER;
-            rightBackPower = ROTATION_POWER;
-            leftBackPower = -ROTATION_POWER;
+            rightFrontPower = Constants.ROTATION_POWER;
+            leftFrontPower = -Constants.ROTATION_POWER;
+            rightBackPower = Constants.ROTATION_POWER;
+            leftBackPower = -Constants.ROTATION_POWER;
         } else {
-            rightFrontPower = -ROTATION_POWER;
-            leftFrontPower = ROTATION_POWER;
-            rightBackPower = -ROTATION_POWER;
-            leftBackPower = ROTATION_POWER;
+            rightFrontPower = -Constants.ROTATION_POWER;
+            leftFrontPower = Constants.ROTATION_POWER;
+            rightBackPower = -Constants.ROTATION_POWER;
+            leftBackPower = Constants.ROTATION_POWER;
         }
 
         double lastAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
@@ -124,7 +91,7 @@ public abstract class AutonomousControl extends LinearOpMode {
          */
         double yaw = degrees;
 
-        while (opModeIsActive() && Math.abs(yaw) > 18f) {
+        while (opModeIsActive() && Math.abs(yaw) > 14f) {
             robotHardware.getRightFrontMotor().setPower(rightFrontPower);
             robotHardware.getRightBackMotor().setPower(rightBackPower);
             robotHardware.getLeftFrontMotor().setPower(leftFrontPower);
@@ -177,7 +144,7 @@ public abstract class AutonomousControl extends LinearOpMode {
     private void drive(double distance, @NonNull DrivingDirection direction) {
         distance = Math.abs(distance);
 
-        int drivingTarget = (int) (distance * TICKS_PER_CENTIMETRE);
+        int drivingTarget = (int) (distance * Constants.DRIVING_TICKS_PER_CENTIMETRE);
 
         switch (direction) {
 
@@ -217,10 +184,10 @@ public abstract class AutonomousControl extends LinearOpMode {
         robotHardware.getRightFrontMotor().setTargetPosition(drivingTarget);
         robotHardware.getRightBackMotor().setTargetPosition(drivingTarget);
 
-        robotHardware.getRightFrontMotor().setPower(DRIVING_POWER);
-        robotHardware.getRightBackMotor().setPower(DRIVING_POWER);
-        robotHardware.getLeftFrontMotor().setPower(DRIVING_POWER);
-        robotHardware.getLeftBackMotor().setPower(DRIVING_POWER);
+        robotHardware.getRightFrontMotor().setPower(Constants.DRIVING_POWER);
+        robotHardware.getRightBackMotor().setPower(Constants.DRIVING_POWER);
+        robotHardware.getLeftFrontMotor().setPower(Constants.DRIVING_POWER);
+        robotHardware.getLeftBackMotor().setPower(Constants.DRIVING_POWER);
 
         robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -259,13 +226,13 @@ public abstract class AutonomousControl extends LinearOpMode {
      * the arm up, and ARM_DOWN to position it down
      *
      * @param armUp true if the arm should come up, false if it should come down
-     * @see AutonomousControl#ARM_UP
-     * @see AutonomousControl#ARM_DOWN
+     * @see Constants#ARM_UP
+     * @see Constants#ARM_DOWN
      */
     protected void useArm(boolean armUp) {
         if (!isStopRequested()) {
-            if (armUp) robotHardware.getArmBase().setPosition(ARM_UP);
-            else robotHardware.getArmBase().setPosition(ARM_DOWN);
+            if (armUp) robotHardware.getArmBase().setPosition(Constants.ARM_UP);
+            else robotHardware.getArmBase().setPosition(Constants.ARM_DOWN);
         }
         sleep(100);
     }
@@ -275,17 +242,17 @@ public abstract class AutonomousControl extends LinearOpMode {
      * the claws, and CLAWS_OPENED to open them
      *
      * @param closeClaws true if the claws should close, false if they should open
-     * @see AutonomousControl#CLAWS_CLOSED
-     * @see AutonomousControl#CLAWS_OPENED
+     * @see Constants#CLAWS_CLOSED
+     * @see Constants#CLAWS_OPENED
      */
     protected void useClaws(boolean closeClaws) {
         if (!isStopRequested()) {
             if (closeClaws) {
-                robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
-                robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
+                robotHardware.getRightClaw().setPosition(Constants.CLAWS_CLOSED);
+                robotHardware.getLeftClaw().setPosition(Constants.CLAWS_CLOSED);
             } else {
-                robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
-                robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
+                robotHardware.getLeftClaw().setPosition(Constants.CLAWS_OPENED);
+                robotHardware.getRightClaw().setPosition(Constants.CLAWS_OPENED);
             }
         }
         sleep(100);
@@ -303,18 +270,17 @@ public abstract class AutonomousControl extends LinearOpMode {
         sleep(100);
     }
 
-
     protected void useElevator(int level) {
         int targetPos = 0;
         switch (level) {
             case 1:
-                targetPos = 1200;
+                targetPos = 1600;
                 break;
             case 2:
-                targetPos = 3600;
+                targetPos = 4100;
                 break;
             case 3:
-                targetPos = 6000;
+                targetPos = 6300;
         }
         robotHardware.getElevatorMotor().setTargetPosition(targetPos);
         robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.TeleOpControl;
+import org.firstinspires.ftc.teamcode.util.Constants;
 
 @TeleOp(name = "Proficient Movement", group = "Regio")
 public final class ProficientMovement extends TeleOpControl {
@@ -38,15 +39,15 @@ public final class ProficientMovement extends TeleOpControl {
                 stopMotors();
                 return;
             }
-            if (gamepad1.left_bumper) rotate(ROTATION_POWER);
-            if (gamepad1.right_bumper) rotate(-ROTATION_POWER);
-            if (gamepad1.dpad_left) driveSideways(SLIDING_POWER);
-            if (gamepad1.dpad_right) driveSideways(-SLIDING_POWER);
+            if (gamepad1.left_bumper) rotate(Constants.ROTATION_POWER);
+            if (gamepad1.right_bumper) rotate(-Constants.ROTATION_POWER);
+            if (gamepad1.dpad_left) driveSideways(Constants.SLIDING_POWER);
+            if (gamepad1.dpad_right) driveSideways(-Constants.SLIDING_POWER);
             return;
         }
 
-        double forwardPower = gamepad1.right_trigger / POWER_RATIO;
-        double backwardPower = -gamepad1.left_trigger / POWER_RATIO;
+        double forwardPower = gamepad1.right_trigger / Constants.POWER_RATIO;
+        double backwardPower = -gamepad1.left_trigger / Constants.POWER_RATIO;
         double totalPower = forwardPower + backwardPower;
 
         /*
@@ -86,16 +87,16 @@ public final class ProficientMovement extends TeleOpControl {
              */
             if (horizontalCoordinate > 0) {
                 if (verticalCoordinate > 0) {
-                    driveDiagonally(DIAGONAL_DRIVING_POWER, false);
+                    driveDiagonally(Constants.DIAGONAL_DRIVING_POWER, false);
                 } else {
-                    driveDiagonally(-DIAGONAL_DRIVING_POWER, false);
+                    driveDiagonally(-Constants.DIAGONAL_DRIVING_POWER, false);
                 }
                 return;
             } else {
                 if (verticalCoordinate > 0) {
-                    driveDiagonally(DIAGONAL_DRIVING_POWER, true);
+                    driveDiagonally(Constants.DIAGONAL_DRIVING_POWER, true);
                 } else {
-                    driveDiagonally(-DIAGONAL_DRIVING_POWER, true);
+                    driveDiagonally(-Constants.DIAGONAL_DRIVING_POWER, true);
                 }
                 return;
             }
@@ -115,7 +116,7 @@ public final class ProficientMovement extends TeleOpControl {
              */
             double verticalCoordinate = -gamepad1.left_stick_y;
 
-            double boostPower = verticalCoordinate / POWER_RATIO;
+            double boostPower = verticalCoordinate / Constants.POWER_RATIO;
             //UP
             if (boostPower >= 0f) {
                 if (totalPower > 0f) {
