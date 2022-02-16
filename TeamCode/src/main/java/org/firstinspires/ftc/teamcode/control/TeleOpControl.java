@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.control;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
-public abstract class TeleOpControl extends OpMode {
+public abstract class TeleOpControl extends LinearOpMode {
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
@@ -316,45 +315,18 @@ public abstract class TeleOpControl extends OpMode {
     }
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
+        //Init Phase
         robotHardware.initTeleOp(hardwareMap);
-        telemetry.setAutoClear(false);
-        /*drivingTelemetry = telemetry.addData("Driving Systems", " ");
-        leftFrontMotorTelemetry = telemetry.addData("Left front Motor", " ");
-        rightFrontMotorTelemetry = telemetry.addData("Right front Motor", " ");
-        leftBackMotorTelemetry = telemetry.addData("Left back Motor", " ");
-        rightBackMotorTelemetry = telemetry.addData("Right back Motor", " ");
-
-        craneTelemetry = telemetry.addData("Crane Systems", " ");
-        elevatorMotorTelemetry = telemetry.addData("Elevator", " ");
-        wheelMotorTelemetry = telemetry.addData("Carousel Wheel", " ");
-        armTelemetry = telemetry.addData("Arm", " ");
-        clawsTelemetry = telemetry.addData("Claws", " ");
-        runtimeTelemetry = telemetry.addData("Runtime", 0);*/
         useClaws();
         useArm(true);
-    }
-
-    @Override
-    public void loop() {
-        drive();
-        useLimbs();
-//        runtimeTelemetry.setValue(runtime.toString());
-        if (gamepad1.y) {
-            if (resetEncodersKeyCooldown.time() > 1) {
-                resetEncodersKeyCooldown.reset();
-                robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                robotHardware.getRightFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robotHardware.getRightBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robotHardware.getLeftBackMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robotHardware.getLeftFrontMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+        waitForStart();
+        while (opModeIsActive()) {
+            drive();
+            useLimbs();
+        }
+        if (isStopRequested()) {
+            //Logic to bring the elevator down
         }
     }
 

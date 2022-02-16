@@ -13,12 +13,6 @@ public final class ProficientMovement extends TeleOpControl {
     private final ElapsedTime clawButtonCooldown = new ElapsedTime();
 
     @Override
-    public void start() {
-        clawButtonCooldown.reset();
-    }
-
-
-    @Override
     protected void drive() {
 
         /*
