@@ -74,7 +74,7 @@ public final class Constants {
     /**
      * Maximum ticks the elevator may go to before risking to break the cord. (About 30cm)
      */
-    public static final int MAX_ELEVATOR_TICKS = (int) (70 * ELEVATOR_TICKS_PER_CENTIMETRE);
+    public static final int MAX_ELEVATOR_TICKS = (int) (60 * ELEVATOR_TICKS_PER_CENTIMETRE);
 
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
