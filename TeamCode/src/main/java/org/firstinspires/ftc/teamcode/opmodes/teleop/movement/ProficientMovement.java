@@ -91,15 +91,14 @@ public final class ProficientMovement extends TeleOpControl {
                 } else {
                     driveDiagonally(-Constants.DIAGONAL_DRIVING_POWER, false);
                 }
-                return;
             } else {
                 if (verticalCoordinate > 0) {
                     driveDiagonally(Constants.DIAGONAL_DRIVING_POWER, true);
                 } else {
                     driveDiagonally(-Constants.DIAGONAL_DRIVING_POWER, true);
                 }
-                return;
             }
+            return;
         }
         /*
         Left joystick mappings
