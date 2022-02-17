@@ -11,22 +11,22 @@ public class RedSideFarPosition extends AutonomousControl {
     protected void run() {
         driveStraight(25);
         rotate(-90);
-        int level = identifyElement();
+        ElevatorLevels level = identifyElement();
         float distance = 50;
-        if (level == 3 || level == 1) distance -= 20;
+        if (level == ElevatorLevels.LEVEL_THREE || level == ElevatorLevels.LEVEL_ONE) distance -= 20;
         useElevator(level);
         driveStraight(distance);
         rotate(90);
         useArm(false);
-        distance = 14;
-        if (level == 3) distance += 2;
-        if (level == 2) distance++;
+        distance = 12;
+        if (level == ElevatorLevels.LEVEL_THREE) distance += 3;
+        if (level == ElevatorLevels.LEVEL_TWO) distance += 2;
         driveStraight(distance);
         useClaws(false);
         driveStraight(-distance);
         rotate(-90);
         driveStraight(150);
         useArm(true);
-        useElevator(4);
+        useElevator(ElevatorLevels.START);
     }
 }

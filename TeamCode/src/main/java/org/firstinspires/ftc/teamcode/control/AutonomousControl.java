@@ -30,11 +30,10 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Elevator distances for each level in centimetres
      */
-    private enum ElevatorLevels {
-        START(0), LEVEL_ONE(0), LEVEL_TWO(0), LEVEL_THREE(0), MAX(0);
+    protected enum ElevatorLevels {
+        START(0), LEVEL_ONE(9), LEVEL_TWO(25), LEVEL_THREE(50), MAX(59);
 
         ElevatorLevels(double distance) {
-
             this.distance = distance;
         }
 
@@ -270,18 +269,8 @@ public abstract class AutonomousControl extends LinearOpMode {
         sleep(100);
     }
 
-    protected void useElevator(int level) {
-        int targetPos = 0;
-        switch (level) {
-            case 1:
-                targetPos = 1600;
-                break;
-            case 2:
-                targetPos = 4100;
-                break;
-            case 3:
-                targetPos = 6300;
-        }
+    protected void useElevator(ElevatorLevels level) {
+        int targetPos = (int) (level.getDistance() * Constants.ELEVATOR_TICKS_PER_CENTIMETRE);
         robotHardware.getElevatorMotor().setTargetPosition(targetPos);
         robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robotHardware.getElevatorMotor().setPower(1);
@@ -298,18 +287,18 @@ public abstract class AutonomousControl extends LinearOpMode {
      * @return the elevator level corresponding to the position, level 1 if no position
      * is found
      */
-    protected int identifyElement() {
+    protected ElevatorLevels identifyElement() {
         if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
-            return 2;
+            return ElevatorLevels.LEVEL_TWO;
         }
 
         driveStraight(15);
 
         if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
-            return 3;
+            return ElevatorLevels.LEVEL_THREE;
         }
 
-        return 1;
+        return ElevatorLevels.LEVEL_ONE;
     }
 
     @Override
