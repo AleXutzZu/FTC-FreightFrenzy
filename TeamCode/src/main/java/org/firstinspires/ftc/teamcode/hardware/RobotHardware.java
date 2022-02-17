@@ -198,9 +198,10 @@ public class RobotHardware {
         Defining the motor for the elevator
          */
         elevatorMotor = hardwareMap.get(DcMotor.class, "elevator_motor");
+        elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         elevatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        elevatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         elevatorMotor.setPower(0f);
     }
 

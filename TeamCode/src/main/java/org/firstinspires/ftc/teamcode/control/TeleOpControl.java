@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.control;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Constants;
@@ -245,9 +244,13 @@ public abstract class TeleOpControl extends LinearOpMode {
         if ((robotHardware.getElevatorMotor().getCurrentPosition() <= Constants.MAX_ELEVATOR_TICKS) && (robotHardware.getElevatorMotor().getCurrentPosition() >= 0)) {
             robotHardware.getElevatorMotor().setPower(motorPower);
         } else if (robotHardware.getElevatorMotor().getCurrentPosition() < 0) {
-            robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
+            if (motorPower > 0f) {
+                robotHardware.getElevatorMotor().setPower(motorPower);
+            } else robotHardware.getElevatorMotor().setPower(0);
         } else if (robotHardware.getElevatorMotor().getCurrentPosition() > Constants.MAX_ELEVATOR_TICKS) {
-            robotHardware.getElevatorMotor().setPower(-Math.abs(motorPower));
+            if (motorPower < 0f) {
+                robotHardware.getElevatorMotor().setPower(motorPower);
+            } else robotHardware.getElevatorMotor().setPower(0);
         }
 
         /*craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
