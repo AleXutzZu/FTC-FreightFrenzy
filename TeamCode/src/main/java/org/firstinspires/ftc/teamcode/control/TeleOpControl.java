@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.control;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Constants;
@@ -13,6 +15,15 @@ public abstract class TeleOpControl extends LinearOpMode {
      */
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
 
+    /**
+     * Emergency button in case the OpMode crashes and the elevator remains stuck
+     */
+    private final ElapsedTime emergencyButtonCooldown = new ElapsedTime();
+
+    /**
+     * In case of an emergency, allow the operator to bypass the elevator limits to fix it (needed when an OpMode crashes)
+     */
+    private boolean bypassElevator = false;
     /**
      * Whether or not the claws are open or not (true = open, false = closed)
      */
@@ -241,18 +252,24 @@ public abstract class TeleOpControl extends LinearOpMode {
      *                   value will bring it down
      */
     protected void useElevator(double motorPower) {
-        if ((robotHardware.getElevatorMotor().getCurrentPosition() <= Constants.MAX_ELEVATOR_TICKS) && (robotHardware.getElevatorMotor().getCurrentPosition() >= 0)) {
+        if (bypassElevator) {
             robotHardware.getElevatorMotor().setPower(motorPower);
-        } else if (robotHardware.getElevatorMotor().getCurrentPosition() < 0) {
-            if (motorPower > 0f) {
-                robotHardware.getElevatorMotor().setPower(motorPower);
-            } else robotHardware.getElevatorMotor().setPower(0);
-        } else if (robotHardware.getElevatorMotor().getCurrentPosition() > Constants.MAX_ELEVATOR_TICKS) {
-            if (motorPower < 0f) {
-                robotHardware.getElevatorMotor().setPower(motorPower);
-            } else robotHardware.getElevatorMotor().setPower(0);
+            return;
         }
 
+        if (robotHardware.getElevatorMotor().getCurrentPosition() < 0) {
+            if (motorPower > 0f) robotHardware.getElevatorMotor().setPower(motorPower);
+            else robotHardware.getElevatorMotor().setPower(0);
+            return;
+        }
+
+        if (robotHardware.getElevatorMotor().getCurrentPosition() > Constants.MAX_ELEVATOR_TICKS) {
+            if (motorPower < 0f) robotHardware.getElevatorMotor().setPower(motorPower);
+            else robotHardware.getElevatorMotor().setPower(0f);
+            return;
+        }
+
+        robotHardware.getElevatorMotor().setPower(motorPower);
         /*craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
         if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
         elevatorMotorTelemetry.setValue("dir %s pow %.2f pos %d", robotHardware.getElevatorMotor().getDirection(), robotHardware.getElevatorMotor().getPower(), robotHardware.getElevatorMotor().getCurrentPosition());
@@ -281,9 +298,24 @@ public abstract class TeleOpControl extends LinearOpMode {
         useClaws();
         useArm(true);
         waitForStart();
+        emergencyButtonCooldown.reset();
         while (opModeIsActive()) {
             drive();
             useLimbs();
+
+            //Emergency elevator button Gamepad2.y
+            if (gamepad2.y) {
+                if (emergencyButtonCooldown.milliseconds() >= 200) {
+                    if (!bypassElevator) {
+                        bypassElevator = true;
+                    } else {
+                        bypassElevator = false;
+                        robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                        robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    }
+                    emergencyButtonCooldown.reset();
+                }
+            }
         }
     }
 
