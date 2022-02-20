@@ -3,65 +3,16 @@ package org.firstinspires.ftc.teamcode.control;
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.util.Constants;
 
 public abstract class TeleOpControl extends LinearOpMode {
-    /**
-     * Servo position to bring the arms up (Arm base Servo)
-     */
-    protected static final double ARM_UP = 1f;
-
-    /**
-     * Servo position to put the arm down (Arm base Servo)
-     */
-    protected static final double ARM_DOWN = 0.5f;
-
-    /**
-     * Servo position to close the claws (Claw servos)
-     */
-    protected static final double CLAWS_CLOSED = 1f;
-
-    /**
-     * Servo position to open the claws (Claw servos)
-     */
-    protected static final double CLAWS_OPENED = 0f;
-
-    /**
-     * Dictates how small the output from the joystick/trigger should be
-     */
-    protected static final double POWER_RATIO = 2;
-
-    /**
-     * Power input for rotating around the central axis
-     */
-    protected static final double ROTATION_POWER = 1;
-
-    /**
-     * Power input for sliding operation (left or right)
-     */
-    protected static final double SLIDING_POWER = 1;
-
-    /**
-     * Power input for diagonal driving (in all 4 directions)
-     */
-    protected static final double DIAGONAL_DRIVING_POWER = 1;
-
     /**
      * Robot Hardware necessary for movement
      */
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
-
-    /**
-     * Shows runtime since pressing start
-     */
-    private final ElapsedTime runtime = new ElapsedTime();
-
-    /**
-     * Cooldown for resetting encoders button
-     */
-    private final ElapsedTime resetEncodersKeyCooldown = new ElapsedTime();
 
     /**
      * Whether or not the claws are open or not (true = open, false = closed)
@@ -249,11 +200,11 @@ public abstract class TeleOpControl extends LinearOpMode {
      * It brings the arm up in the ARM_UP position and brings it down to the ARM_DOWN position
      *
      * @param armUp whether or not to bring the arm up or down (true = bring up, false = put down)
-     * @see TeleOpControl#ARM_UP
-     * @see TeleOpControl#ARM_DOWN
+     * @see Constants#ARM_UP
+     * @see Constants#ARM_DOWN
      */
     protected void useArm(boolean armUp) {
-        robotHardware.getArmBase().setPosition(armUp ? ARM_UP : ARM_DOWN);
+        robotHardware.getArmBase().setPosition(armUp ? Constants.ARM_UP : Constants.ARM_DOWN);
 
         /*craneTelemetry.setValue(armUp ? Limb.ARM_UP : Limb.ARM_DOWN);
         armTelemetry.setValue(armUp ? "up" : "dwn");
@@ -265,18 +216,18 @@ public abstract class TeleOpControl extends LinearOpMode {
      * It closes the claws by putting them in the CLAWS_CLOSED position and opens them by putting the servos
      * in the CLAWS_OPENED position
      *
-     * @see TeleOpControl#CLAWS_OPENED
-     * @see TeleOpControl#CLAWS_CLOSED
+     * @see Constants#CLAWS_OPENED
+     * @see Constants#CLAWS_CLOSED
      */
     protected void useClaws() {
         if (clawState) {
             clawState = false;
-            robotHardware.getLeftClaw().setPosition(CLAWS_CLOSED);
-            robotHardware.getRightClaw().setPosition(CLAWS_CLOSED);
+            robotHardware.getLeftClaw().setPosition(Constants.CLAWS_CLOSED);
+            robotHardware.getRightClaw().setPosition(Constants.CLAWS_CLOSED);
         } else {
             clawState = true;
-            robotHardware.getRightClaw().setPosition(CLAWS_OPENED);
-            robotHardware.getLeftClaw().setPosition(CLAWS_OPENED);
+            robotHardware.getRightClaw().setPosition(Constants.CLAWS_OPENED);
+            robotHardware.getLeftClaw().setPosition(Constants.CLAWS_OPENED);
         }
 
         /*craneTelemetry.setValue(clawState ? Limb.CLAWS_CLOSED : Limb.CLAWS_OPEN);
@@ -291,7 +242,13 @@ public abstract class TeleOpControl extends LinearOpMode {
      *                   value will bring it down
      */
     protected void useElevator(double motorPower) {
-        robotHardware.getElevatorMotor().setPower(motorPower);
+        if ((robotHardware.getElevatorMotor().getCurrentPosition() <= Constants.MAX_ELEVATOR_TICKS) && (robotHardware.getElevatorMotor().getCurrentPosition() >= 0)) {
+            robotHardware.getElevatorMotor().setPower(motorPower);
+        } else if (robotHardware.getElevatorMotor().getCurrentPosition() < 0) {
+            robotHardware.getElevatorMotor().setPower(Math.abs(motorPower));
+        } else if (robotHardware.getElevatorMotor().getCurrentPosition() > Constants.MAX_ELEVATOR_TICKS) {
+            robotHardware.getElevatorMotor().setPower(-Math.abs(motorPower));
+        }
 
         /*craneTelemetry.setValue((motorPower < 0 ? Limb.ELEVATOR_DOWN : Limb.ELEVATOR_UP));
         if (motorPower == 0) craneTelemetry.setValue(Limb.IDLE);
@@ -324,9 +281,6 @@ public abstract class TeleOpControl extends LinearOpMode {
         while (opModeIsActive()) {
             drive();
             useLimbs();
-        }
-        if (isStopRequested()) {
-            //Logic to bring the elevator down
         }
     }
 
