@@ -33,38 +33,12 @@ public class ProficientOmniMovement extends TeleOpControl {
             targetLeftBackPower /= power + turn;
             targetRightBackPower /= power + turn;
         }
-        /*
-        TODO
-            - Add a system to ensure the motors aren't going at full speed from the start
-            - Test the system
-         */
-        double normalisedLeftFrontPower, normalisedRightFrontPower, normalisedLeftBackPower, normalisedRightBackPower;
-        double deltaLeftFrontPowers = targetLeftFrontPower - robotHardware.getLeftFrontMotor().getPower();
-        double deltaRightFrontPowers = targetRightFrontPower - robotHardware.getRightFrontMotor().getPower();
-        double deltaLeftBackPowers = targetLeftBackPower - robotHardware.getLeftBackMotor().getPower();
-        double deltaRightBackPowers = targetRightBackPower - robotHardware.getRightBackMotor().getPower();
-
-        if (Math.abs(deltaLeftFrontPowers) > 0.08) {
-            normalisedLeftFrontPower = robotHardware.getLeftFrontMotor().getPower() + Math.signum(deltaLeftFrontPowers) * 0.05;
-        } else normalisedLeftFrontPower = targetLeftFrontPower;
-
-        if (Math.abs(deltaRightFrontPowers) > 0.08) {
-            normalisedRightFrontPower = robotHardware.getRightFrontMotor().getPower() + Math.signum(deltaRightFrontPowers) * 0.05;
-        } else normalisedRightFrontPower = targetRightFrontPower;
-
-        if (Math.abs(deltaLeftBackPowers) > 0.08) {
-            normalisedLeftBackPower = robotHardware.getLeftBackMotor().getPower() + Math.signum(deltaLeftBackPowers) * 0.05;
-        } else normalisedLeftBackPower = targetLeftBackPower;
-
-        if (Math.abs(deltaRightBackPowers) > 0.08) {
-            normalisedRightBackPower = robotHardware.getRightBackMotor().getPower() + Math.signum(deltaRightBackPowers) * 0.05;
-        } else normalisedRightBackPower = targetRightBackPower;
 
         // Send calculated power to wheels
-        robotHardware.getLeftFrontMotor().setPower(normalisedLeftFrontPower);
-        robotHardware.getRightFrontMotor().setPower(normalisedRightFrontPower);
-        robotHardware.getLeftBackMotor().setPower(normalisedLeftBackPower);
-        robotHardware.getRightBackMotor().setPower(normalisedRightBackPower);
+        robotHardware.getLeftFrontMotor().setPower(targetLeftFrontPower);
+        robotHardware.getRightFrontMotor().setPower(targetRightFrontPower);
+        robotHardware.getLeftBackMotor().setPower(targetLeftBackPower);
+        robotHardware.getRightBackMotor().setPower(targetRightBackPower);
     }
 
     @Override
