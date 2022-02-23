@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes.autonomous.test;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,38 +10,56 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.AutonomousControl;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @Autonomous(name = "Experimental Finite State Machine", group = "Testing Purposes")
 public class ExperimentalFSM extends AutonomousControl {
     private enum MachineState {
-        START, GO_TO_CAROUSEL, SPIN_DUCK, CHECK_BARCODE, GO_TO_SHIPPING_HUB, DUMP_FREIGHT, GO_TO_STORAGE_UNIT, IDENTIFY_FREIGHT, POSITION_TO_PICK_FREIGHT, PICK_FREIGHT, IDLE
+        START, GO_TO_CAROUSEL, SPIN_DUCK, GO_TO_BARCODE, CHECK_BARCODE, GO_TO_SHIPPING_HUB, DUMP_FREIGHT, GO_TO_STORAGE_UNIT, IDENTIFY_FREIGHT, POSITION_TO_PICK_FREIGHT, PICK_FREIGHT, IDLE
     }
 
     @Override
     protected void run() {
+        Pose2d startPose = new Pose2d(-36, -65, Math.toRadians(90));
         ElapsedTime runtime = new ElapsedTime();
         MachineState state = MachineState.START;
         int level = 3;
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        Trajectory carouselTrajectory = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(-57, -57), 0).build();
+        Trajectory barcodeTrajectory = drive.trajectoryBuilder(carouselTrajectory.start()).splineTo(new Vector2d(0, 0), 0).build();
         boolean checkedBarcode = false;
         while (opModeIsActive()) {
             switch (state) {
                 case START:
-                    //Set pose estimate
+                    drive.setPoseEstimate(startPose);
                     state = MachineState.GO_TO_CAROUSEL;
                     break;
                 case GO_TO_CAROUSEL:
+                    if (!drive.isBusy()) {
+                        drive.followTrajectoryAsync(carouselTrajectory);
+                        state = MachineState.SPIN_DUCK;
+                    }
                     // drive the robot to the carousel and check if the robot has done moving
-                    state = MachineState.SPIN_DUCK;
                     break;
                 case SPIN_DUCK:
                     //Spin the duck then switch state to checking the barcode
-                    state = MachineState.CHECK_BARCODE;
+                    if (!drive.isBusy()) {
+                        state = MachineState.GO_TO_BARCODE;
+                    }
+                    break;
+                case GO_TO_BARCODE:
+                    if (!drive.isBusy()) {
+                        drive.followTrajectory(barcodeTrajectory);
+                        state = MachineState.CHECK_BARCODE;
+                    }
                     break;
                 case CHECK_BARCODE:
-                    //Drive the robot to the 3 barcodes and check the barcodes then switch state
-                    state = MachineState.GO_TO_SHIPPING_HUB;
-                    level = 2;
-                    checkedBarcode = true;
+                    if (!drive.isBusy()) {
+                        //Drive the robot to the 3 barcodes and check the barcodes then switch state
+                        state = MachineState.GO_TO_SHIPPING_HUB;
+                        level = 2;
+                        checkedBarcode = true;
+                    }
                     break;
                 case GO_TO_SHIPPING_HUB:
                     if (checkedBarcode) {
