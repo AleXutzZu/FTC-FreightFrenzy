@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.movement;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.control.TeleOpControl;
 import org.firstinspires.ftc.teamcode.util.Constants;
 
 @TeleOp(name = "Proficient Movement", group = "Regio")
+@Disabled
 public final class ProficientMovement extends TeleOpControl {
     /**
      * Cooldown for opening/closing claws
