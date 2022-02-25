@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.TeleOpControl;
 
-@TeleOp(name = "Proficient Omni Movement", group = "Testing Purposes")
+@TeleOp(name = "Proficient Omni Movement", group = "Regio")
 public class ProficientOmniMovement extends TeleOpControl {
     /**
      * Cooldown for opening/closing claws

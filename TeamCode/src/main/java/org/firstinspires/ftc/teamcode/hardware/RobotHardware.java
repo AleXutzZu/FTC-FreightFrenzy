@@ -148,10 +148,10 @@ public class RobotHardware {
                 throw new IllegalStateException("Unexpected value: " + opModeType);
         }
 
-        rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftBackMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
