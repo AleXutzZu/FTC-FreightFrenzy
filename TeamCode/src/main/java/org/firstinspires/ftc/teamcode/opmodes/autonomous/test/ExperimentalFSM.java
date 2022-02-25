@@ -16,7 +16,7 @@ public class ExperimentalFSM extends AutonomousControl {
         GO_TO_CAROUSEL,
         SPIN_DUCK,
         GO_TO_BARCODE, CHECK_BARCODE_1, CHECK_BARCODE_2,
-        GO_TO_SHIPPING_HUB, LIFT_FREIGHT ,DUMP_FREIGHT,
+        GO_TO_SHIPPING_HUB, LIFT_FREIGHT, DUMP_FREIGHT,
         GO_TO_STORAGE_UNIT, IDENTIFY_FREIGHT, POSITION_TO_PICK_FREIGHT, PICK_FREIGHT,
         IDLE
     }
@@ -77,7 +77,7 @@ public class ExperimentalFSM extends AutonomousControl {
                     if (!drive.isBusy()) {
                         //check barcode
                         boolean barcode2 = false;//todo
-                        if (barcode2){
+                        if (barcode2) {
                             level = 2;
                             checkedBarcode = true;
                         }
@@ -109,11 +109,15 @@ public class ExperimentalFSM extends AutonomousControl {
                     break;
                 case POSITION_TO_PICK_FREIGHT:
                     //Drive the robot to the required pose
+                    Vector2d freightLocation = new Vector2d(0, 0);
+                    Trajectory goToFreight = drive.trajectoryBuilder(drive.getPoseEstimate()).lineToConstantHeading(freightLocation).build();
                     state = MachineState.PICK_FREIGHT;
                     break;
                 case PICK_FREIGHT:
                     //Actually pick up freight
-                    state = MachineState.GO_TO_SHIPPING_HUB;
+                    if (!drive.isBusy()) {
+                        state = MachineState.GO_TO_SHIPPING_HUB;
+                    }
                     break;
                 case IDLE:
                     if (!drive.isBusy()) idle();
