@@ -4,18 +4,21 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.control.AutonomousControl;
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @Autonomous(name = "Experimental Finite State Machine", group = "Testing Purposes")
 public class ExperimentalFSM extends AutonomousControl {
     private enum MachineState {
-        START, GO_TO_CAROUSEL, SPIN_DUCK, GO_TO_BARCODE, CHECK_BARCODE, GO_TO_SHIPPING_HUB, DUMP_FREIGHT, GO_TO_STORAGE_UNIT, IDENTIFY_FREIGHT, POSITION_TO_PICK_FREIGHT, PICK_FREIGHT, IDLE
+        START,
+        GO_TO_CAROUSEL,
+        SPIN_DUCK,
+        GO_TO_BARCODE, CHECK_BARCODE_1, CHECK_BARCODE_2,
+        GO_TO_SHIPPING_HUB, LIFT_FREIGHT ,DUMP_FREIGHT,
+        GO_TO_STORAGE_UNIT, IDENTIFY_FREIGHT, POSITION_TO_PICK_FREIGHT, PICK_FREIGHT,
+        IDLE
     }
 
     @Override
@@ -25,8 +28,10 @@ public class ExperimentalFSM extends AutonomousControl {
         MachineState state = MachineState.START;
         int level = 3;
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Trajectory carouselTrajectory = drive.trajectoryBuilder(startPose).splineTo(new Vector2d(-57, -57), 0).build();
-        Trajectory barcodeTrajectory = drive.trajectoryBuilder(carouselTrajectory.start()).splineTo(new Vector2d(0, 0), 0).build();
+        Trajectory carouselTrajectory = drive.trajectoryBuilder(startPose).lineToLinearHeading(new Pose2d(-55, -49, Math.toRadians(45))).build();
+        Trajectory barcodeTrajectory = drive.trajectoryBuilder(carouselTrajectory.end()).lineToLinearHeading(new Pose2d(-45, -48, Math.toRadians(0))).build();
+        Trajectory barcode2Trajectory = drive.trajectoryBuilder(barcodeTrajectory.end()).lineTo(new Vector2d(-35, -48)).build();
+
         boolean checkedBarcode = false;
         while (opModeIsActive()) {
             switch (state) {
@@ -44,27 +49,48 @@ public class ExperimentalFSM extends AutonomousControl {
                 case SPIN_DUCK:
                     //Spin the duck then switch state to checking the barcode
                     if (!drive.isBusy()) {
+                        //spin the motor
                         state = MachineState.GO_TO_BARCODE;
                     }
                     break;
                 case GO_TO_BARCODE:
                     if (!drive.isBusy()) {
-                        drive.followTrajectory(barcodeTrajectory);
-                        state = MachineState.CHECK_BARCODE;
+                        drive.followTrajectoryAsync(barcodeTrajectory);
+                        state = MachineState.CHECK_BARCODE_1;
                     }
                     break;
-                case CHECK_BARCODE:
+                case CHECK_BARCODE_1:
                     if (!drive.isBusy()) {
-                        //Drive the robot to the 3 barcodes and check the barcodes then switch state
+                        boolean barcode1 = true;//todo
+                        if (barcode1) {
+                            state = MachineState.GO_TO_SHIPPING_HUB;
+                            level = 1;
+                            checkedBarcode = true;
+                            //drive.followTrajectoryAsync();
+                        } else {
+                            state = MachineState.CHECK_BARCODE_2;
+                            drive.followTrajectoryAsync(barcode2Trajectory);
+                        }
+                    }
+                    break;
+                case CHECK_BARCODE_2:
+                    if (!drive.isBusy()) {
+                        //check barcode
+                        boolean barcode2 = false;//todo
+                        if (barcode2){
+                            level = 2;
+                            checkedBarcode = true;
+                        }
                         state = MachineState.GO_TO_SHIPPING_HUB;
-                        level = 2;
-                        checkedBarcode = true;
                     }
                     break;
                 case GO_TO_SHIPPING_HUB:
                     if (checkedBarcode) {
                         checkedBarcode = false;
                     } else level = 3;
+                    state = MachineState.LIFT_FREIGHT;
+                    break;
+                case LIFT_FREIGHT:
                     state = MachineState.DUMP_FREIGHT;
                     break;
                 case DUMP_FREIGHT:
@@ -90,7 +116,7 @@ public class ExperimentalFSM extends AutonomousControl {
                     state = MachineState.GO_TO_SHIPPING_HUB;
                     break;
                 case IDLE:
-                    idle();
+                    if (!drive.isBusy()) idle();
                     break;
                 default:
                     //This should never happen but in case it does we set it to idle
