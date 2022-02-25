@@ -14,31 +14,49 @@ public class ProficientOmniMovement extends TeleOpControl {
 
     @Override
     protected void drive() {
-        double x = -gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
-        double turn = -gamepad1.right_stick_x;
+        double max;
 
-        double theta = Math.atan2(y, x);
-        double power = Math.hypot(x, y);
-
-        double sine = Math.sin(theta - Math.PI / 4);
-        double cosine = Math.cos(theta - Math.PI / 4);
-        double max = Math.max(Math.abs(sine), Math.abs(cosine));
+        // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
+        double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+        double lateral =  gamepad1.left_stick_x;
+        double yaw     =  gamepad1.right_stick_x;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
-        double targetLeftFrontPower = power * cosine / max + turn;
-        double targetRightFrontPower = power * sine / max - turn;
-        double targetLeftBackPower = power * sine / max + turn;
-        double targetRightBackPower = power * cosine / max - turn;
+        // Set up a variable for each drive wheel to save the power level for telemetry.
+        double targetLeftFrontPower  = axial + lateral + yaw;
+        double targetRightFrontPower = axial - lateral - yaw;
+        double targetLeftBackPower   = axial - lateral + yaw;
+        double targetRightBackPower  = axial + lateral - yaw;
 
         // Normalize the values so no wheel power exceeds 100%
         // This ensures that the robot maintains the desired motion.
-        if (power + Math.abs(turn) > 1) {
-            targetLeftFrontPower /= power + turn;
-            targetRightFrontPower /= power + turn;
-            targetLeftBackPower /= power + turn;
-            targetRightBackPower /= power + turn;
+        max = Math.max(Math.abs(targetLeftFrontPower), Math.abs(targetRightFrontPower));
+        max = Math.max(max, Math.abs(targetLeftBackPower));
+        max = Math.max(max, Math.abs(targetRightBackPower));
+
+        if (max > 1.0) {
+            targetLeftFrontPower  /= max;
+            targetRightFrontPower /= max;
+            targetLeftBackPower   /= max;
+            targetRightBackPower  /= max;
         }
+
+        // This is test code:
+        //
+        // Uncomment the following code to test your motor directions.
+        // Each button should make the corresponding motor run FORWARD.
+        //   1) First get all the motors to take to correct positions on the robot
+        //      by adjusting your Robot Configuration if necessary.
+        //   2) Then make sure they run in the correct direction by modifying the
+        //      the setDirection() calls above.
+        // Once the correct motors move in the correct direction re-comment this code.
+
+            /*
+            targetLeftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
+            targetLeftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
+            targetRightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
+            targetRightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
+            */
 
         // Send calculated power to wheels
         robotHardware.getLeftFrontMotor().setPower(targetLeftFrontPower);
