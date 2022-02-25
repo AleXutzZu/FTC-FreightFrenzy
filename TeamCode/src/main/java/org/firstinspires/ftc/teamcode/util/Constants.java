@@ -55,11 +55,16 @@ public final class Constants {
     public static final double DIAGONAL_DRIVING_POWER = 1;
 
     /**
-     * Tetrix motor tick rate, according to their spec sheet
-     * <p><a href="https://www.pitsco.com/TETRIX-MAX-TorqueNADO-Motor-with-Encoder">TETRIX-MAX TorqueNADO Motor with Encoder</a></p>
+     * goBILDA drivetrain motor tick rate, according to their spec sheet
+     * <p><a href="https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/">5203 Series Yellow Jacket Planetary Gear Motor</a></p>
      */
-    public static final int TETRIX_MOTOR_TICK_RATE = 1440;
+    public static final double GOBILDA_DRIVETRAIN_MOTOR_TICK_RATE = 537.7;
 
+    /**
+     * goBILDA elevator motor tick rate, according to their spec sheet
+     * <p><a href="https://www.gobilda.com/5202-series-yellow-jacket-planetary-gear-motor-13-7-1-ratio-435-rpm-3-3-5v-encoder/">5202 Series Yellow Jacket Planetary Gear Motor</a></p>
+     */
+    public static final double TETRIX_ELEVATOR_MOTOR_TICK_RATE = 1440;
     /**
      * Diameter for the inner circle to which the cord is tied (in cm)
      * <p><a href="https://www.servocity.com/1-25-winch-pulley/">1.25” Winch Pulley</a></p>
@@ -69,25 +74,25 @@ public final class Constants {
     /**
      * Ticks required by the elevator motor to advance the cord 1 cm
      */
-    public static final double ELEVATOR_TICKS_PER_CENTIMETRE = TETRIX_MOTOR_TICK_RATE / (WINCH_PULLEY_DIAMETER * Math.PI);
+    public static final double ELEVATOR_TICKS_PER_CENTIMETRE = TETRIX_ELEVATOR_MOTOR_TICK_RATE / (WINCH_PULLEY_DIAMETER * Math.PI);
 
     /**
      * Maximum ticks the elevator may go to before risking to break the cord. (About 30cm)
      */
-    public static final int MAX_ELEVATOR_TICKS = (int) (60 * ELEVATOR_TICKS_PER_CENTIMETRE);
+    public static final int MAX_ELEVATOR_TICKS = (int) (55 * ELEVATOR_TICKS_PER_CENTIMETRE);
 
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
      * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
      */
-    public static final double WHEEL_DIAMETER = 10.16;
+    public static final double WHEEL_DIAMETER = 9.6;
 
     /**
      * <p>Ticks per centimetre based on motor and wheel specs</p>
      * <p>Defined as <b>MOTOR_TICK_RATE / WHEEL_DIAMETER</b></p>
      *
      * @see Constants#WHEEL_DIAMETER
-     * @see Constants#TETRIX_MOTOR_TICK_RATE
+     * @see Constants#GOBILDA_DRIVETRAIN_MOTOR_TICK_RATE
      */
-    public static final double DRIVING_TICKS_PER_CENTIMETRE = TETRIX_MOTOR_TICK_RATE / (WHEEL_DIAMETER * Math.PI);
+    public static final double DRIVING_TICKS_PER_CENTIMETRE = GOBILDA_DRIVETRAIN_MOTOR_TICK_RATE / (WHEEL_DIAMETER * Math.PI);
 }
