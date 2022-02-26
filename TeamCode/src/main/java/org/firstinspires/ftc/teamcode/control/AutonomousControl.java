@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.util.Constants;
 
+@Deprecated
 public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Robot Hardware necessary for movement
