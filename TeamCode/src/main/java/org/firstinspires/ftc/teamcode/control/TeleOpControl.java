@@ -69,6 +69,7 @@ public abstract class TeleOpControl extends LinearOpMode {
      *
      * @param motorPower positive value will result in forward movement, while negative in backward movement
      */
+    @Deprecated
     protected void driveStraight(double motorPower) {
         drive(motorPower, (motorPower < 0f ? Direction.BACKWARD : Direction.FORWARD));
     }
@@ -78,6 +79,7 @@ public abstract class TeleOpControl extends LinearOpMode {
      *
      * @param motorPower positive value will result in strafing to the left, while negative in strafing to the right
      */
+    @Deprecated
     protected void driveSideways(double motorPower) {
         drive(motorPower, (motorPower > 0f ? Direction.STRAFE_LEFT : Direction.STRAFE_RIGHT));
     }
@@ -89,6 +91,7 @@ public abstract class TeleOpControl extends LinearOpMode {
      *                     in backwards movement
      * @param leftDiagonal whether or not to use the left diagonal (false = right diagonal, true = left diagonal)
      */
+    @Deprecated
     protected void driveDiagonally(double motorPower, boolean leftDiagonal) {
         if (leftDiagonal) {
             drive(motorPower, motorPower < 0f ? Direction.DIAGONALLY_LEFT_BACKWARD : Direction.DIAGONALLY_LEFT_FORWARD);
@@ -102,6 +105,7 @@ public abstract class TeleOpControl extends LinearOpMode {
      *
      * @param motorPower Positive power will result in rotation to the left, while negative power will result in rotation to the right
      */
+    @Deprecated
     protected void rotate(double motorPower) {
         drive(motorPower, (motorPower >= 0f ? Direction.ROTATE_LEFT : Direction.ROTATE_RIGHT));
     }
@@ -112,6 +116,7 @@ public abstract class TeleOpControl extends LinearOpMode {
      * @param motorPower power to give to the motors
      * @param direction  non-null direction that tells which direction the robot should take
      */
+    @Deprecated
     private void drive(double motorPower, @NonNull Direction direction) {
         double leftFrontPower = 0, rightFrontPower = 0, leftBackPower = 0, rightBackPower = 0;
         motorPower = Math.abs(motorPower);
@@ -201,6 +206,7 @@ public abstract class TeleOpControl extends LinearOpMode {
     /**
      * Brings the motors to a halt
      */
+    @Deprecated
     protected void stopMotors() {
         drive(0, Direction.IDLE);
     }

@@ -49,6 +49,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      *
      * @param distance value representing the desired distance in centimetres. If negative, the robot will go backwards, forwards otherwise
      */
+    @Deprecated
     protected void driveStraight(double distance) {
         drive(distance, (distance < 0d ? DrivingDirection.BACKWARD : DrivingDirection.FORWARD));
     }
@@ -58,6 +59,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      *
      * @param distance positive value representing the desired distance in centimetres.
      */
+    @Deprecated
     protected void driveSideways(double distance) {
         drive(distance, (distance < 0f ? DrivingDirection.STRAFE_LEFT : DrivingDirection.STRAFE_RIGHT));
     }
@@ -67,6 +69,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      *
      * @param degrees Value between -180 and 180 (inclusive) which the robot should rotate to
      */
+    @Deprecated
     protected void rotate(double degrees) {
         degrees = Range.clip(degrees, -180, 180);
         double leftFrontPower, rightFrontPower, leftBackPower, rightBackPower;
@@ -116,6 +119,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      *
      * @param target value representing the target to turn to
      */
+    @Deprecated
     protected void rotateTo(double target) {
         target = Range.clip(target, -180, 180);
         double currentAngle = robotHardware.getGyroscope().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZXY, AngleUnit.DEGREES).firstAngle;
@@ -131,6 +135,7 @@ public abstract class AutonomousControl extends LinearOpMode {
     /**
      * Completely brings the motors to a halt.
      */
+    @Deprecated
     protected void stopMotors() {
         if (opModeIsActive()) {
             robotHardware.getRightFrontMotor().setPower(0);
@@ -139,7 +144,7 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getLeftBackMotor().setPower(0);
         }
     }
-
+    @Deprecated
     private void drive(double distance, @NonNull DrivingDirection direction) {
         distance = Math.abs(distance);
 
