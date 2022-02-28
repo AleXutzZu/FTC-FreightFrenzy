@@ -4,11 +4,6 @@ package org.firstinspires.ftc.teamcode.util;
  * Various constants for various tasks including servo positions, tick/cm ratios and different driving powers
  */
 public final class Constants {
-    /*
-    TODO
-        - Possibly update values to match goBILDA motors and wheels.
-        - Currently using TETRIX Motors and HD Mecanum Wheels
-     */
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
@@ -37,7 +32,7 @@ public final class Constants {
     /**
      * Power input for rotating around the central axis
      */
-    public static final double ROTATION_POWER = 1;
+    public static final double ROTATION_POWER = 0.1;
 
     /**
      * Power input for sliding operation (left or right)
@@ -47,7 +42,7 @@ public final class Constants {
     /**
      * Power used when the robot is driving straight (during autonomous)
      */
-    public static final double DRIVING_POWER = 1d;
+    public static final double DRIVING_POWER = 0.05d;
 
     /**
      * Power input for diagonal driving (in all 4 directions)
@@ -58,7 +53,7 @@ public final class Constants {
      * goBILDA drivetrain motor tick rate, according to their spec sheet
      * <p><a href="https://www.gobilda.com/5203-series-yellow-jacket-planetary-gear-motor-19-2-1-ratio-24mm-length-8mm-rex-shaft-312-rpm-3-3-5v-encoder/">5203 Series Yellow Jacket Planetary Gear Motor</a></p>
      */
-    public static final double GOBILDA_DRIVETRAIN_MOTOR_TICK_RATE = 537.7;
+    public static final double GOBILDA_DRIVETRAIN_MOTOR_TICK_RATE = 537.6;
 
     /**
      * goBILDA elevator motor tick rate, according to their spec sheet
@@ -83,7 +78,7 @@ public final class Constants {
 
     /**
      * <p>Wheel diameter in <b>centimetres</b></p>
-     * <a href= "https://www.andymark.com/products/4-in-hd-mecanum-wheel-set-options">HD Mecanum Wheels</a>
+     * <a href= "https://www.gobilda.com/96mm-mecanum-wheel-set-70a-durometer-bearing-supported-rollers/">96mm Mecanum Wheel Set</a>
      */
     public static final double WHEEL_DIAMETER = 9.6;
 
