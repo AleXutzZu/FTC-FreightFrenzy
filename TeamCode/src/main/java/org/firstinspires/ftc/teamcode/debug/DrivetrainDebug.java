@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
@@ -12,10 +12,17 @@ import org.firstinspires.ftc.teamcode.util.Debug;
 public class DrivetrainDebug implements Debug {
     private final RobotHardware robotHardware = RobotHardware.getInstance();
 
-    private final DcMotor leftFrontMotor = robotHardware.getLeftFrontMotor();
-    private final DcMotor rightFrontMotor = robotHardware.getRightFrontMotor();
-    private final DcMotor leftBackMotor = robotHardware.getLeftBackMotor();
-    private final DcMotor rightBackMotor = robotHardware.getRightBackMotor();
+    private final DcMotor leftFrontMotor;
+    private final DcMotor rightFrontMotor;
+    private final DcMotor leftBackMotor;
+    private final DcMotor rightBackMotor;
+
+    public DrivetrainDebug(HardwareMap hardwareMap) {
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "left_front");
+        rightFrontMotor = hardwareMap.get(DcMotor.class, "right_front");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "left_back");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "right_back");
+    }
 
     private enum Direction {
         FORWARD, BACKWARD,
@@ -33,10 +40,10 @@ public class DrivetrainDebug implements Debug {
         telemetry.addData("Drivetrain", "dir %s pow %.2f",
                 getDirection(leftFrontMotor.getPower(), rightFrontMotor.getPower(), leftBackMotor.getPower(), rightBackMotor.getPower()),
                 averagePower)
-                .addData("Left Front Motor", "pow %.2f", leftFrontMotor.getPower())
-                .addData("Right Front Motor", "pow %.2f", rightFrontMotor.getPower())
-                .addData("Left Back Motor", "pow %.2f", leftBackMotor.getPower())
-                .addData("Right Back Motor", "pow %.2f", rightBackMotor.getPower());
+                .addData("Left Front Motor", "pow %.2f pos %d", leftFrontMotor.getPower(), leftFrontMotor.getCurrentPosition())
+                .addData("Right Front Motor", "pow %.2f pos %d", rightFrontMotor.getPower(), rightFrontMotor.getCurrentPosition())
+                .addData("Left Back Motor", "pow %.2f pos %d", leftBackMotor.getPower(), leftBackMotor.getCurrentPosition())
+                .addData("Right Back Motor", "pow %.2f pos %d", rightBackMotor.getPower(), rightBackMotor.getCurrentPosition());
         telemetry.update();
     }
 
