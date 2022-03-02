@@ -32,7 +32,7 @@ public abstract class AutonomousControl extends LinearOpMode {
      * Elevator distances for each level in centimetres
      */
     protected enum ElevatorLevels {
-        START(0), LEVEL_ONE(9), LEVEL_TWO(25), LEVEL_THREE(50), MAX(59);
+        START(0), LEVEL_ONE(10), LEVEL_TWO(25), LEVEL_THREE(44), MAX(59);
 
         ElevatorLevels(double distance) {
             this.distance = distance;
@@ -145,6 +145,7 @@ public abstract class AutonomousControl extends LinearOpMode {
             robotHardware.getLeftBackMotor().setPower(0);
         }
     }
+
     @Deprecated
     private void drive(double distance, @NonNull DrivingDirection direction) {
         distance = Math.abs(distance);
@@ -267,12 +268,12 @@ public abstract class AutonomousControl extends LinearOpMode {
 
     /**
      * Operates the wheel on the back of the robot
+     * @param motorPower power given to the motors
      */
-    protected void useWheel() {
+    protected void useWheel(float motorPower) {
         if (opModeIsActive()) {
-            robotHardware.getWheelMotor().setPower(1);
+            robotHardware.getWheelMotor().setPower(motorPower);
         }
-        sleep(100);
     }
 
     protected void useElevator(ElevatorLevels level) {
@@ -286,25 +287,8 @@ public abstract class AutonomousControl extends LinearOpMode {
         robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    /**
-     * This function will identify where the team element is located and return the
-     * elevator level necessary
-     *
-     * @return the elevator level corresponding to the position, level 1 if no position
-     * is found
-     */
-    protected ElevatorLevels identifyElement() {
-        if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
-            return ElevatorLevels.LEVEL_TWO;
-        }
-
-        driveStraight(15);
-
-        if (robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30) {
-            return ElevatorLevels.LEVEL_THREE;
-        }
-
-        return ElevatorLevels.LEVEL_ONE;
+    protected boolean checkBarcode() {
+        return robotHardware.getLeftDistanceSensor().getDistance(DistanceUnit.CM) < 30;
     }
 
     @Override
