@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -51,6 +52,9 @@ public class MotorDirectionDebugger extends LinearOpMode {
         DcMotor rightFront = hardwareMap.get(DcMotor.class, "right_front");
         DcMotor rightBack = hardwareMap.get(DcMotor.class, "right_back");
 
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -78,22 +82,22 @@ public class MotorDirectionDebugger extends LinearOpMode {
 
             if (gamepad1.x) {
                 leftFront.setPower(MOTOR_POWER);
-                telemetry.addLine("Running Motor: Front Left pos: " + leftFront.getCurrentPosition());
+                telemetry.addData("Running Motor", "Front Left pos: %d", leftFront.getCurrentPosition());
             } else if (gamepad1.y) {
                 rightFront.setPower(MOTOR_POWER);
-                telemetry.addLine("Running Motor: Front Right pos: " + rightFront.getCurrentPosition());
+                telemetry.addData("Running Motor", "Front Right pos: %d", rightFront.getCurrentPosition());
             } else if (gamepad1.b) {
                 rightBack.setPower(MOTOR_POWER);
-                telemetry.addLine("Running Motor: Rear Right pos: " + rightBack.getCurrentPosition());
+                telemetry.addData("Running Motor", "Rear Right pos: %d", rightBack.getCurrentPosition());
             } else if (gamepad1.a) {
                 leftBack.setPower(MOTOR_POWER);
-                telemetry.addLine("Running Motor: Rear Left pos: " + leftBack.getCurrentPosition());
+                telemetry.addData("Running Motor", "Rear Left pos: %d", leftBack.getCurrentPosition());
             } else {
                 leftBack.setPower(0);
                 leftFront.setPower(0);
                 rightBack.setPower(0);
                 rightFront.setPower(0);
-                telemetry.addLine("Running Motor: None");
+                telemetry.addData("Running Motor", "None");
             }
 
             telemetry.update();
