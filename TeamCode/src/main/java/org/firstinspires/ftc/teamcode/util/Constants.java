@@ -12,7 +12,7 @@ public final class Constants {
     /**
      * Servo position to put the arm down (Arm base Servo)
      */
-    public static final double ARM_DOWN = 0.5f;
+    public static final double ARM_DOWN = 0.3f;
 
     /**
      * Servo position to close the claws (Claw servos)
