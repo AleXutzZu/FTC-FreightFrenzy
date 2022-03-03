@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.control.AutonomousControl;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.Constants;
 
 @Autonomous(name = "Demo: Red Side Far Position", group = "Demo Cluj-Napoca")
 public class RedSideFarPosition extends AutonomousControl {
@@ -23,7 +24,7 @@ public class RedSideFarPosition extends AutonomousControl {
         Trajectory barcode1shippingHub2 = drive.trajectoryBuilder(barcode1shippingHub1.end()).strafeLeft(8.8).build();
         Trajectory barcode2shippingHub1 = drive.trajectoryBuilder(barcode2.end()).forward(19).build();
         Trajectory barcode2shippingHub2 = drive.trajectoryBuilder(barcode1shippingHub2.end()).strafeLeft(2.8).build();
-        Trajectory barcode1parking1 = drive.trajectoryBuilder(barcode1shippingHub2.end()).strafeRight(9.8).build();
+        Trajectory barcode1parking1 = drive.trajectoryBuilder(barcode1shippingHub2.end()).strafeRight(9.5).build();
         Trajectory barcode1parking2 = drive.trajectoryBuilder(barcode1parking1.end()).forward(62).build();
         Trajectory barcode2parking1 = drive.trajectoryBuilder(barcode2shippingHub2.end()).strafeRight(5.8).build();
         Trajectory barcode2parking2 = drive.trajectoryBuilder(barcode2parking1.end()).forward(62).build();
@@ -35,22 +36,22 @@ public class RedSideFarPosition extends AutonomousControl {
         useWheel(0);
         drive.followTrajectory(barcode1);
         if (checkBarcode()){
-            useElevator(ElevatorLevels.LEVEL_ONE);
+            useElevator(Constants.ElevatorLevels.LEVEL_ONE);
             useArm(false);
             drive.followTrajectory(barcode1shippingHub1);
             drive.followTrajectory(barcode1shippingHub2);
             useClaws(false);
             drive.followTrajectory(barcode1parking1);
             useArm(true);
-            useElevator(ElevatorLevels.START);
+            useElevator(Constants.ElevatorLevels.START);
             drive.followTrajectory(barcode1parking2);
             return;
         }else{
             drive.followTrajectory(barcode2);
         }
         if (checkBarcode()){
-            useElevator(ElevatorLevels.LEVEL_TWO);
-        }else useElevator(ElevatorLevels.LEVEL_THREE);
+            useElevator(Constants.ElevatorLevels.LEVEL_TWO);
+        }else useElevator(Constants.ElevatorLevels.LEVEL_THREE);
         useArm(false);
         drive.followTrajectory(barcode2shippingHub1);
         drive.followTrajectory(barcode2shippingHub2);
@@ -58,7 +59,7 @@ public class RedSideFarPosition extends AutonomousControl {
         sleep(1000);
         drive.followTrajectory(barcode2parking1);
         useArm(true);
-        useElevator(ElevatorLevels.START);
+        useElevator(Constants.ElevatorLevels.START);
         drive.followTrajectory(barcode2parking2);
     }
 }
