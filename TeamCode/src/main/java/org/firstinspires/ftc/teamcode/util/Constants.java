@@ -4,6 +4,23 @@ package org.firstinspires.ftc.teamcode.util;
  * Various constants for various tasks including servo positions, tick/cm ratios and different driving powers
  */
 public final class Constants {
+
+    /**
+     * Elevator distances for each level in centimetres
+     */
+    public enum ElevatorLevels{
+        START(0), LEVEL_ONE(13), LEVEL_TWO(25), LEVEL_THREE(44), MAX(59);
+
+        ElevatorLevels(double distance) {
+            this.distance = distance;
+        }
+
+        private final double distance;
+
+        public double getDistance() {
+            return distance;
+        }
+    }
     /**
      * Servo position to bring the arms up (Arm base Servo)
      */
@@ -17,12 +34,12 @@ public final class Constants {
     /**
      * Servo position to close the claws (Claw servos)
      */
-    public static final double CLAWS_CLOSED = 1f;
+    public static final double CLAWS_CLOSED = 0.2f;
 
     /**
      * Servo position to open the claws (Claw servos)
      */
-    public static final double CLAWS_OPENED = 0f;
+    public static final double CLAWS_OPENED = 0.7f;
 
     /**
      * Dictates how small the output from the joystick/trigger should be

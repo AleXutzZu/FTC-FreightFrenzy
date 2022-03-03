@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.control;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -11,37 +11,31 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Constants;
 
-public abstract class AutonomousUtil extends LinearOpMode {
+public abstract class AutonomousUtil extends OpMode {
     protected final RobotHardware robotHardware = RobotHardware.getInstance();
 
-    protected final SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-    /**
-     * Elevator distances for each level in centimetres
-     */
-    protected enum ElevatorLevel {
-        START(0), LEVEL_ONE(9), LEVEL_TWO(25), LEVEL_THREE(50), MAX(59);
-
-        ElevatorLevel(double distance) {
-            this.distance = distance;
-        }
-
-        private final double distance;
-
-        public double getDistance() {
-            return distance;
-        }
-    }
-
+    protected SampleMecanumDrive drive;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
         robotHardware.initAutonomous(hardwareMap);
-        waitForStart();
-        run();
+        drive = new SampleMecanumDrive(hardwareMap);
     }
 
-    protected abstract void run();
+    @Override
+    public void init_loop() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
 
     /**
      * Powers the carousel wheel making it spin
@@ -66,9 +60,10 @@ public abstract class AutonomousUtil extends LinearOpMode {
 
     /**
      * Brings the elevator to the specified level asynchronously
+     *
      * @param level specified level
      */
-    protected void useElevatorAsync(@NonNull ElevatorLevel level) {
+    protected void useElevatorAsync(@NonNull Constants.ElevatorLevels level) {
         int targetPos = (int) (level.getDistance() * Constants.ELEVATOR_TICKS_PER_CENTIMETRE);
         robotHardware.getElevatorMotor().setTargetPosition(targetPos);
         robotHardware.getElevatorMotor().setPower(1);
@@ -76,23 +71,35 @@ public abstract class AutonomousUtil extends LinearOpMode {
     }
 
     protected void useClaws(boolean closeClaws) {
-        if (!isStopRequested()) {
-            if (closeClaws) {
-                robotHardware.getRightClaw().setPosition(Constants.CLAWS_CLOSED);
-                robotHardware.getLeftClaw().setPosition(Constants.CLAWS_CLOSED);
-            } else {
-                robotHardware.getLeftClaw().setPosition(Constants.CLAWS_OPENED);
-                robotHardware.getRightClaw().setPosition(Constants.CLAWS_OPENED);
-            }
+        if (closeClaws) {
+            robotHardware.getRightClaw().setPosition(Constants.CLAWS_CLOSED);
+            robotHardware.getLeftClaw().setPosition(Constants.CLAWS_CLOSED);
+        } else {
+            robotHardware.getLeftClaw().setPosition(Constants.CLAWS_OPENED);
+            robotHardware.getRightClaw().setPosition(Constants.CLAWS_OPENED);
         }
     }
 
+    protected void useArm(boolean armUp) {
+        if (armUp) robotHardware.getArmBase().setPosition(Constants.ARM_UP);
+        else robotHardware.getArmBase().setPosition(Constants.ARM_DOWN);
+    }
 
     /**
      * Check if the elevator is busy
+     *
      * @return whether the elevator has done retreating or advancing to the required position
      */
-    protected boolean isElevatorBusy(){
+    protected boolean isElevatorBusy() {
         return robotHardware.getElevatorMotor().isBusy();
+    }
+
+    /**
+     * Check if the elevator is at the start
+     *
+     * @return true if it is, false otherwise
+     */
+    protected boolean isElevatorAtStart() {
+        return robotHardware.getElevatorMotor().getCurrentPosition() == 0;
     }
 }

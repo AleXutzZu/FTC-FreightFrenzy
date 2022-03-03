@@ -29,23 +29,6 @@ public abstract class AutonomousControl extends LinearOpMode {
     }
 
     /**
-     * Elevator distances for each level in centimetres
-     */
-    protected enum ElevatorLevels {
-        START(0), LEVEL_ONE(10), LEVEL_TWO(25), LEVEL_THREE(44), MAX(59);
-
-        ElevatorLevels(double distance) {
-            this.distance = distance;
-        }
-
-        private final double distance;
-
-        public double getDistance() {
-            return distance;
-        }
-    }
-
-    /**
      * Drives the robot in a straight direction for the desired distance with the desired power
      *
      * @param distance value representing the desired distance in centimetres. If negative, the robot will go backwards, forwards otherwise
@@ -276,7 +259,7 @@ public abstract class AutonomousControl extends LinearOpMode {
         }
     }
 
-    protected void useElevator(ElevatorLevels level) {
+    protected void useElevator(Constants.ElevatorLevels level) {
         int targetPos = (int) (level.getDistance() * Constants.ELEVATOR_TICKS_PER_CENTIMETRE);
         robotHardware.getElevatorMotor().setTargetPosition(targetPos);
         robotHardware.getElevatorMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
