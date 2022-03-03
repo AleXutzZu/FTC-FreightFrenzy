@@ -236,7 +236,7 @@ public class RobotHardware {
         rightClaw = hardwareMap.get(Servo.class, "right_claw");
 
         armBase.setDirection(Servo.Direction.FORWARD);
-        leftClaw.setDirection(Servo.Direction.REVERSE);
+        leftClaw.setDirection(Servo.Direction.FORWARD);
         rightClaw.setDirection(Servo.Direction.FORWARD);
     }
 
