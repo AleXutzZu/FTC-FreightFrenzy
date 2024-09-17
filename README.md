@@ -3,9 +3,9 @@
 
 This is an archived repository for the Robot Controller App used in Freight Frenzy by the Perpetuum Mobile Team.
 
-Everything related to the robot is in the TeamCode module 
+Everything related to the robot is in the TeamCode module.
 
-## Some of the libraries used
+## Libraries used
 - RoadRunner for path and trajectory generation
 - FTCLib
 - MeepMeep for vizualizing RoadRunner paths/trajectories
