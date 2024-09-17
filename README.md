@@ -1,44 +1,13 @@
 
-# Perpetuum Mobile RO065
+# FTC Freight Frenzy Code
 
-Acesta este codul sursă oficial al robotului echipei **Perpetuum Mobile RO065**. Este
-bazat pe codul furnizat de [FTC](https://www.firstinspires.org/).
-
-## Membrii Echipă
-- Andra Fecske
-- Dragoș Szilagyi
-- Casiana Cozma
-- Alexandra Moroz
-- Cristina Ciors
-- Karina Rusu
-- Mara Bria
-- Sebastian Enea
-- David Alex
-- Vanessa Buga
-- Sârbu Laura
-- Larisa Lohan
-- Cătălin Bumb
-- Andrei Mateian
-- Andra Mateș
-## Autori cod
-
-- [@AleXutzZu](https://www.github.com/AleXutzZu)
-- [@andramates](https://www.github.com/andramates)
+This is an archived repository for the Robot Controller App used in Freight Frenzy by the Perpetuum Mobile Team.
 
 
-## Voluntari
+## Some links
 
-Momentan nimeni
-
-
-## Documentație
-
-- [Documentația FtcRobotController](https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki)
+- [Robot Controller Docs](https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki)
 - [Javadoc](https://javadoc.io/doc/org.firstinspires.ftc)
-- [Exemple de Cod](FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples)
-- [Codul de anul trecut](https://drive.google.com/drive/u/0/folders/1fYaFXlUK6ZxIL_FdRfeJHxZKOYuNguDm)
+- [Samples](FtcRobotController/src/main/java/org/firstinspires/ftc/robotcontroller/external/samples)
 
-## Abilități Robot
-
-- Nu avem, reveniți mai târziu
 
